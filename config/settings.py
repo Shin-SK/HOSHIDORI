@@ -7,10 +7,12 @@ import cloudinary.api
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-i49+sc6q...')  
-DEBUG = bool(os.environ.get('DEBUG', True)) 
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-i49+sc6q...')
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
+
+debug_str = os.environ.get('DEBUG', 'True')
+DEBUG = (debug_str.lower() == 'true')
 
 if not DEBUG:
     ALLOWED_HOSTS = ['hoshidori-production.up.railway.app']
@@ -189,8 +191,8 @@ ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = False
 
 # ③ Cloudinary設定
 cloudinary.config(
-    cloud_name = os.environ.get('CLOUDINARY_CLOUD_NAME', 'ddfvexdsf'),
-    api_key = os.environ.get('CLOUDINARY_API_KEY', '587674237252344'),
-    api_secret = os.environ.get('CLOUDINARY_API_SECRET', 'O2LoXcTpe-hoA051AcFHL6hi0O0'),
+    cloud_name=os.environ['CLOUDINARY_CLOUD_NAME'],
+    api_key=os.environ['CLOUDINARY_API_KEY'],
+    api_secret=os.environ['CLOUDINARY_API_SECRET'],
     secure=True
 )
