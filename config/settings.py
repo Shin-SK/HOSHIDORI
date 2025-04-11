@@ -3,6 +3,10 @@ from pathlib import Path
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
+import dotenv
+
+# ここで先に .env をロード（settings.pyの最初の方）
+dotenv.load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -17,7 +21,7 @@ DEBUG = (debug_str.lower() == 'true')
 if not DEBUG:
     ALLOWED_HOSTS = ['hoshidori-production.up.railway.app']
 else:
-    ALLOWED_HOSTS = []
+    ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -198,3 +202,14 @@ cloudinary.config(
     api_secret=os.environ['CLOUDINARY_API_SECRET'],
     secure=True
 )
+
+
+EMAIL_BACKEND = os.environ.get('DJANGO_EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
+EMAIL_HOST = os.environ.get('DJANGO_EMAIL_HOST', '')
+EMAIL_PORT = int(os.environ.get('DJANGO_EMAIL_PORT', '25'))
+EMAIL_HOST_USER = os.environ.get('DJANGO_EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.environ.get('DJANGO_EMAIL_HOST_PASSWORD', '')
+EMAIL_USE_TLS = (os.environ.get('DJANGO_EMAIL_USE_TLS', 'False') == 'True')
+EMAIL_USE_SSL = (os.environ.get('DJANGO_EMAIL_USE_SSL', 'False') == 'True')
+
+DEFAULT_FROM_EMAIL = os.environ.get('DJANGO_DEFAULT_FROM_EMAIL', 'webmaster@localhost')
