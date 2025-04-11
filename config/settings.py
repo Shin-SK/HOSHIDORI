@@ -8,12 +8,14 @@ import cloudinary.api
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-i49+sc6q...')  
-DEBUG = bool(os.environ.get('DEBUG', True))  # 例: 環境変数DEBUGが"False"ならFalse
+DEBUG = bool(os.environ.get('DEBUG', True)) 
 
-ALLOWED_HOSTS = []
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
-if not DEBUG: ALLOWED_HOSTS = ['yourapp.up.railway.app']
+if not DEBUG:
+    ALLOWED_HOSTS = ['hoshidori-production.up.railway.app']
+else:
+    ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'django.contrib.admin',
