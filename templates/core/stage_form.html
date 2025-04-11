@@ -1,0 +1,57 @@
+<!-- core/stage_form.html -->
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+Stage Form
+{% endblock %}
+
+{% block content %}
+
+<section class="form-update container">
+
+    <h2>Stage Form</h2>
+
+    <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    
+    <!-- フォーム全体のエラー -->
+    {{ form.non_field_errors }}
+
+        <!-- ポスター画像 -->
+        <div class="field poster">
+            <input
+            id="poster-upload"
+            type="file"
+            name="{{ form.poster_file.html_name }}"
+            class="filepond"
+            accept="image/*"
+          >
+          <!-- エラー表示 -->
+          {{ form.poster_file.errors }}
+        </div>
+        
+    
+    <!-- タイトル -->
+    <div class="field stage-title">
+        {{ form.title }}
+        {{ form.title.errors }}
+    </div>
+
+    <!-- 出演者 -->
+    <div class="field cast">
+        {{ form.cast }}
+        {{ form.cast.errors }}
+    </div>
+    
+    <!-- スタッフ -->
+    <div class="field staff">
+        {{ form.staff }}
+        {{ form.staff.errors }}
+    </div>
+    
+    <button type="submit">保存</button>
+    </form>
+
+</section>
+{% endblock %}

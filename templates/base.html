@@ -1,0 +1,102 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <title>{% block title %}ホシドリ{% endblock %}</title>
+    {% load static %}
+    
+	<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+	<!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> -->
+    <!-- Drawer CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.2/css/drawer.min.css">
+    <!-- Slick CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css">
+    <!-- Font Awesome Kit -->
+    <script src="https://kit.fontawesome.com/66f29bbc2b.js"></script>
+    <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet" />
+    <link
+        href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css"
+        rel="stylesheet"
+    />
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+    <header class="header">
+        <div class="item home">
+            <a href="{% url 'stage_list' %}">
+                <img src="{% static 'img/logo.svg' %}" alt="ロゴ">
+            </a>
+        </div>
+    </header>
+      
+
+<main class="container">
+    {% block content %}
+    <!-- メインコンテンツ -->
+    {% endblock %}
+</main>
+
+<footer class="footer">
+    <div class="footer__wrap container">
+        <div class="float-button back"></div>
+        <div class="float-button cog"></div>
+        <div class="area">
+            <div class="item home">
+                <a href="{% url 'stage_list' %}">
+                    <i class="fas fa-home"></i>
+                </a>
+            </div>
+            <div class="item search">
+                <a href="{% url 'stage_list' %}">
+                    <i class="fas fa-search"></i>
+                </a>
+            </div>
+            <div class="item mypage">
+                <a href="{% url 'my_page' %}">
+                  {% if request.user.is_authenticated %}
+                    {% if request.user.icon_url %}
+                      <!-- ユーザーがアイコンを設定している場合 -->
+                      <img src="{{ request.user.icon_url }}" alt="User Icon" class="user-icon">
+                    {% else %}
+                      <!-- デフォルトアイコン -->
+                      <img src="{% static 'img/user-default.svg' %}" alt="Default Icon" class="user-icon">
+                    {% endif %}
+                  {% else %}
+                    <!-- ログインしていない場合など -->
+                    <img src="{% static 'img/user-default.svg' %}" alt="Guest Icon" class="user-icon">
+                  {% endif %}
+                </a>
+              </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery (必要に応じて) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<!-- bootstrap -->
+<!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
+<!-- iScroll -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/iScroll/5.2.0/iscroll.min.js"></script>
+<!-- drawer.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.2/js/drawer.min.js"></script>
+<!-- Slick -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+<script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
+<script src="https://unpkg.com/filepond/dist/filepond.js"></script>
+
+<!-- Custom JS (global.js, custom.jsなど複数あれば順番に読み込む) -->
+<script src="{% static 'js/global.js' %}"></script>
+<script src="{% static 'js/custom.js' %}"></script>
+
+{% block extra_js %}{% endblock %}
+
+</body>
+</html>

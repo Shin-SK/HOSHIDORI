@@ -1,0 +1,1185 @@
+@charset "UTF-8";
+/* 除算math.divを使うのに必要な記述 */
+@import url(https://use.typekit.net/lpz2crc.css);
+@import url(https://use.typekit.net/lpz2crc.css);
+@import url(https://use.typekit.net/lpz2crc.css);
+@import url(https://use.typekit.net/lpz2crc.css);
+html {
+  font-size: 62.5%;
+}
+
+body {
+  font-size: clamp(1.4rem, 1.3346938776rem + 0.2040816327vw, 1.6rem);
+}
+body a {
+  color: #0f0f0f;
+}
+body a :hover {
+  transition: 0.5s;
+  -webkit-transition: 0.5s; /* Chrome、Safari用 */
+  -moz-transition: 0.5s; /* Firefox用 */
+  -o-transition: 0.5s; /* Opera用 */
+  opacity: 0.5;
+}
+body img {
+  max-width: 100%;
+  height: auto;
+}
+body .mincho {
+  font-family: "Times New Roman", "YuMincho", "Hiragino Mincho ProN", "Yu Mincho", "MS PMincho", serif;
+  font-size: clamp(3rem, 2.9346938776rem + 0.2040816327vw, 3.2rem);
+}
+body section {
+  margin-bottom: 40px;
+}
+
+/* 非表示状態 */
+.inactive {
+  display: none;
+  opacity: 0;
+}
+
+/* 表示状態 */
+.active {
+  display: block;
+  opacity: 1;
+}
+
+html {
+  /*IE(Internet Explorer)・Microsoft Edgeへの対応*/
+  -ms-overflow-style: none;
+  /*Firefoxへの対応*/
+  scrollbar-width: none;
+  /*Google Chrome、Safariへの対応*/
+}
+html::-webkit-scrollbar {
+  display: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+/* 除算math.divを使うのに必要な記述 */
+html {
+  font-size: 62.5%;
+}
+
+body {
+  font-size: clamp(1.4rem, 1.3346938776rem + 0.2040816327vw, 1.6rem);
+}
+
+body a {
+  color: #0f0f0f;
+}
+
+body a :hover {
+  transition: 0.5s;
+  -webkit-transition: 0.5s; /* Chrome、Safari用 */
+  -moz-transition: 0.5s; /* Firefox用 */
+  -o-transition: 0.5s; /* Opera用 */
+  opacity: 0.5;
+}
+
+body img {
+  max-width: 100%;
+  height: auto;
+}
+
+body .mincho {
+  font-family: "Times New Roman", "YuMincho", "Hiragino Mincho ProN", "Yu Mincho", "MS PMincho", serif;
+  font-size: clamp(3rem, 2.9346938776rem + 0.2040816327vw, 3.2rem);
+}
+
+body section {
+  margin-bottom: 40px;
+}
+
+/* 非表示状態 */
+.inactive {
+  display: none;
+  opacity: 0;
+}
+
+/* 表示状態 */
+.active {
+  display: block;
+  opacity: 1;
+}
+
+html {
+  /*IE(Internet Explorer)・Microsoft Edgeへの対応*/
+  -ms-overflow-style: none;
+  /*Firefoxへの対応*/
+  scrollbar-width: none;
+  /*Google Chrome、Safariへの対応*/
+}
+
+html::-webkit-scrollbar {
+  display: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: none;
+  font-style: normal;
+  text-align: left;
+  zoom: 1;
+}
+
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+  display: block;
+}
+
+table {
+  border-collapse: collapse;
+  font-family: inherit;
+}
+
+h1, h2, h3, h4, h5 {
+  font-size: 100%;
+  font-weight: normal;
+  line-height: 1;
+}
+
+input, textarea, select {
+  font-family: inherit;
+  font-size: 16px;
+}
+
+input[type=button], input[type=text], input[type=submit] {
+  -webkit-appearance: none;
+  border-radius: 0;
+}
+
+textarea {
+  resize: none;
+  -webkit-appearance: none;
+  border-radius: 0;
+}
+
+th, td {
+  border-collapse: collapse;
+}
+
+table th, table td {
+  white-space: nowrap;
+}
+
+ul, ol {
+  list-style-type: none;
+}
+
+img {
+  vertical-align: text-bottom;
+  vertical-align: -webkit-baseline-middle;
+  max-width: 100%;
+  height: auto;
+  width: auto;
+}
+
+#navigation {
+  opacity: 0;
+  visibility: hidden; /* 見えなくするが、スペースを維持 */
+  transition: opacity 0.5s ease-in-out;
+}
+
+#navigation.visible {
+  opacity: 1;
+  visibility: visible; /* 表示状態 */
+  transition: opacity 0.5s ease-in-out;
+}
+
+.nav {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 80px;
+  padding: 8px;
+  background-color: white;
+  z-index: 99999;
+  box-shadow: 0px 0px 15px -5px #777777;
+}
+@media screen and (max-width: 768px) {
+  .nav {
+    height: 60px;
+  }
+}
+.nav__wrap {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  justify-content: space-between;
+}
+.nav__wrap .logo img {
+  height: 50px;
+}
+@media screen and (max-width: 768px) {
+  .nav__wrap .logo img {
+    height: 30px;
+  }
+}
+.nav__wrap .menu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+}
+@media screen and (max-width: 768px) {
+  .nav__wrap .menu {
+    display: none;
+  }
+}
+
+.drawer-hamburger {
+  top: unset;
+  width: 30px;
+  display: none;
+}
+@media screen and (max-width: 768px) {
+  .drawer-hamburger {
+    display: block;
+  }
+}
+
+.drawer-nav {
+  background-color: #fafafa;
+}
+.drawer-nav ul .logo {
+  padding-left: 10px;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  justify-content: start;
+}
+.drawer-nav ul li a {
+  padding-left: 16px;
+  padding-top: 16px;
+  padding-right: 8px;
+  padding-bottom: 16px;
+  display: block;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  justify-content: space-between;
+}
+.drawer-nav ul li a::after {
+  content: "";
+  width: 10px;
+  height: 10px;
+  display: inline-block;
+  background-repeat: no-repeat;
+}
+.drawer-nav ul li a:hover {
+  background-color: white;
+  text-decoration: none;
+  color: black;
+}
+
+/* ナビの背景を前面に出す */
+.drawer--right.drawer-open .drawer-nav {
+  width: 100%;
+}
+
+/* アイコンの位置 */
+.drawer--right.drawer-open .drawer-hamburger {
+  right: 0;
+}
+
+body {
+  line-height: normal;
+}
+
+.header {
+  padding-top: 16px;
+}
+.header .item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.header .item img {
+  width: 40px;
+  height: 40px;
+}
+
+/* 除算math.divを使うのに必要な記述 */
+html {
+  font-size: 62.5%;
+}
+
+body {
+  font-size: clamp(1.4rem, 1.3346938776rem + 0.2040816327vw, 1.6rem);
+}
+
+body a {
+  color: #0f0f0f;
+}
+
+body a :hover {
+  transition: 0.5s;
+  -webkit-transition: 0.5s; /* Chrome、Safari用 */
+  -moz-transition: 0.5s; /* Firefox用 */
+  -o-transition: 0.5s; /* Opera用 */
+  opacity: 0.5;
+}
+
+body img {
+  max-width: 100%;
+  height: auto;
+}
+
+body .mincho {
+  font-family: "Times New Roman", "YuMincho", "Hiragino Mincho ProN", "Yu Mincho", "MS PMincho", serif;
+  font-size: clamp(3rem, 2.9346938776rem + 0.2040816327vw, 3.2rem);
+}
+
+body section {
+  margin-bottom: 40px;
+}
+
+/* 非表示状態 */
+.inactive {
+  display: none;
+  opacity: 0;
+}
+
+/* 表示状態 */
+.active {
+  display: block;
+  opacity: 1;
+}
+
+html {
+  /*IE(Internet Explorer)・Microsoft Edgeへの対応*/
+  -ms-overflow-style: none;
+  /*Firefoxへの対応*/
+  scrollbar-width: none;
+  /*Google Chrome、Safariへの対応*/
+}
+
+html::-webkit-scrollbar {
+  display: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: none;
+  font-style: normal;
+  text-align: left;
+  zoom: 1;
+}
+
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+  display: block;
+}
+
+table {
+  border-collapse: collapse;
+  font-family: inherit;
+}
+
+h1, h2, h3, h4, h5 {
+  font-size: 100%;
+  font-weight: normal;
+  line-height: 1;
+}
+
+input, textarea, select {
+  font-family: inherit;
+  font-size: 16px;
+}
+
+input[type=button], input[type=text], input[type=submit] {
+  -webkit-appearance: none;
+  border-radius: 0;
+}
+
+textarea {
+  resize: none;
+  -webkit-appearance: none;
+  border-radius: 0;
+}
+
+th, td {
+  border-collapse: collapse;
+}
+
+table th, table td {
+  white-space: nowrap;
+}
+
+ul, ol {
+  list-style-type: none;
+}
+
+img {
+  vertical-align: text-bottom;
+  vertical-align: -webkit-baseline-middle;
+  max-width: 100%;
+  height: auto;
+  width: auto;
+}
+
+.footer {
+  height: auto;
+  padding: 8px 0px;
+  background-color: #004C71;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 99999;
+}
+.footer__wrap {
+  padding: 8px;
+}
+.footer__wrap .area {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+.footer__wrap .area .home, .footer__wrap .area .search {
+  font-size: clamp(2.4rem, 2.3346938776rem + 0.2040816327vw, 2.6rem);
+}
+.footer__wrap .area .home a, .footer__wrap .area .search a {
+  color: white;
+}
+.footer__wrap .area .mypage img {
+  width: 32px;
+  height: 32px;
+  border-radius: 100%;
+  border: 1px #004C71 solid;
+}
+
+/* 除算math.divを使うのに必要な記述 */
+html {
+  font-size: 62.5%;
+}
+
+body {
+  font-size: clamp(1.4rem, 1.3346938776rem + 0.2040816327vw, 1.6rem);
+}
+
+body a {
+  color: #0f0f0f;
+}
+
+body a :hover {
+  transition: 0.5s;
+  -webkit-transition: 0.5s; /* Chrome、Safari用 */
+  -moz-transition: 0.5s; /* Firefox用 */
+  -o-transition: 0.5s; /* Opera用 */
+  opacity: 0.5;
+}
+
+body img {
+  max-width: 100%;
+  height: auto;
+}
+
+body .mincho {
+  font-family: "Times New Roman", "YuMincho", "Hiragino Mincho ProN", "Yu Mincho", "MS PMincho", serif;
+  font-size: clamp(3rem, 2.9346938776rem + 0.2040816327vw, 3.2rem);
+}
+
+body section {
+  margin-bottom: 40px;
+}
+
+/* 非表示状態 */
+.inactive {
+  display: none;
+  opacity: 0;
+}
+
+/* 表示状態 */
+.active {
+  display: block;
+  opacity: 1;
+}
+
+html {
+  /*IE(Internet Explorer)・Microsoft Edgeへの対応*/
+  -ms-overflow-style: none;
+  /*Firefoxへの対応*/
+  scrollbar-width: none;
+  /*Google Chrome、Safariへの対応*/
+}
+
+html::-webkit-scrollbar {
+  display: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: none;
+  font-style: normal;
+  text-align: left;
+  zoom: 1;
+}
+
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+  display: block;
+}
+
+table {
+  border-collapse: collapse;
+  font-family: inherit;
+}
+
+h1, h2, h3, h4, h5 {
+  font-size: 100%;
+  font-weight: normal;
+  line-height: 1;
+}
+
+input, textarea, select {
+  font-family: inherit;
+  font-size: 16px;
+}
+
+input[type=button], input[type=text], input[type=submit] {
+  -webkit-appearance: none;
+  border-radius: 0;
+}
+
+textarea {
+  resize: none;
+  -webkit-appearance: none;
+  border-radius: 0;
+}
+
+th, td {
+  border-collapse: collapse;
+}
+
+table th, table td {
+  white-space: nowrap;
+}
+
+ul, ol {
+  list-style-type: none;
+}
+
+img {
+  vertical-align: text-bottom;
+  vertical-align: -webkit-baseline-middle;
+  max-width: 100%;
+  height: auto;
+  width: auto;
+}
+
+.container {
+  padding: 0px 16px;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 768px;
+}
+
+main {
+  padding-bottom: 80px !important;
+}
+
+.mainTitle {
+  font-size: clamp(2rem, 1.9346938776rem + 0.2040816327vw, 2.2rem);
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+button {
+  cursor: pointer;
+}
+
+input, textarea {
+  background-color: #f5f5f5;
+  width: 100%;
+  padding: 16px;
+}
+
+.name-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  width: 100%;
+}
+.name-box .icon {
+  width: 80px;
+  height: 80px;
+}
+.name-box .icon img {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+  border-radius: 100%;
+  border: 1px #004C71 solid;
+  background-color: white;
+}
+.name-box .name {
+  font-weight: bold;
+}
+
+.lists {
+  margin: 16px auto;
+  gap: 8px;
+  align-items: start;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+.lists__wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+  gap: 8px;
+  background-color: #f5f5f5;
+  border-radius: 16px;
+  padding: 8px;
+  height: 100%;
+}
+.lists__wrap .poster {
+  width: 100%;
+  height: auto;
+}
+.lists__wrap .poster a {
+  width: 100%;
+  height: 100%;
+}
+.lists__wrap .poster a img {
+  aspect-ratio: 1/1.414;
+  width: 100%;
+  height: auto;
+  -o-object-fit: cover;
+     object-fit: cover;
+  border-radius: 8px;
+}
+.lists__wrap .poster .noimage {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1/1.414;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+}
+.lists__wrap .text-area {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  font-size: clamp(1.2rem, 1.1346938776rem + 0.2040816327vw, 1.4rem);
+}
+.lists__wrap .text-area .title {
+  font-weight: bold;
+  text-align: center;
+  width: 100%;
+}
+.lists__wrap .text-area .wrap .head {
+  font-weight: bold;
+}
+.lists__wrap .text-area .wrap ul {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0px 8px;
+  flex-wrap: wrap;
+}
+.lists__wrap .text-area .wrap ul li {
+  color: #004C71;
+}
+.lists__wrap .text-area .wrap ul li a {
+  color: #004C71;
+}
+
+.search-form {
+  height: 60vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.search-form form {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 16px;
+}
+.search-form form .input-wrap {
+  width: 100%;
+  border-radius: 100px;
+  border: 2px #004C71 solid;
+  position: relative;
+}
+.search-form form .input-wrap input {
+  border-radius: 100px;
+}
+.search-form form .input-wrap button {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 16px;
+  height: 16px;
+  width: 16px;
+  margin: auto;
+}
+.search-form form button {
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+}
+
+.stage-create {
+  width: 100%;
+  height: 100%;
+}
+.stage-create .box a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  aspect-ratio: 1/1.414;
+  background-color: #f5f5f5;
+  border-radius: 16px;
+  height: 100%;
+  width: 100%;
+  padding: 16px;
+  color: #004C71;
+  font-size: clamp(4rem, 3.9346938776rem + 0.2040816327vw, 4.2rem);
+}
+
+.form-update {
+  padding: 80px 0px;
+}
+.form-update h2 {
+  font-size: clamp(2rem, 1.9346938776rem + 0.2040816327vw, 2.2rem);
+  margin: 40px auto;
+  text-align: center;
+}
+.form-update input, .form-update textarea {
+  background-color: #f5f5f5;
+  width: 100%;
+  padding: 16px;
+}
+.form-update form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 16px;
+  justify-content: flex-start;
+}
+.form-update form .field {
+  flex: 1;
+  width: 100%;
+}
+
+.filepond--root {
+  height: 100%;
+  max-width: 100%;
+  aspect-ratio: 1/1.1414;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.filepond--root .filepond--drop-label {
+  padding: 16px;
+  height: 100%;
+}
+.filepond--root .filepond--drop-label i {
+  font-size: clamp(2rem, 1.9346938776rem + 0.2040816327vw, 2.2rem);
+  color: #004C71;
+}
+
+.stage-detail {
+  padding: 80px 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 40px;
+}
+.stage-detail h1 {
+  text-align: center;
+  font-size: clamp(2rem, 1.9346938776rem + 0.2040816327vw, 2.2rem);
+  font-weight: bold;
+}
+.stage-detail .wrap .contents {
+  display: block;
+  position: relative;
+}
+.stage-detail .wrap .contents .field {
+  margin-top: 8px;
+}
+.stage-detail .wrap .contents .field .title {
+  font-weight: bold;
+}
+.stage-detail .wrap .contents .field ul {
+  display: flex;
+  gap: 8px;
+}
+.stage-detail .wrap .contents .stage-edit {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  font-size: clamp(1.2rem, 1.1346938776rem + 0.2040816327vw, 1.4rem);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  color: gray;
+}
+.stage-detail .wrap .contents .stage-edit a {
+  color: gray;
+}
+.stage-detail .wrap .status {
+  width: 100%;
+  margin-top: 40px;
+}
+.stage-detail .wrap .status .box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  justify-content: space-between;
+}
+.stage-detail .wrap .status .box a {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 4px;
+}
+.stage-detail .wrap .status .box a i {
+  font-size: clamp(3rem, 2.9346938776rem + 0.2040816327vw, 3.2rem);
+}
+.stage-detail .wrap .status .box a span {
+  font-size: clamp(1rem, 0.9346938776rem + 0.2040816327vw, 1.2rem);
+}
+.stage-detail .log {
+  width: 100%;
+  margin-bottom: 24px;
+}
+.stage-detail .log .area .box {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  gap: 16px;
+  justify-content: flex-start;
+  background-color: #f5f5f5;
+  padding: 16px;
+}
+.stage-detail .log .area .box .wrap {
+  width: 100%;
+}
+.stage-detail .log .area .box .wrap .outer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 40px;
+}
+.stage-detail .log .area .box .wrap .outer .inner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.stage-detail .log .area .box .wrap .outer .inner span {
+  background-color: #004C71;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  padding: 4px 16px;
+  border-radius: 100px;
+  margin-right: 8px;
+  font-size: clamp(1.2rem, 1.1346938776rem + 0.2040816327vw, 1.4rem);
+}
+.stage-detail .log .area .box .wrap .outer .log-status .inner__wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-size: clamp(1rem, 0.9346938776rem + 0.2040816327vw, 1.2rem);
+}
+.stage-detail .log .area .box .wrap .outer .log-status .inner__wrap i {
+  font-size: clamp(3rem, 2.9346938776rem + 0.2040816327vw, 3.2rem);
+}
+.stage-detail .log .area .box .wrap .log-comment {
+  padding: 16px;
+  margin-top: 16px;
+  background-color: white;
+}
+.stage-detail .log .area .box .edit {
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: clamp(1.2rem, 1.1346938776rem + 0.2040816327vw, 1.4rem);
+  gap: 8px;
+}
+
+.log-form .radio {
+  display: flex;
+  justify-content: space-between;
+}
+.log-form .radio__wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px;
+  width: 100%;
+}
+.log-form .radio__wrap input[type=radio] {
+  display: none;
+}
+.log-form .radio__wrap label {
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border: 1px solid #ccc;
+  width: 100%;
+  border-radius: 4px;
+  margin-right: 0.5rem;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+.log-form .radio__wrap label:hover {
+  background-color: #f7f7f7;
+}
+.log-form .radio__wrap input[type=radio]:checked + label {
+  background-color: #333; /* お好みの色 */
+  color: #fff;
+  border-color: #333;
+}
+.log-form .star-rating i {
+  font-size: 24px;
+  color: #ccc;
+  cursor: pointer;
+  margin-right: 4px;
+}
+.log-form .star-rating i.selected {
+  color: #f7d106; /* 塗りつぶし: 黄色など */
+}
+
+.mypage .user {
+  padding: 40px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.mypage .user .edit {
+  border: 1px #004C71 solid;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: clamp(1rem, 0.9346938776rem + 0.2040816327vw, 1.2rem);
+  display: inline;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+.mypage .navi {
+  margin-bottom: 40px;
+}
+.mypage .navi__wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.mypage .navi__wrap li {
+  width: 100%;
+}
+.mypage .navi__wrap li a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 4px;
+}
+.mypage .navi__wrap li a i {
+  font-size: clamp(3rem, 2.9346938776rem + 0.2040816327vw, 3.2rem);
+}
+.mypage .navi__wrap li a span {
+  font-size: clamp(1rem, 0.9346938776rem + 0.2040816327vw, 1.2rem);
+}
+.mypage h2 {
+  position: relative;
+  width: 100%;
+  font-size: clamp(2rem, 1.9346938776rem + 0.2040816327vw, 2.2rem);
+  color: #004C71;
+}
+.mypage h2::after {
+  content: "";
+  position: absolute;
+  height: 1px;
+  width: 95%;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  margin: auto;
+  background-color: #004C71;
+}
+.mypage .caution {
+  padding: 40px 16px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.allauth {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 100vh;
+  flex-direction: column;
+  gap: 80px;
+  padding: 80px 0px;
+}
+.allauth h1 {
+  text-align: center;
+  font-weight: bold;
+}
+.allauth .form {
+  display: flex;
+  align-items: stretch;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.profile-edit .filepond--root {
+  height: 150px;
+  max-width: 100%;
+  aspect-ratio: 1/1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.profile-edit .filepond--root .filepond--drop-label {
+  padding: 16px;
+  height: 100%;
+}
+.profile-edit .filepond--root .filepond--drop-label i {
+  font-size: clamp(2rem, 1.9346938776rem + 0.2040816327vw, 2.2rem);
+  color: #004C71;
+}
+.profile-edit .icon__wrap {
+  display: flex;
+  align-items: start;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+  gap: 16px;
+}
+.profile-edit .icon__wrap .current-icon {
+  position: relative;
+}
+.profile-edit .icon__wrap .current-icon img {
+  width: 150px;
+  height: 150px;
+  -o-object-fit: cover;
+     object-fit: cover;
+  -o-object-position: center;
+     object-position: center;
+}
+.profile-edit .icon__wrap .current-icon button {
+  margin-top: 8px;
+  font-size: clamp(1rem, 0.9346938776rem + 0.2040816327vw, 1.2rem);
+  position: absolute;
+  bottom: -16px;
+  right: 0;
+}
+
+.login .logo, .signup .logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.login .logo img, .signup .logo img {
+  height: 100px;
+}
+.login .remember label, .signup .remember label {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  justify-content: flex-start;
+}
+.login .remember label input, .signup .remember label input {
+  width: auto;
+}/*# sourceMappingURL=custom.css.map */

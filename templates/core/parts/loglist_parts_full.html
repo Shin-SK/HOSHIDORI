@@ -1,0 +1,115 @@
+<!-- core/loglist_parts.html -->
+{% load static %}
+{% load split_name_tags %}
+
+<div class="lists__wrap">
+  <!-- ポスターやタイトルは log.stage.xxx を使う -->
+  <div class="poster">
+    {% if log.stage.poster %}
+      <a href="{% url 'stage_detail' log.stage.pk %}">
+        <img src="{{ log.stage.poster.url }}" alt="{{ log.stage.title }}">
+      </a>
+    {% else %}
+      <a class="noimage" href="{% url 'stage_detail' log.stage.pk %}">No Poster</a>
+    {% endif %}
+  </div>
+
+  <div class="text-area">
+    <div class="title">
+      <a href="{% url 'stage_detail' log.stage.pk %}">{{ log.stage.title }}</a>
+    </div>
+
+    <!-- 出演者 -->
+    <div class="wrap">
+      <div class="head">出演者</div>
+      <ul>
+        {% for person in log.stage.cast|split_name %}
+          <li><a href="{% url 'stage_list' %}?cast={{ person }}">{{ person }}</a></li>
+        {% empty %}
+          <li>出演者情報なし</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <!-- スタッフ -->
+    <div class="wrap">
+      <div class="head">スタッフ</div>
+      <ul>
+        {% for staff_person in log.stage.staff|split_name %}
+          <li><a href="{% url 'stage_list' %}?staff={{ staff_person }}">{{ staff_person }}</a></li>
+        {% empty %}
+          <li>スタッフ情報なし</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+  <!-- ログ固有情報 (status, times, rating, comment) -->
+  <div class="log-info">
+
+
+	<div class="log">
+
+		{% if all_logs %}
+			<div class="area">
+				{% for log in all_logs %}
+					<div class="box">
+						<div class="name-box">
+							<div class="icon"><img src="{% static 'img/user.svg' %}" alt=""></div>
+							<div class="name">{{ log.user }} さん</div>
+						</div>
+						<div class="wrap">
+							<div class="outer">
+								<div class="inner log-status">
+									<span>ステータス</span>
+									<div class="inner__wrap">
+										{% if log.status == 'watched' %}
+										<i class="fas fa-eye"></i>
+									  {% elif log.status == 'want' %}
+										<i class="fas fa-heart"></i>
+									  {% elif log.status == 'cannot' %}
+										<i class="fas fa-eye-slash"></i>
+									  {% endif %}
+									  {{ log.get_status_display }}
+									</div>
+								  </div>
+								<div class="inner log-times">
+									<span>観劇回数</span>{{ log.times }}
+								</div>
+								<div class="inner log-rating">
+									<span>レビュー</span>
+									<div class="star">
+										{% for i in "12345" %}
+										  {% if i|add:0 <= log.rating %}
+											<i class="fas fa-star"></i>
+										  {% else %}
+											<i class="far fa-star"></i> {# 空 star (FontAwesome solid vs regular) #}
+										  {% endif %}
+										{% endfor %}
+									  </div>
+								</div>
+							</div>
+	
+							<div class="log-comment">
+								{{ log.comment }}
+							</div>  
+						</div>
+	
+						<div class="edit">
+							{% if user.is_authenticated and user == log.user %}
+							<!-- 自分のログだけ編集・削除リンク -->
+							<a href="{% url 'log_update' log.pk %}">編集</a> |
+							<a href="{% url 'log_delete' log.pk %}">削除</a>
+							{% endif %}
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		{% else %}
+		{% endif %}
+	
+		</div>
+
+
+	</div>
+</div>

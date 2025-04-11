@@ -1,0 +1,81 @@
+<!-- core/templates/core/log_form.html -->
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+Stage Form
+{% endblock %}
+
+{% block content %}
+
+    <section class="form-update log-form">
+        <h2>レビューを書く</h2>
+        <form method="post">
+            {% csrf_token %}
+        
+            <!-- 全体のフォームエラー -->
+            {{ form.non_field_errors }}
+            <!-- ステータス -->
+            <div class="field radio">
+                {% for value,label in form.fields.status.choices %}
+                <div class="radio__wrap">
+                  <input 
+                    type="radio" 
+                    name="status" 
+                    id="status_{{ value }}" 
+                    value="{{ value }}"
+                    {% if form.status.value == value %}checked{% endif %}
+                  >
+                  <label for="status_{{ value }}">
+                    <!-- アイコン -->
+                    {{ label }}
+                  </label>
+                </div>
+              {% endfor %}
+                <!-- エラー表示 -->
+                {{ form.status.errors }}
+            </div>
+            <!-- TIMES -->
+            <div class="field">
+                <label for="{{ form.times.id_for_label }}">観劇回数</label>
+                {{ form.times }}
+                {{ form.times.errors }}
+            </div>
+            <!-- COMMENT -->
+            <div class="field">
+                <label for="{{ form.comment.id_for_label }}">コメント</label><br>
+                {{ form.comment }}
+                {{ form.comment.errors }}
+            </div>
+            <!-- WATCHED_DATE -->
+            <div class="field">
+                <label for="{{ form.watched_date.id_for_label }}">観劇日</label><br>
+                {{ form.watched_date }}
+                {{ form.watched_date.errors }}
+            </div>
+        
+            <!-- ★ RATING（星評価）★
+                 ここでは LogForm に rating を含めない or 使わない想定
+                 → hidden input & JavaScript で制御
+            -->
+            <div class="field star-rating" id="star-rating">
+                <label>レビュー評価</label><br>
+                <!-- 星5つ -->
+                <i class="fas fa-star" data-value="1"></i>
+                <i class="fas fa-star" data-value="2"></i>
+                <i class="fas fa-star" data-value="3"></i>
+                <i class="fas fa-star" data-value="4"></i>
+                <i class="fas fa-star" data-value="5"></i>
+                <!-- hidden input: 実際にDjangoへ送る -->
+                <input type="hidden" name="rating" id="rating-input" value="{{ object.rating|default_if_none:'3' }}">
+                <!-- ↑ UpdateViewなら 'object.rating' が既存値を取得する例
+                     CreateView時は 'form.instance.rating' や 3等のデフォルトにしてもよい
+                -->
+            </div>
+            <button type="submit">保存</button>
+        </form>
+    </section>
+
+
+{% endblock %}
+

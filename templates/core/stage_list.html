@@ -1,0 +1,42 @@
+<!-- core/stage_list.html -->
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block title %}
+ユーザープロフィール検索
+{% endblock %}
+
+{% block content %}
+
+<!-- 検索フォーム -->
+ <div class="search-form">
+    <form method="get">
+        {{ filter.form.non_field_errors }}
+        <div class="input-wrap">
+            {{ filter.form.search }}
+            <button type="submit">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+      </form>
+ </div>
+
+
+<div class="mainTitle">舞台一覧</div>
+
+<!-- 検索結果 -->
+    <section class="stagelist lists">
+    {% for stage in stages %}
+        {% include "core/parts/stagelist_parts.html" %}
+    {% empty %}
+        <div class="stage__wrap stage-create">
+            <div class="box">
+                <a href="{% url 'stage_form' %}"><i class="fas fa-plus"></i></a>
+            </div>
+        </div>
+    {% endfor %}
+    </section>
+
+{% endblock %}
+

@@ -1,0 +1,53 @@
+<!-- templates/account/login.html -->
+{% extends "base.html" %}
+{% load static %}
+{% load i18n account socialaccount %}
+
+{% block title %}ログイン{% endblock %}
+
+{% block content %}
+
+
+<section class="allauth login">
+
+
+<form method="post" action="{% url 'account_login' %}" class="form">
+  <div class="logo">
+    <img src="{% static 'img/logo.svg' %}" alt="">
+  </div>
+
+  {% csrf_token %}
+  {{ form.non_field_errors }}
+  
+  <div class="field">
+    <label for="id_login">メールアドレスまたはユーザー名</label><br>
+    {{ form.login }}
+    {{ form.login.errors }}
+  </div>
+
+  <div class="field">
+    <label for="id_password">パスワード</label><br>
+    {{ form.password }}
+    {{ form.password.errors }}
+  </div>
+
+  <!-- もしRemember Me等があれば… -->
+  {% if form.remember %}
+  <div class="field remember">
+    <label for="id_remember">
+      {{ form.remember }} ログイン状態を保持
+    </label>
+  </div>
+  {% endif %}
+
+  <div class="field">
+    <p>アカウントをお持ちでない方は <a href="{% url 'account_signup' %}">新規登録</a></p>
+  </div>
+  
+  <button type="submit">ログイン</button>
+</form>
+
+</section>
+
+
+{% endblock %}

@@ -1,0 +1,67 @@
+<!-- accounts/templates/account/profile_edit.html -->
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="allauth profile-edit container">
+
+
+  <!-- ◆◆◆ プロフィール用フォーム (ニックネーム / アイコン) ◆◆◆ -->
+  <form method="post" enctype="multipart/form-data" class="form">
+	<h1>プロフィール編集</h1>
+    {% csrf_token %}
+    <div class="field">
+      <label for="id_nickname">ニックネーム</label>
+      {{ form.nickname }}
+      {{ form.nickname.errors }}
+    </div>
+
+    <div class="field icon">
+      <div class="icon__wrap">
+        {% if request.user.icon_url %}
+          <div class="current-icon">
+            <!-- 既存アイコンを表示 -->
+            <img src="{{ request.user.icon_url }}" alt="現在のアイコン">
+            <!-- 削除ボタン → 「action=remove_icon」 で判別 -->
+            <button type="submit" name="action" value="remove_icon">アイコンを削除</button>
+          </div>
+        {% endif %}
+
+        <!-- 新しいアイコンをアップロード (FilePond可) -->
+        <input 
+          type="file" 
+          id="icon-upload" 
+          name="{{ form.icon_file.html_name }}" 
+          accept="image/*"
+        >
+        {{ form.icon_url.errors }}
+      </div>
+    </div>
+
+    <!-- 更新ボタン → 「action=profile_update」 で判別 -->
+    <button type="submit" name="action" value="profile_update">更新</button>
+  </form>
+
+  <!-- ◆◆◆ パスワード更新フォーム ◆◆◆ -->
+  <form method="post" enctype="multipart/form-data" class="form">
+    {% csrf_token %}
+    <h1>パスワード更新</h1>
+
+    <div class="field">
+      <label for="id_new_password1">新しいパスワード</label>
+      {{ form.new_password1 }}
+      {{ form.new_password1.errors }}
+    </div>
+
+    <div class="field">
+      <label for="id_new_password2">新しいパスワード(確認)</label>
+      {{ form.new_password2 }}
+      {{ form.new_password2.errors }}
+    </div>
+
+    <!-- パスワード変更ボタン → 「action=password_update」 -->
+    <button type="submit" name="action" value="password_update">パスワードを変更</button>
+  </form>
+
+</section>
+{% endblock %}

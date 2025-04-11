@@ -1,0 +1,16 @@
+<!-- core/loglist_parts.html -->
+{% load static %}
+{% load split_name_tags %}
+
+<div class="lists__wrap">
+  <!-- ポスターやタイトルは log.stage.xxx を使う -->
+  <div class="poster">
+    {% if log.stage.poster %}
+      <a href="{% url 'stage_detail' log.stage.pk %}">
+        <img src="{{ log.stage.poster.url }}" alt="{{ log.stage.title }}">
+      </a>
+    {% else %}
+      <a class="noimage" href="{% url 'stage_detail' log.stage.pk %}">No Poster</a>
+    {% endif %}
+  </div>
+</div>

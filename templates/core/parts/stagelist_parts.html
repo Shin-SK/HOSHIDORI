@@ -1,0 +1,58 @@
+<!-- core/stagelist_parts.html -->
+{% load split_name_tags cloudinary_extras %}  
+
+<div class="lists__wrap">
+    <div class="poster">
+        <!-- ポスター画像があれば表示、なければテキストリンクなど -->
+        {% if stage.poster_url %}
+          <a href="{% url 'stage_detail' stage.pk %}">
+            <img src="{{ stage.poster_url|transform_cloudinary }}" alt="{{ stage.title }}">
+          </a>
+        {% else %}
+          <a class="noimage" href="{% url 'stage_detail' stage.pk %}">No Poster</a>
+        {% endif %}
+    </div>
+
+    <div class="text-area">
+        <div class="title">
+            <a href="{% url 'stage_detail' stage.pk %}">{{ stage.title }}</a>
+        </div>
+
+        <div class="wrap">
+            <!-- <div class="head">出演者</div> -->
+            <ul>
+              <!-- stage.cast を split_name で分割してループ -->
+              {% for person in stage.cast|split_name %}
+                <li>
+                  <!-- 出演者をクリックすると検索ページへ (cast=person) -->
+                  <a href="{% url 'stage_list' %}?search={{ person }}">{{ person }}</a>
+                </li>
+              {% empty %}
+                <li>出演者情報なし</li>
+              {% endfor %}
+              <li>/</li>
+              {% for staff_person in stage.staff|split_name %}
+              <li>
+                <!-- スタッフ名をクリックすると検索ページへ (staff=staff_person) -->
+                <a href="{% url 'stage_list' %}?search={{ staff_person }}">{{ staff_person }}</a>
+              </li>
+            {% empty %}
+              <li>スタッフ情報なし</li>
+            {% endfor %}
+            </ul>
+        </div>
+
+        <!-- <div class="wrap">
+            <div class="head">スタッフ</div>
+            <ul>
+              {% for staff_person in stage.staff|split_name %}
+                <li>
+                  <a href="{% url 'stage_list' %}?staff={{ staff_person }}">{{ staff_person }}</a>
+                </li>
+              {% empty %}
+                <li>スタッフ情報なし</li>
+              {% endfor %}
+            </ul>
+        </div> -->
+    </div>
+</div>

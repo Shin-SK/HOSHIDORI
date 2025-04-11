@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+{% load static %}
+{% load split_name_tags %}
+
+{% block title %}
+Stage Form
+{% endblock %}
+
+{% block content %}
+
+<section class="stage-detail">
+	<h1>{{ stage.title }}</h1>
+
+	<div class="wrap">
+		<div class="contents">
+			<div class="poster">
+				<img src="{{ stage.poster_url }}" alt="Stage Poster">
+			</div>
+			<div class="contents__wrap">
+				<!-- 出演者 -->
+				<div class="field cast">
+					<div class="title">キャスト</div>
+					<ul class="inner">
+						<!-- stage.cast を split_name で分割してループ -->
+						{% for person in stage.cast|split_name %}
+						  <li>
+							<!-- 出演者をクリックすると検索ページへ (cast=person) -->
+							<a href="{% url 'stage_list' %}?cast={{ person }}">{{ person }}</a>
+						  </li>
+						{% empty %}
+						  <li>出演者情報なし</li>
+						{% endfor %}
+					  </ul>
+				</div>
+				
+				<!-- スタッフ -->
+				<div class="field staff">
+					<div class="title">スタッフ</div>
+					<ul class="inner">
+						{% for staff_person in stage.staff|split_name %}
+						  <li>
+							<!-- スタッフ名をクリックすると検索ページへ (staff=staff_person) -->
+							<a href="{% url 'stage_list' %}?staff={{ staff_person }}">{{ staff_person }}</a>
+						  </li>
+						{% empty %}
+						  <li>スタッフ情報なし</li>
+						{% endfor %}
+					  </ul>
+				</div>
+
+				<!-- レビュー平均 -->
+				<div class="field average">
+					<div class="title">レビュー平均</div>
+					<div class="inner">
+					{% if average_rating %}
+						{% comment %} 例: ★★★☆☆ (平均3.0) {% endcomment %}
+						<div class="star">
+						{% with avg=average_rating|floatformat:1 %}
+							<!-- floatformat:1 で小数第1位まで表示 例: 3.0 -->
+							
+							<!-- 星の個数を forループで塗りつぶし or 空星に出し分け -->
+							{% for i in "12345" %}
+							{% if i|add:0 <= average_rating %}
+								<i class="fas fa-star"></i>
+							{% else %}
+								<i class="far fa-star"></i>
+							{% endif %}
+							{% endfor %}
+				
+							(平均 {{ avg }})
+						{% endwith %}
+						</div>
+					{% else %}
+						<p>まだレビューがありません</p>
+					{% endif %}
+					</div>
+				</div>
+
+
+				<div class="stage-edit">
+					<!-- ステージ編集ボタン -->
+					<a href="{% url 'stage_form' stage.pk %}">ステージ編集</a>
+					|
+					<!-- ステージ削除ボタン -->
+					{% if user.is_authenticated %}
+					<a href="{% url 'stage_delete' stage.pk %}">削除</a>
+					{% endif %}
+				</div>
+
+			</div>
+
+		</div>
+		<div class="status">
+				<div class="box">
+					<!-- 'watched' -->
+					<a href="{% url 'set_status' stage.pk 'watched' %}"><i class="fas fa-eye"></i><span>観た</span></a>
+					<!-- 'want' -->
+					<a href="{% url 'set_status' stage.pk 'want' %}"><i class="fas fa-heart"></i><span>観たい</span></a> 
+					<!-- 'cannot' -->
+					<a href="{% url 'set_status' stage.pk 'cannot' %}"><i class="fas fa-eye-slash"></i><span>観れない</span></a> 
+				</div>
+		</div>
+	</div><!-- wrap -->
+
+	<div class="log">
+
+	{% if all_logs %}
+		<div class="area">
+			{% for log in all_logs %}
+				<div class="box">
+					<div class="name-box">
+						<div class="icon">
+							{% if log.user.icon %}
+							  <img src="{{ log.user.icon.url }}" alt="">
+							{% else %}
+							  <img src="{% static 'img/user.svg' %}" alt="">
+							{% endif %}
+						  </div>
+						  <div class="name">
+							{{ log.user.nickname }} さん
+						  </div>
+					</div>
+					<div class="wrap">
+						<div class="outer">
+							<div class="inner log-status">
+								<span>ステータス</span>
+								<div class="inner__wrap">
+									{% if log.status == 'watched' %}
+									<i class="fas fa-eye"></i>
+								  {% elif log.status == 'want' %}
+									<i class="fas fa-heart"></i>
+								  {% elif log.status == 'cannot' %}
+									<i class="fas fa-eye-slash"></i>
+								  {% endif %}
+								  {{ log.get_status_display }}
+								</div>
+							  </div>
+							<div class="inner log-times">
+								<span>観劇回数</span>{{ log.times }}
+							</div>
+							<div class="inner log-rating">
+								<span>レビュー</span>
+								<div class="star">
+									{% for i in "12345" %}
+									  {% if i|add:0 <= log.rating %}
+										<i class="fas fa-star"></i>
+									  {% else %}
+										<i class="far fa-star"></i> {# 空 star (FontAwesome solid vs regular) #}
+									  {% endif %}
+									{% endfor %}
+								  </div>
+							</div>
+						</div>
+
+						<div class="log-comment">
+							{{ log.comment }}
+						</div>  
+					</div>
+
+					<div class="edit">
+						{% if user.is_authenticated and user == log.user %}
+						<!-- 自分のログだけ編集・削除リンク -->
+						<a href="{% url 'log_update' log.pk %}">編集</a> |
+						<a href="{% url 'log_delete' log.pk %}">削除</a>
+						{% endif %}
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+	{% else %}
+		<p>まだログがありません。</p>
+	{% endif %}
+
+	</div>
+
+
+</section>
+
+{% endblock %}

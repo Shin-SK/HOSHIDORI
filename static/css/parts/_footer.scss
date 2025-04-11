@@ -1,0 +1,35 @@
+@use "../global/global" as g;
+@use "../global/reset";
+
+.footer{
+	height: auto;
+	padding: 8px 0px;
+	background-color: $mc;
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	z-index: 99999;
+	&__wrap{
+	  padding: 8px;
+	  .area{
+		display: flex;
+		align-items: center;
+		justify-content: space-around;
+		.home, .search{
+			@include fs(24);
+			a{
+				color: white;
+			}
+		}
+		.mypage{
+			img{
+				width: 32px;
+				height: 32px;
+				border-radius: 100%;
+				border: 1px $mc solid;
+			}
+		}
+	  }
+	}
+  }

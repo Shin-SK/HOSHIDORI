@@ -1,0 +1,17 @@
+<!-- core/stage_confirm_delete.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Delete Stage</title>
+</head>
+<body>
+    <h1>Stageを削除</h1>
+    <p>{{ object.title }} を本当に削除しますか？</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">削除</button>
+        <a href="{% url 'stage_detail' object.pk %}">キャンセル</a>
+    </form>
+</body>
+</html>
