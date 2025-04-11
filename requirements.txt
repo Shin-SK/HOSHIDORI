@@ -7,7 +7,9 @@ django-allauth==65.7.0
 django-browser-reload==1.18.0
 django-cloudinary-storage==0.3.0
 django-filter==25.1
+gunicorn==23.0.0
 idna==3.10
+packaging==24.2
 pillow==11.1.0
 psycopg2==2.9.10
 requests==2.32.3
