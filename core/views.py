@@ -122,7 +122,7 @@ class StageDetailView(DetailView):
         return context
 
 
-class StageCreateView(CreateView):
+class StageCreateView(LoginRequiredMixin, CreateView):
     model = Stage
     form_class = StageForm
     template_name = 'core/stage_form.html'
