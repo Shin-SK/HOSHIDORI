@@ -4,17 +4,20 @@ import cloudinary
 import cloudinary.uploader
 import cloudinary.api
 import dotenv
+import dj_database_url
 
-# ここで先に .env をロード（settings.pyの最初の方）
+
+# envをロード
 dotenv.load_dotenv()
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-i49+sc6q...')
 
+#カスタムユーザーモデル
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
+#デバッグで本番とローカルを分ける
 debug_str = os.environ.get('DEBUG', 'True')
 DEBUG = (debug_str.lower() == 'true')
 
@@ -23,6 +26,7 @@ if not DEBUG:
 else:
     ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
+#app
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -74,37 +78,14 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
+#DBはdj-database-urlを使ってpostgreSQLに対応させる
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default=f"sqlite:///{os.path.join(BASE_DIR, 'db.sqlite3')}",
+        conn_max_age=600,
+    )
 }
 
-# ② Railwayの環境変数があればPostgreSQLに切り替え
-#    例: 'DB_NAME', 'DB_USER', 'DB_PASSWORD', 'DB_HOST', 'DB_PORT' を設定していると想定
-POSTGRES_NAME = os.environ.get('DB_NAME')
-POSTGRES_USER = os.environ.get('DB_USER')
-POSTGRES_PASSWORD = os.environ.get('DB_PASSWORD')
-POSTGRES_HOST = os.environ.get('DB_HOST')
-POSTGRES_PORT = os.environ.get('DB_PORT')
-
-if all([POSTGRES_NAME, POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_HOST, POSTGRES_PORT]):
-    DATABASES['default'] = {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': POSTGRES_NAME,
-        'USER': POSTGRES_USER,
-        'PASSWORD': POSTGRES_PASSWORD,
-        'HOST': POSTGRES_HOST,
-        'PORT': POSTGRES_PORT,
-    }
-
-
-# Password validation
-# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -125,24 +106,17 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
-
+LANGUAGE_CODE = 'ja'
+TIME_ZONE = 'Asia/Tokyo'
 USE_I18N = True
-
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
+# whitenoiseでstaticfilesをまとめる
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    BASE_DIR / 'static',  # 例
-    # 絶対パスを書くなら
-    # '/Users/skii/Library/CloudStorage/Dropbox/EXMATCH/static',
+    BASE_DIR / 'static',
 ]
 
 # Default primary key field type
@@ -192,10 +166,7 @@ ACCOUNT_FORMS = {
 ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = False
 
 
-
-# Cloudinary設定
-
-# ③ Cloudinary設定
+#Cloudinary
 cloudinary.config(
     cloud_name=os.environ['CLOUDINARY_CLOUD_NAME'],
     api_key=os.environ['CLOUDINARY_API_KEY'],
@@ -203,7 +174,7 @@ cloudinary.config(
     secure=True
 )
 
-
+#メール系
 EMAIL_BACKEND = os.environ.get('DJANGO_EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
 EMAIL_HOST = os.environ.get('DJANGO_EMAIL_HOST', '')
 EMAIL_PORT = int(os.environ.get('DJANGO_EMAIL_PORT', '25'))
@@ -214,6 +185,8 @@ EMAIL_USE_SSL = (os.environ.get('DJANGO_EMAIL_USE_SSL', 'False') == 'True')
 
 DEFAULT_FROM_EMAIL = os.environ.get('DJANGO_DEFAULT_FROM_EMAIL', 'webmaster@localhost')
 
+
+#CSRF
 CSRF_TRUSTED_ORIGINS = [
     "https://hoshidori-production.up.railway.app",
 ]
