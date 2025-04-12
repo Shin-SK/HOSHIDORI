@@ -50,7 +50,7 @@
 </head>
 <body>
 
-    {% if request.resolver_match.url_name != 'account_login' and request.resolver_match.url_name != 'account_signup' %}
+    {% if request.resolver_match.url_name != 'account_login' and request.resolver_match.url_name != 'account_signup' and request.resolver_match.url_name != 'top' %}
     <header class="header">
         <div class="header__wrap container">
             <div class="item home">
@@ -80,6 +80,7 @@
     {% endblock %}
 </main>
 
+{% if request.resolver_match.url_name != 'account_login' and request.resolver_match.url_name != 'account_signup' and request.resolver_match.url_name != 'top' %}
 <footer class="footer">
     <div class="footer__wrap container">
         <div class="float-button back"></div>
@@ -114,6 +115,7 @@
         </div>
     </div>
 </footer>
+{% endif %}
 
 <!-- jQuery (必要に応じて) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>

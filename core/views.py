@@ -230,3 +230,13 @@ class LogCreateView(LoginRequiredMixin, CreateView):
         stage_pk = self.kwargs.get('stage_pk')
         return reverse_lazy('stage_detail', kwargs={'pk': stage_pk})
 
+
+
+from django.shortcuts import render, redirect
+
+def top_view(request):
+    if request.user.is_authenticated:
+        return redirect('stage_list')  # ログインしていれば /stage/ へ
+    else:
+        # LP用テンプレートを表示
+        return render(request, 'core/top.html')

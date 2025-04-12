@@ -140,7 +140,7 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
-LOGIN_REDIRECT_URL = '/'     # ログイン後のリダイレクト先
+LOGIN_REDIRECT_URL = '/stage/'     # ログイン後のリダイレクト先
 ACCOUNT_LOGOUT_REDIRECT_URL = '/'  # ログアウト後のリダイレクト先
 ACCOUNT_LOGOUT_ON_GET = True
 
