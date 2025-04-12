@@ -4,7 +4,7 @@
 
 
 {% block title %}
-ユーザープロフィール検索
+舞台一覧
 {% endblock %}
 
 {% block content %}
@@ -30,15 +30,19 @@
 
 <!-- 検索結果 -->
     <div class="stagelist lists">
-    {% for stage in stages %}
-        {% include "core/parts/stagelist_parts.html" %}
-    {% empty %}
+        {% if stages %}
+            {% for stage in stages %}
+                {% include "core/parts/stagelist_parts.html" %}
+            {% endfor %}
+            {% else %}
+        {% endif %}
+    
+        <!-- ループの有無に関係なく、必ず一度だけ表示したい要素 -->
         <div class="stage__wrap stage-create">
-            <div class="box">
-                <a href="{% url 'stage_form' %}"><i class="fas fa-plus"></i></a>
-            </div>
+        <div class="box">
+            <a href="{% url 'stage_form' %}"><i class="fas fa-plus"></i></a>
         </div>
-    {% endfor %}
+        </div>
     </div>
 
     
