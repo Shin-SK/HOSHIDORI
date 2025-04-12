@@ -4,7 +4,9 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="apple-touch-icon" href="{% static 'img/apple-touch-icon.png' %}" />
+    <link rel="icon" href="{% static 'img/favicon.png' %}" type="image/png">
     <title>{% block title %}ホシドリ{% endblock %}</title>
     {% load static %}
     
@@ -30,13 +32,28 @@
 </head>
 <body>
 
+    {% if request.resolver_match.url_name != 'account_login' and request.resolver_match.url_name != 'account_signup' %}
     <header class="header">
-        <div class="item home">
-            <a href="{% url 'stage_list' %}">
-                <img src="{% static 'img/logo.svg' %}" alt="ロゴ">
-            </a>
+        <div class="header__wrap container">
+            <div class="item home">
+                <a href="{% url 'stage_list' %}">
+                    <img src="{% static 'img/logo.svg' %}" alt="ロゴ">
+                </a>
+            </div>
+            <div class="item login">
+                {% if request.user.is_authenticated %}
+                    <!-- ログイン済みユーザー向け表示 -->
+                    <a href="{% url 'account_logout' %}">ログアウト</a>
+                {% else %}
+                    <!-- 未ログインユーザー向け表示 -->
+                    <a href="{% url 'account_login' %}">ログイン</a>
+                {% endif %}
+            </div>
         </div>
     </header>
+    {% endif %}
+
+
       
 
 <main class="container">
@@ -52,7 +69,7 @@
         <div class="area">
             <div class="item home">
                 <a href="{% url 'stage_list' %}">
-                    <i class="fas fa-home"></i>
+                    <img src="{% static 'img/home.svg' %}" alt="home" class="home">
                 </a>
             </div>
             <div class="item search">
@@ -68,11 +85,11 @@
                       <img src="{{ request.user.icon_url }}" alt="User Icon" class="user-icon">
                     {% else %}
                       <!-- デフォルトアイコン -->
-                      <img src="{% static 'img/user-default.svg' %}" alt="Default Icon" class="user-icon">
+                      <img src="{% static 'img/user-default.png' %}" alt="Default Icon" class="user-icon">
                     {% endif %}
                   {% else %}
                     <!-- ログインしていない場合など -->
-                    <img src="{% static 'img/user-default.svg' %}" alt="Guest Icon" class="user-icon">
+                    <img src="{% static 'img/user-default.png' %}" alt="Guest Icon" class="user-icon">
                   {% endif %}
                 </a>
               </div>

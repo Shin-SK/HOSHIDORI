@@ -24,7 +24,7 @@ DEBUG = (debug_str.lower() == 'true')
 if not DEBUG:
     ALLOWED_HOSTS = ['hoshidori-07958dfc4ae7.herokuapp.com']
 else:
-    ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+    ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '127.0.0.1:8000']
 
 #app
 INSTALLED_APPS = [
@@ -79,12 +79,17 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 
 #DBはdj-database-urlを使ってpostgreSQLに対応させる
-DATABASES = {
-    'default': dj_database_url.config(
-        default=f"sqlite:///{os.path.join(BASE_DIR, 'db.sqlite3')}",
-        conn_max_age=600,
-    )
-}
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+else:
+    DATABASES = {
+        'default': dj_database_url.config(conn_max_age=600)
+    }
 
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -137,6 +142,7 @@ AUTHENTICATION_BACKENDS = [
 ]
 LOGIN_REDIRECT_URL = '/'     # ログイン後のリダイレクト先
 ACCOUNT_LOGOUT_REDIRECT_URL = '/'  # ログアウト後のリダイレクト先
+ACCOUNT_LOGOUT_ON_GET = True
 
 # 旧: ACCOUNT_AUTHENTICATION_METHOD = 'username_email' は非推奨
 # 新: ログイン方法をセット型で指定

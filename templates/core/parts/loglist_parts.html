@@ -5,9 +5,9 @@
 <div class="lists__wrap">
   <!-- ポスターやタイトルは log.stage.xxx を使う -->
   <div class="poster">
-    {% if log.stage.poster %}
+    {% if log.stage.poster_url %}
       <a href="{% url 'stage_detail' log.stage.pk %}">
-        <img src="{{ log.stage.poster.url }}" alt="{{ log.stage.title }}">
+        <img src="{{ log.stage.poster_url }}" alt="{{ log.stage.title }}">
       </a>
     {% else %}
       <a class="noimage" href="{% url 'stage_detail' log.stage.pk %}">No Poster</a>

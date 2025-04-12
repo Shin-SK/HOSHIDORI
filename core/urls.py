@@ -16,7 +16,7 @@ from .views import (
 
 urlpatterns = [
     # Stage一覧が欲しければ以下を追加（Optional）
-    path('stage/', StageListView.as_view(), name='stage_list'),  # ListViewを作る場合
+    path('', StageListView.as_view(), name='stage_list'),  # ListViewを作る場合
     path('stage/<int:pk>/', StageDetailView.as_view(), name='stage_detail'),
     path('stage/create/', StageCreateView.as_view(), name='stage_form'),
     path('stage/<int:pk>/update/', StageUpdateView.as_view(), name='stage_form'),

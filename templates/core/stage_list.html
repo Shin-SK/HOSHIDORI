@@ -9,24 +9,27 @@
 
 {% block content %}
 
-<!-- 検索フォーム -->
- <div class="search-form">
-    <form method="get">
-        {{ filter.form.non_field_errors }}
-        <div class="input-wrap">
-            {{ filter.form.search }}
-            <button type="submit">
-                <i class="fas fa-search"></i>
-            </button>
-        </div>
-      </form>
- </div>
+<section class="stage mb-footer">
 
 
-<div class="mainTitle">舞台一覧</div>
+    <!-- 検索フォーム -->
+    <div class="search-form">
+        <form method="get">
+            {{ filter.form.non_field_errors }}
+            <div class="input-wrap">
+                {{ filter.form.search }}
+                <button type="submit">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+
+
+    <div class="mainTitle">舞台一覧</div>
 
 <!-- 検索結果 -->
-    <section class="stagelist lists">
+    <div class="stagelist lists">
     {% for stage in stages %}
         {% include "core/parts/stagelist_parts.html" %}
     {% empty %}
@@ -36,7 +39,9 @@
             </div>
         </div>
     {% endfor %}
-    </section>
+    </div>
 
+    
+</section>
 {% endblock %}
 

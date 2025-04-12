@@ -110,11 +110,16 @@
 
 .header{
   padding-top: 16px;
-  .item{
-    @include flex();
-    img{
-      width: 40px;
-      height: 40px;
+  &__wrap{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    .item{
+      @include flex();
+      img{
+        width: 40px;
+        height: 40px;
+      }
     }
   }
 }

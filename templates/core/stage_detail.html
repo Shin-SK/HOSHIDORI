@@ -8,7 +8,7 @@ Stage Form
 
 {% block content %}
 
-<section class="stage-detail">
+<section class="stage-detail mb-footer">
 	<h1>{{ stage.title }}</h1>
 
 	<div class="wrap">
@@ -76,6 +76,20 @@ Stage Form
 					</div>
 				</div>
 
+				<div class="field ad">
+					<div class="item amazon">
+						<span>グッズを探す</span>
+						<a href="https://amzn.to/3RbO1j1" target="_blank">
+							<img src="{% static 'img/ad-amazon.png' %}" alt="">
+						</a>
+					</div>
+					<div class="item pia">
+						<span>チケットを探す</span>
+						<a href="https://t.pia.jp/" target="_blank">
+							<img src="{% static 'img/ad-pia.png' %}" alt="">
+						</a>
+					</div>
+				</div>
 
 				<div class="stage-edit">
 					<!-- ステージ編集ボタン -->
@@ -110,10 +124,10 @@ Stage Form
 				<div class="box">
 					<div class="name-box">
 						<div class="icon">
-							{% if log.user.icon %}
-							  <img src="{{ log.user.icon.url }}" alt="">
+							{% if log.user.icon_url %}
+							  <img src="{{ log.user.icon_url }}" alt="">
 							{% else %}
-							  <img src="{% static 'img/user.svg' %}" alt="">
+							  <img src="{% static 'img/user-default.png' %}" alt="">
 							{% endif %}
 						  </div>
 						  <div class="name">

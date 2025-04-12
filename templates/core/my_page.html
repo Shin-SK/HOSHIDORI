@@ -13,8 +13,8 @@ My Page
 <div class="user">
   <div class="name-box">
     <div class="icon">
-      {% if request.user.icon %}
-      <img src="{{ request.user.icon.url }}" alt="User Icon">
+      {% if request.user.icon_url %}
+      <img src="{{ request.user.icon_url }}" alt="User Icon">
     {% else %}
       <img src="{% static 'img/user.svg' %}" alt="Default Icon">
     {% endif %}
