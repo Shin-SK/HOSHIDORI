@@ -250,6 +250,7 @@ input, textarea{
                 ul{
                     display: flex;
                     gap: 8px;
+                    flex-wrap: wrap;
                 }
                 &.ad{
                     display: flex;
