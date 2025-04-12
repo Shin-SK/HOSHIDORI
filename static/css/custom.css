@@ -902,7 +902,7 @@ input, textarea {
 }
 .stage-detail .wrap .contents .field ul {
   display: flex;
-  gap: 8px;
+  gap: 0px 8px;
   flex-wrap: wrap;
 }
 .stage-detail .wrap .contents .field.ad {
