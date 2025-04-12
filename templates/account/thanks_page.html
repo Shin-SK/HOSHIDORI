@@ -1,0 +1,52 @@
+<!-- templates/account/login.html -->
+{% extends "base.html" %}
+{% load static %}
+{% load i18n account socialaccount %}
+
+{% block title %}thanks{% endblock %}
+
+{% block content %}
+
+
+<section class="thanks" id="thanks">
+
+	<div class="thanks__wrap">
+
+		<div class="title">登録が完了しました</div>
+		<p><span id="countdown"></span>秒後に開演します</p>
+
+	</div>
+
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // 紙吹雪を一度だけ起動
+    const thanksEl = document.getElementById('thanks');
+    if (thanksEl) {
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 }
+      });
+    }
+
+    // カウントダウン処理
+    let countdown = 5; // 秒数
+    const countdownSpan = document.getElementById('countdown');
+    countdownSpan.textContent = countdown;
+
+    const timer = setInterval(() => {
+      countdown--;
+      countdownSpan.textContent = countdown;
+
+      if (countdown <= 0) {
+        clearInterval(timer);
+        // ホームへリダイレクト (必要に応じてURLを変更)
+        window.location.href = "/";
+      }
+    }, 1000);
+  });
+</script>
+{% endblock %}

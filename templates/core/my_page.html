@@ -16,7 +16,7 @@ My Page
       {% if request.user.icon_url %}
       <img src="{{ request.user.icon_url }}" alt="User Icon">
     {% else %}
-      <img src="{% static 'img/user.svg' %}" alt="Default Icon">
+      <img src="{% static 'img/user-default.png' %}" alt="Default Icon">
     {% endif %}
     </div>
     <div class="name"> {{ request.user.nickname }}さん</div>

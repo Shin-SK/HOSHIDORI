@@ -60,3 +60,14 @@ def profile_edit(request):
         # GETリクエスト
         form = ProfileEditForm(instance=user)
         return render(request, 'account/profile_edit.html', {'form': form})
+
+
+from allauth.account.views import SignupView
+from django.shortcuts import redirect
+
+class MySignupView(SignupView):
+    def form_valid(self, form):
+        # まず通常の処理(ユーザー作成＆ログイン)を行う
+        response = super().form_valid(form)
+        # その後、好きなページに飛ばす
+        return redirect('thanks_page')  # たとえばURL name='thanks_page'
