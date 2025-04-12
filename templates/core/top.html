@@ -9,7 +9,7 @@
 
 <section class="top">
 
-<div class="loading">
+<div class="loading" id="loading">
 	<div class="spinner">
 		<img src="{% static 'img/logo.svg' %}" alt="">
 	</div>
@@ -80,4 +80,19 @@
 
 </section>
 
+
+<script>
+	document.addEventListener('DOMContentLoaded', function() {
+	  setTimeout(function() {
+		const loadingEl = document.getElementById('loading');
+		// (1) クラス追加でフェード開始
+		loadingEl.classList.add('fadeout');
+  
+		// (2) 0.5秒(=アニメーション時間)後にdisplay:none
+		setTimeout(function(){
+		  loadingEl.style.display = 'none';
+		}, 500);
+	  }, 1000);
+	});
+  </script>
 {% endblock %}

@@ -1300,16 +1300,46 @@ input, textarea {
 }
 
 .top {
-  position: relative;
   margin-bottom: unset;
 }
 .top .loading {
-  opacity: 0;
+  opacity: 1;
   position: fixed;
   width: 100%;
   height: 100vh;
-  display: none;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
   z-index: 99999999;
+  background-color: white;
+  transition: opacity 0.5s ease; /* フェードのトランジション */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.top .loading.fadeout {
+  opacity: 0; /* トランジションで0.5秒かけて透明に */
+  pointer-events: none; /* クリック無効(お好みで) */
+}
+.top .loading .spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.top .loading .spinner img {
+  width: 50%;
+  height: auto;
+  animation: spin 2.5s ease-in-out infinite;
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 .top .kv {
   width: 100%;
