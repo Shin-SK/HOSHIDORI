@@ -47,6 +47,10 @@
         href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css"
         rel="stylesheet"
     />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static 'css/custom.css' %}">
 
@@ -76,13 +80,15 @@
     {% endif %}
 
 
-      
+{% block top %}
 
 <main class="container">
     {% block content %}
     <!-- メインコンテンツ -->
     {% endblock %}
 </main>
+
+{% endblock top %}
 
 {% if request.resolver_match.url_name != 'account_login' and request.resolver_match.url_name != 'account_signup' and request.resolver_match.url_name != 'top' %}
 <footer class="footer">
@@ -133,6 +139,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
 <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
 <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
+
 
 <!-- Custom JS (global.js, custom.jsなど複数あれば順番に読み込む) -->
 <script src="{% static 'js/global.js' %}"></script>

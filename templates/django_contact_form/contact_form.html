@@ -1,0 +1,39 @@
+<!-- templates/contact_form/contact_form.html (例) -->
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+お問い合わせ
+{% endblock %}
+
+{% block content %}
+<section class="contact container">
+  <h1>お問い合わせ</h1>
+
+  <form class="form" method="post">
+    {% csrf_token %}
+    <!-- 全体エラー(非フィールドエラー)があれば表示 -->
+    {{ form.non_field_errors }}
+
+    <div class="field">
+      <label for="{{ form.name.id_for_label }}">お名前</label>
+      {{ form.name }}  <!-- inputタグ本体 -->
+      {{ form.name.errors }}
+    </div>
+
+    <div class="field">
+      <label for="{{ form.email.id_for_label }}">メールアドレス</label>
+      {{ form.email }}
+      {{ form.email.errors }}
+    </div>
+
+    <div class="field">
+      <label for="{{ form.body.id_for_label }}">本文</label>
+      {{ form.body }}
+      {{ form.body.errors }}
+    </div>
+
+    <button type="submit">送信</button>
+  </form>
+</section>
+{% endblock %}

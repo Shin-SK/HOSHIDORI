@@ -1,14 +1,14 @@
 import os
+from dotenv import load_dotenv
 from pathlib import Path
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
-import dotenv
 import dj_database_url
 
 
 # envをロード
-dotenv.load_dotenv()
+load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django_browser_reload',
     'django_filters',
     'django.contrib.sites',
+    'django_contact_form',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',  # SNSログイン使うなら
@@ -181,7 +182,10 @@ cloudinary.config(
 )
 
 #メール系
-EMAIL_BACKEND = os.environ.get('DJANGO_EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
+# if DEBUG:
+#     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# else:
+EMAIL_BACKEND = os.environ.get('DJANGO_EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend')
 EMAIL_HOST = os.environ.get('DJANGO_EMAIL_HOST', '')
 EMAIL_PORT = int(os.environ.get('DJANGO_EMAIL_PORT', '25'))
 EMAIL_HOST_USER = os.environ.get('DJANGO_EMAIL_HOST_USER', '')
@@ -190,3 +194,4 @@ EMAIL_USE_TLS = (os.environ.get('DJANGO_EMAIL_USE_TLS', 'False') == 'True')
 EMAIL_USE_SSL = (os.environ.get('DJANGO_EMAIL_USE_SSL', 'False') == 'True')
 
 DEFAULT_FROM_EMAIL = os.environ.get('DJANGO_DEFAULT_FROM_EMAIL', 'webmaster@localhost')
+
