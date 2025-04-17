@@ -7,10 +7,9 @@ import cloudinary.api
 import dj_database_url
 
 
-# envをロード
-load_dotenv()
-
 BASE_DIR = Path(__file__).resolve().parent.parent
+# envをロード
+load_dotenv(BASE_DIR / '.env')  # こう書くと確実
 
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-i49+sc6q...')
 
@@ -26,6 +25,10 @@ if not DEBUG:
 else:
     ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '127.0.0.1:8000']
 
+    # DEBUG = True
+    # ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '127.0.0.1:8000']
+
+
 #app
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -34,23 +37,31 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_browser_reload',
+    # 'django_browser_reload',
     'django_filters',
     'django.contrib.sites',
     'django_contact_form',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',  # SNSログイン使うなら
+    'corsheaders',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'dj_rest_auth',
+    # ユーザー登録（registration）機能を使うなら
+    'dj_rest_auth.registration',  
+
     'accounts',
     'core',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',  # ← これを先頭付近に必ず入れる
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django_browser_reload.middleware.BrowserReloadMiddleware',  # 必須
+    # 'django_browser_reload.middleware.BrowserReloadMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -155,13 +166,22 @@ ACCOUNT_LOGIN_METHODS = {
 # {'email'} だけにすれば「メールでのみログイン」
 # {'username'} だけなら「ユーザー名のみ」
 
-ACCOUNT_SIGNUP_FIELDS = [
-    'email*',       # 「*」を付けると必須扱い
-    'password1*',   # パスワード
-    'password2*',   # パスワード確認
-    # 'username',    # ユーザー名を入力させたいなら追加
-    # 'nickname',    # カスタムフィールドがあれば追加できる
-]
+ACCOUNT_SIGNUP_FIELDS = {
+    'username': {
+        'required': True,
+    },
+    'email': {
+        'required': True,   # メール必須
+        'label': 'Email address'
+    },
+    'password1': {
+        'required': True,
+    },
+    'password2': {
+        'required': True,
+    },
+    # ...
+}
 
 # これで「メール + パスワード」でアカウント作成＆ログインが可能となる
 # username は不要なので signup画面に出ない
@@ -195,3 +215,44 @@ EMAIL_USE_SSL = (os.environ.get('DJANGO_EMAIL_USE_SSL', 'False') == 'True')
 
 DEFAULT_FROM_EMAIL = os.environ.get('DJANGO_DEFAULT_FROM_EMAIL', 'webmaster@localhost')
 
+
+
+# CORS設定
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",  # Vue
+]
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:5173",
+]
+
+WSGI_APPLICATION = 'config.wsgi.application'
+
+# ★ これを追加
+REST_USE_JWT = True
+
+# settings.py (最終形)
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',  # 全開放なら
+    ],
+}
+
+
+# もし期限やリフレッシュ設定などを変えたい場合は
+from datetime import timedelta
+SIMPLE_JWT = {
+   'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+   'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+   # 署名などカスタムしたければ
+   # 'SIGNING_KEY': 'your_secret_key',
+   # ...
+}
+
+
+
+REST_AUTH_SERIALIZERS = {
+    'USER_DETAILS_SERIALIZER': 'accounts.serializers.CustomUserSerializer',
+}

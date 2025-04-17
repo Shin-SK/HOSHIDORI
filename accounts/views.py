@@ -71,3 +71,17 @@ class MySignupView(SignupView):
         response = super().form_valid(form)
         # その後、好きなページに飛ばす
         return redirect('thanks_page')  # たとえばURL name='thanks_page'
+
+
+
+# accounts/views.py
+from rest_framework.generics import RetrieveUpdateAPIView
+from rest_framework.permissions import IsAuthenticated
+from .serializers import CustomUserSerializer
+
+class MyUserDetailView(RetrieveUpdateAPIView):
+    serializer_class = CustomUserSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user

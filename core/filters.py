@@ -3,6 +3,18 @@ import django_filters
 from django import forms
 from django.db.models import Q
 from .models import Stage
+from .models import Log
+
+class LogFilter(django_filters.FilterSet):
+    # stage で絞り込みたい場合
+    stage = django_filters.NumberFilter(field_name='stage_id')
+
+    # user で絞り込みたい場合 (例)
+    user = django_filters.NumberFilter(field_name='user_id')
+
+    class Meta:
+        model = Log
+        fields = ['stage', 'user', 'status', 'rating']
 
 class StageFilter(django_filters.FilterSet):
     search = django_filters.CharFilter(
