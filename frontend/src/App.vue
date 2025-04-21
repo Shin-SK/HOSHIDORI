@@ -1,5 +1,12 @@
 <!-- src/App.vue -->
 <template>
+  <header class="header">
+      <div class="header__wrap">
+        <router-link to="/stage" class="logo">
+          <img src="/img/logo.svg" alt="">
+        </router-link>
+      </div>
+  </header>
   <div class="container">
     <router-view />
   </div>

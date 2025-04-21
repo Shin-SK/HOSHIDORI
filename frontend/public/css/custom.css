@@ -587,7 +587,7 @@ button {
 }
 
 .status-active i {
-  color: red !important;
+  color: #a22041 !important;
 }
 
 input, textarea {
@@ -704,6 +704,58 @@ input, textarea {
   color: #000b00;
 }
 
+.mypage .outer {
+  margin-bottom: 40px;
+}
+.mypage .outer h2 {
+  margin: 40px auto;
+}
+.mypage .watched .card {
+  padding: 16px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+.mypage .watched .card .box {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 16px;
+}
+.mypage .watched .card .box .poster img {
+  aspect-ratio: 1/1.414;
+  width: 100%;
+  height: auto;
+  -o-object-fit: cover;
+     object-fit: cover;
+  border-radius: 8px;
+}
+.mypage .watched .card .box .log {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+.mypage .watched .card .box .log .title {
+  font-weight: bold;
+}
+.mypage .watched .card .box .log .meta {
+  margin-bottom: 8px;
+  display: flex;
+  gap: 16px;
+  font-size: clamp(1.2rem, 1.1346938776rem + 0.2040816327vw, 1.4rem);
+}
+.mypage .watched .card .box .log .comment {
+  flex: 1;
+  padding: 8px;
+  background-color: white;
+  height: 100%;
+  width: 100%;
+}
+.mypage .watched .card .box .edit {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+}
+
 .search-form {
   height: 60vh;
   width: 100%;
@@ -793,6 +845,20 @@ input, textarea {
 .form-update form .field {
   flex: 1;
   width: 100%;
+}
+.form-update form .field.submit-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 24px;
+}
+.form-update form .field.create-account {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.form-update form .field.create-account p {
+  text-align: center;
 }
 .form-update .poster-outer {
   display: flex;
@@ -1140,7 +1206,15 @@ input, textarea {
   gap: 16px;
   width: 100%;
 }
+.allauth button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
+.profile-edit h2 {
+  margin-bottom: 16px;
+}
 .profile-edit .filepond--root {
   height: 150px;
   max-width: 100%;
@@ -1275,6 +1349,18 @@ input, textarea {
   align-items: center;
   flex-direction: column;
 }
+.header__wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px;
+  width: 100%;
+}
+.header__wrap img {
+  width: 40px;
+  height: auto;
+}
+
 .top {
   margin-bottom: unset;
 }

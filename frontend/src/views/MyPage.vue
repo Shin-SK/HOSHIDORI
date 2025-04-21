@@ -14,9 +14,7 @@
 		  </div>
 		</div>
 		<div class="edit">
-		  <!-- Djangoの {% url 'profile_edit' %} は使えないので Vue Routerで遷移させるか別URLにする -->
-		  <!-- <router-link to="/profile_edit">ユーザー情報を編集</router-link> -->
-		   ユーザー情報を編集
+			<router-link to="/profile/edit">ユーザー情報を編集</router-link>
 		</div>
 	  </div>
   
@@ -30,7 +28,7 @@
 	  </div>
   
 	  <!-- 観たい -->
-	  <div class="want" id="want">
+	  <div class="outer want" id="want">
 		<h2><i class="fas fa-heart"></i> 観たい</h2>
 		<div v-if="wantLogs.length > 0" class="lists log">
 		  <div
@@ -66,36 +64,45 @@
 	  </div>
   
 	  <!-- 観た -->
-	  <div class="watched" id="watched">
+	  <div class="outer watched" id="watched">
 		<h2><i class="fas fa-eye"></i> 観た</h2>
-		<div v-if="watchedLogs.length > 0" class="lists log">
+		<div v-if="watchedLogs.length > 0" class="card">
 		  <div
 			v-for="log in watchedLogs"
 			:key="log.id"
-			class="log-item"
+			class="box"
 		  >
-		  
-          <!-- loglist_parts.html 相当の部分 ここから -->
-          <div class="lists__wrap">
-            <div class="poster">
-              <!-- Vue Routerで stage_detail = '/stage/:id' としている想定 -->
-              <router-link :to="`/stage/${log.stage.id}`">
-                <!-- ポスターURLがあれば img を表示、なければ noimage -->
-                <template v-if="log.stage.poster_url">
-                  <img
-                    :src="log.stage.poster_url"
-                    :alt="log.stage.title"
-                  />
-                </template>
-                <template v-else>
-                  <span class="noimage">No Poster</span>
-                </template>
-              </router-link>
-            </div>
-          </div>
-          <!-- loglist_parts.html 相当の部分 ここまで -->
+				<!-- ★ watched 部分の1アイテム内 ここだけ書き換え -->
+				<!-- ポスター -->
+				<div class="poster">
+					<router-link :to="`/stage/${log.stage.id}`">
+					<img v-if="log.stage.poster_url"
+						:src="log.stage.poster_url"
+						:alt="log.stage.title" />
+					<span v-else class="noimage">No Poster</span>
+					</router-link>
+				</div>
 
-		  </div>
+				<!-- ★ 自分のログ詳細 -->
+				<div class="log">
+					<div class="title">{{ log.stage.title }}</div>
+					<div class="meta">
+						<div class="times"><span>観劇回数</span> {{ log.times }}</div>
+						<div class="rating star">
+							<i v-for="i in 5" :key="i"
+							:class="['fa-star', i <= log.rating ? 'fas' : 'far']" />
+						</div>
+					</div>
+
+					<p class="comment" v-if="log.comment">{{ log.comment }}</p>
+
+					<!-- 編集／削除 -->
+					<div class="edit">
+						<router-link :to="`/log/${log.id}/edit`">編集</router-link> |
+						<a href="#" class="delete" @click.prevent="onClickDelete(log.id)">削除</a>
+					</div>
+				</div>
+		  </div><!-- box -->
 		</div>
 		<div v-else class="caution">
 		  <router-link to="/stage">作品を探しに行こう</router-link>
@@ -103,7 +110,7 @@
 	  </div>
   
 	  <!-- 観れない -->
-	  <div class="cannot" id="cannot">
+	  <div class="outer cannot" id="cannot">
 		<h2><i class="fas fa-eye-slash"></i> 観れない</h2>
 		<div v-if="cannotLogs.length > 0" class="lists log">
 		  <div

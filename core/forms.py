@@ -7,42 +7,42 @@ class StageForm(forms.ModelForm):
 
     class Meta:
         model = Stage
-        fields = ['poster_file', 'title', 'cast', 'staff']
+        fields = ['title', 'description', 'poster_url', 'theaters']
         
         # ラベルをなくす場合は label='' に
-        labels = {
-            'poster_file': '',
-            'title': '',
-            'cast': '',
-            'staff': '',
-        }
+        # labels = {
+        #     'poster_file': '',
+        #     'title': '',
+        #     'cast': '',
+        #     'staff': '',
+        # }
         
         # placeholder, class などを attrs で指定
-        widgets = {
-            'poster_file': forms.ClearableFileInput(
-                attrs={
-                    'class': 'custom-file-input',
-                    'id': 'poster-upload',
-                }
-            ),
-            'title': forms.TextInput(
-                attrs={
-                    'placeholder': 'タイトル',
-                }
-            ),
-            'cast': forms.Textarea(
-                attrs={
-                    'placeholder': '出演者（スペースやカンマ区切り）',
-                    'rows': 3,
-                }
-            ),
-            'staff': forms.Textarea(
-                attrs={
-                    'placeholder': 'スタッフ（スペースやカンマ区切り）',
-                    'rows': 3,
-                }
-            ),
-        }
+        # widgets = {
+        #     'poster_file': forms.ClearableFileInput(
+        #         attrs={
+        #             'class': 'custom-file-input',
+        #             'id': 'poster-upload',
+        #         }
+        #     ),
+        #     'title': forms.TextInput(
+        #         attrs={
+        #             'placeholder': 'タイトル',
+        #         }
+        #     ),
+        #     'cast': forms.Textarea(
+        #         attrs={
+        #             'placeholder': '出演者（スペースやカンマ区切り）',
+        #             'rows': 3,
+        #         }
+        #     ),
+        #     'staff': forms.Textarea(
+        #         attrs={
+        #             'placeholder': 'スタッフ（スペースやカンマ区切り）',
+        #             'rows': 3,
+        #         }
+        #     ),
+        # }
 
 
 

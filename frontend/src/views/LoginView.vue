@@ -1,13 +1,31 @@
 <template>
-	<div>
-	  <h1>Login with JWT</h1>
+	<section class="login allauth form-update">
 	  <div v-if="error">{{ error }}</div>
 	  <form @submit.prevent="loginUser">
-		<input v-model="form.username" placeholder="Username">
-		<input v-model="form.password" type="password" placeholder="Password">
-		<button type="submit">Login</button>
+		<div class="logo">
+			<img src="/img/logo.svg" alt="">
+		</div>
+		<div class="field">
+			<label for="">メールアドレスまたはユーザー名</label>
+			<input v-model="form.username">
+		</div>
+		<div class="field">
+			<label for="">パスワード</label>
+			<input v-model="form.password" type="password">
+		</div>
+
+		<div class="field create-account">
+			<p>アカウントをお持ちでない方は<br>
+				<router-link to="">新規登録</router-link>
+			</p>
+		</div>
+		<div class="field submit-button">
+			<button type="submit">ログイン</button>
+		</div>
+
 	  </form>
-	</div>
+	</section>
+
   </template>
   
   <script>

@@ -19,13 +19,12 @@
   
 	  <div class="mainTitle">舞台一覧</div>
   
-	  <!-- ■ 状態表示 -->
+	  <!-- ■ ローディング / エラー -->
 	  <p v-if="error" class="text-red-600">{{ error }}</p>
 	  <p v-else-if="loading">Loading…</p>
   
 	  <!-- ■ ステージ一覧 -->
 	  <div v-else class="stagelist lists">
-		<!-- ── ループ ─────────────────────────── -->
 		<div
 		  v-for="stage in stages"
 		  :key="stage.id"
@@ -55,27 +54,33 @@
 			  <ul>
 				<!-- Cast -->
 				<li
-				  v-for="(person, idx) in splitNames(stage.cast)"
+				  v-for="(c, idx) in stage.credits.filter(cr => cr.role === 'cast')"
 				  :key="'cast-' + idx"
 				>
 				  <router-link
-					:to="{ name: 'stage-list', query: { search: person } }"
+					:to="{ name: 'stage-list', query: { search: c.person.name } }"
 				  >
-					{{ person }}
+					{{ c.person.name }}
 				  </router-link>
 				</li>
   
-				<li v-if="splitNames(stage.staff).length"> / </li>
+				<!-- スタッフがあれば区切り -->
+				<li
+				  v-if="stage.credits.some(cr => cr.role === 'cast') &&
+						 stage.credits.some(cr => cr.role === 'staff')"
+				>
+				  /
+				</li>
   
 				<!-- Staff -->
 				<li
-				  v-for="(staff, idx2) in splitNames(stage.staff)"
-				  :key="'staff-' + idx2"
+				  v-for="(s, idx) in stage.credits.filter(cr => cr.role === 'staff')"
+				  :key="'staff-' + idx"
 				>
 				  <router-link
-					:to="{ name: 'stage-list', query: { search: staff } }"
+					:to="{ name: 'stage-list', query: { search: s.person.name } }"
 				  >
-					{{ staff }}
+					{{ s.person.name }}
 				  </router-link>
 				</li>
 			  </ul>
@@ -83,13 +88,12 @@
 		  </div>
 		</div>
   
-		<!-- ステージが 0 件のとき -->
 		<p v-if="stages.length === 0">舞台情報がありません</p>
   
 		<!-- 新規作成ボタン -->
 		<div class="stage__wrap stage-create">
 		  <div class="box">
-			<router-link to="/stage/create">
+			<router-link to="/stage/create/">
 			  <i class="fas fa-plus" />
 			</router-link>
 		  </div>
@@ -98,71 +102,45 @@
 	</section>
   </template>
   
-<script>
-  import { watch, ref } from 'vue'
+  <script setup>
+  import { ref, watch } from 'vue'
   import { useRoute, useRouter } from 'vue-router'
   import apiClient from '@/services/api.js'
   
-  export default {
-	name: 'StageList',
-	setup () {
-	  const route = useRoute()
-	  const router = useRouter()
+  const route       = useRoute()
+  const router      = useRouter()
   
-	  /* ---------- state ---------- */
-	  const stages = ref([])
-	  const loading = ref(true)
-	  const error = ref(null)
-	  const searchTerm = ref(route.query.search || '')
+  /* ---------- state ---------- */
+  const stages     = ref([])
+  const loading    = ref(true)
+  const error      = ref(null)
+  const searchTerm = ref(route.query.search || '')
   
-	  /* ---------- fetch ---------- */
-	  const fetchStages = async () => {
-		try {
-		  loading.value = true
-		  error.value = null
-		  const res = await apiClient.get('/api/stage/', {
-			params: { search: searchTerm.value || undefined }
-		  })
-		  stages.value = res.data
-		} catch (e) {
-		  error.value = e.message
-		} finally {
-		  loading.value = false
-		}
-	  }
-  
-	  /* ---------- handlers ---------- */
-	  const doSearch = () => {
-		router.push({ name: 'stage-list', query: { search: searchTerm.value } })
-	  }
-  
-	  /* ---------- utilities ---------- */
-		/** キャスト／スタッフの文字列を配列に変換 */
-		const splitNames = (str) => {
-		if (!str) return []
-		return str
-			.split(/[,、]/)            // 半角・全角カンマどちらも区切り文字
-			.map(s => s.trim())
-			.filter(Boolean)
-		}
-  
-	  /* ---------- effects ---------- */
-	  // 初回 & クエリ変更時に再取得
-	  fetchStages()
-	  watch(() => route.query.search, (newVal) => {
-		searchTerm.value = newVal || ''
-		fetchStages()
+  /* ---------- fetch ---------- */
+  const fetchStages = async () => {
+	try {
+	  loading.value = true
+	  const res = await apiClient.get('/api/stage/', {
+		params: { search: searchTerm.value || undefined }
 	  })
-  
-	  return {
-		stages,
-		loading,
-		error,
-		searchTerm,
-		doSearch,
-		splitNames
-	  }
+	  stages.value = res.data        // credits 配列込みで返ってくる
+	} catch (e) {
+	  error.value = e.message
+	} finally {
+	  loading.value = false
 	}
   }
-</script>
+  
+  /* ---------- handlers ---------- */
+  const doSearch = () => {
+	router.push({ name: 'stage-list', query: { search: searchTerm.value } })
+  }
+  
+  /* ---------- effects ---------- */
+  fetchStages()                                  // 初回
+  watch(() => route.query.search, (v) => {       // ?search=xxx が変わったら再取得
+	searchTerm.value = v || ''
+	fetchStages()
+  })
+  </script>
   

@@ -1,84 +1,124 @@
 <!-- src/views/StageCreate.vue -->
 <template>
-	<div>
-	  <h1>Create Stage</h1>
+	<section class="form-update container">
+	  <h2>舞台追加</h2>
   
-	  <div v-if="error" style="color:red">{{ error }}</div>
+	  <p v-if="error" class="text-red-600">{{ error }}</p>
   
-	  <form @submit.prevent="createStage">
-		<div>
-		  <label>Title:</label>
-		  <input v-model="formData.title" required />
+	  <form @submit.prevent="handleSubmit" enctype="multipart/form-data">
+		<!-- ポスター FilePond -->
+		<div class="field poster">
+		  <input
+			id="poster-upload"
+			type="file"
+			accept="image/*"
+			class="filepond"
+		  />
 		</div>
   
-		<div>
-		  <label>Description:</label>
-		  <textarea v-model="formData.description" />
+		<!-- タイトル -->
+		<div class="field stage-title">
+		  <input
+			v-model="form.title"
+			type="text"
+			placeholder="タイトル"
+			required
+		  />
 		</div>
   
-		<div>
-		  <label>Poster URL:</label>
-		  <input v-model="formData.poster_url" />
+		<!-- キャスト -->
+		<div class="field cast">
+		  <textarea
+			v-model="form.cast"
+			rows="3"
+			placeholder="キャスト (カンマ区切り)"
+		  />
 		</div>
   
-		<div>
-		  <label>Cast:</label>
-		  <textarea v-model="formData.cast" />
+		<!-- スタッフ -->
+		<div class="field staff">
+		  <textarea
+			v-model="form.staff"
+			rows="3"
+			placeholder="スタッフ (カンマ区切り)"
+		  />
 		</div>
   
-		<div>
-		  <label>Staff:</label>
-		  <textarea v-model="formData.staff" />
-		</div>
-  
-		<button type="submit">Create</button>
+		<button type="submit">保存</button>
 	  </form>
-	</div>
+	</section>
   </template>
   
-  <script>
-  import { ref } from 'vue'
+  <script setup>
+  import { ref, nextTick, onMounted } from 'vue'
   import { useRouter } from 'vue-router'
   import apiClient from '@/services/api.js'
   
-  export default {
-	name: 'StageCreate',
-	setup() {
-	  const router = useRouter()
-	  const error = ref(null)
+  /* ---------- FilePond ---------- */
+  import * as FilePond from 'filepond'
+  import FilePondPluginImagePreview from 'filepond-plugin-image-preview'
+  import 'filepond/dist/filepond.min.css'
+  import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css'
+  FilePond.registerPlugin(FilePondPluginImagePreview)
   
-	  // フォームデータ用オブジェクト
-	  const formData = ref({
-		title: '',
-		description: '',
-		poster_url: '',
-		cast: '',
-		staff: ''
+  /* ---------- state ---------- */
+  const router = useRouter()
+  const error  = ref(null)
+  const posterFile = ref(null)
+  const form = ref({
+	title : '',
+	cast  : '',
+	staff : ''
+  })
+  
+  /* ---------- FilePond mount ---------- */
+  const mountFilePond = () => {
+	const el = document.getElementById('poster-upload')
+	if (!el || el._pond) return
+	FilePond.create(el, {
+	  allowMultiple: false,
+	  storeAsFile  : true,
+	  labelIdle    : '<i class="fas fa-plus"></i>',
+	  server: {
+		process: (_field, file, _meta, load) => { posterFile.value = file; load() },
+		revert : (_uid,   load)              => { posterFile.value = null; load() }
+	  }
+	})
+  }
+  
+  onMounted(async () => {
+	await nextTick()
+	mountFilePond()
+  })
+  
+  /* ---------- helpers ---------- */
+  const splitNames = (str) =>
+	str ? str.split(/[,、]/).map(s => s.trim()).filter(Boolean) : []
+  
+  /* ---------- submit ---------- */
+  const handleSubmit = async () => {
+	error.value = null
+	try {
+	  const credits = [
+		...splitNames(form.value.cast ).map(n => ({ person_name:n, role:'cast'  })),
+		...splitNames(form.value.staff).map(n => ({ person_name:n, role:'staff' }))
+	  ]
+  
+	  const fd = new FormData()
+	  fd.append('title', form.value.title)
+	  fd.append('credits', JSON.stringify(credits))
+	  if (posterFile.value) fd.append('poster_file', posterFile.value)
+  
+	  const res = await apiClient.post('/api/stage/', fd, {
+		headers:{ 'Content-Type':'multipart/form-data' }
 	  })
   
-	  const createStage = async () => {
-		try {
-		  error.value = null
-		  const response = await apiClient.post('/stage/', formData.value)
-		  // 作成成功 → 詳細ページへ飛ぶか、一覧ページへ飛ぶなど自由に
-		  // ここでは新規作成したStageのidを使って詳細へ飛ぶ
-		  const newId = response.data.id
-		  router.push(`/stage/${newId}`)
-		} catch (err) {
-		  error.value = err.message
-		}
-	  }
-  
-	  return {
-		formData,
-		error,
-		createStage
-	  }
+	  router.push(`/stage/${res.data.id}`)
+	} catch (e) {
+	  error.value = e.response?.data
+		? JSON.stringify(e.response.data)
+		: e.message
+	  console.error(e)
 	}
   }
   </script>
-  
-  <style scoped>
-  /* お好みのスタイル */
-  </style>
-  

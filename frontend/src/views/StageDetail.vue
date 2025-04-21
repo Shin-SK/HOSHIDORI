@@ -7,119 +7,122 @@
 	  <p v-if="error" class="text-red-600">{{ error }}</p>
 	  <p v-else-if="loading">Loading…</p>
   
-	  <!-- ========== 本体 (stage があるとき) ========== -->
+	  <!-- ========== 本体 ========== -->
 	  <div v-else class="wrap">
 		<div class="contents">
-			<div class="poster">
-			<img
-				v-if="stage.poster_url"
-				:src="stage.poster_url"
-				:alt="stage.title"
-			/>
-			<span v-else class="noimage">No Poster</span>
-			</div><!-- poster -->
-			<div class="contents__wrap">
+		  <!-- ポスター -->
+		  <div class="poster">
+			<img v-if="stage.poster_url" :src="stage.poster_url" :alt="stage.title" />
+			<span v-else class="noimage">No&nbsp;Poster</span>
+		  </div>
+  
+		  <div class="contents__wrap">
+			<!-- キャスト -->
+			<div class="field">
+			  <div class="title">キャスト</div>
+			  <ul class="inner">
+				<li
+				  v-for="c in castCredits"
+				  :key="'cast-' + c.person.id"
+				>
+				  <router-link
+					:to="{ name: 'stage-list', query: { search: c.person.name } }"
+				  >
+					{{ c.person.name }}
+				  </router-link>
+				</li>
+				<li v-if="castCredits.length === 0">出演者情報なし</li>
+			  </ul>
+			</div>
+  
+			<!-- スタッフ -->
+			<div class="field">
+			  <div class="title">スタッフ</div>
+			  <ul class="inner">
+				<li
+				  v-for="s in staffCredits"
+				  :key="'staff-' + s.person.id"
+				>
+				  <router-link
+					:to="{ name: 'stage-list', query: { search: s.person.name } }"
+				  >
+					{{ s.person.name }}
+					<template v-if="s.position">（{{ s.position }}）</template>
+				  </router-link>
+				</li>
+				<li v-if="staffCredits.length === 0">スタッフ情報なし</li>
+			  </ul>
+			</div>
 
-				<!-- キャスト -->
-				<div class="field">
-					<div class="title">キャスト</div>
-					<ul class="inner">
-					<li
-						v-for="(person, idx) in splitNames(stage.cast)"
-						:key="'c' + idx"
-					>
-						<router-link :to="{ name: 'stage-list', query: { search: person } }">
-						{{ person }}
-						</router-link>
+			<div class="field">
+				<div class="title">劇場</div>
+				<ul class="inner">
+					<li v-for="t in theaterList" :key="'theater-' + t.id">
+					<router-link :to="{ name: 'stage-list', query: { search: t.name } }">
+						{{ t.name }}
+					</router-link>
 					</li>
-					<li v-if="!stage.cast">出演者情報なし</li>
-					</ul>
+					<li v-if="theaterList.length === 0">劇場情報なし</li>
+				</ul>
 				</div>
-
-				<!-- スタッフ -->
-				<div class="field">
-					<div class="title">スタッフ</div>
-					<ul class="inner">
-					<li
-						v-for="(person, i) in splitNames(stage.staff)"
-						:key="'s' + i"
-					>
-						<router-link :to="{ name: 'stage-list', query: { search: person } }">
-						{{ person }}
-						</router-link>
-					</li>
-					<li v-if="!stage.staff">スタッフ情報なし</li>
-					</ul>
-				</div>
-		
-				<!-- レビュー平均 -->
-				<div class="field">
-					<div class="title">レビュー平均</div>
-					<template v-if="avgRating !== null">
-						<span class="star">
-						<i
-							v-for="i in 5"
-							:key="i"
-							:class="['fa-star', avgRating >= i ? 'fas' : 'far']"
-						/>
-						</span>
-						(平均 {{ avgRating.toFixed(1) }})
-					</template>
-					<p v-else>まだレビューがありません</p>
-				</div>
-
-				<div class="field ad">
-					<a href="https://amzn.to/3RbO1j1" target="_blank" class="item">
-						<img src="/img/ad-amazon.png" alt="Amazon" />
-					</a>
-					<a href="https://t.pia.jp/" target="_blank" class="item">
-						<img src="/img/ad-pia.png" alt="Pia" />
-					</a>
-				</div>
-
-				<!-- 編集 -->
-				<div class="stage-edit">
-				<router-link :to="`/stage/${stage.id}/edit`">ステージ編集</router-link>
-				</div>
-
-			</div><!-- contents__wrap -->
-		</div><!-- contents -->
-
-		<!-- ▽ ステータス変更ボタン ▽  -->
+  
+			<!-- レビュー平均 -->
+			<div class="field">
+			  <div class="title">レビュー平均</div>
+			  <template v-if="avgRating !== null">
+				<span class="star">
+				  <i
+					v-for="i in 5"
+					:key="i"
+					:class="['fa-star', avgRating >= i ? 'fas' : 'far']"
+				  />
+				</span>
+				(平均 {{ avgRating.toFixed(1) }})
+			  </template>
+			  <p v-else>まだレビューがありません</p>
+			</div>
+  
+			<!-- 広告などはそのまま -->
+			<div class="field ad">
+			  <a href="https://amzn.to/3RbO1j1" target="_blank" class="item">
+				<img src="/img/ad-amazon.png" alt="Amazon" />
+			  </a>
+			  <a href="https://t.pia.jp/" target="_blank" class="item">
+				<img src="/img/ad-pia.png" alt="Pia" />
+			  </a>
+			</div>
+  
+			<!-- 編集リンク -->
+			<div class="stage-edit">
+			  <router-link :to="`/stage/${stage.id}/edit`">ステージ編集</router-link>
+			</div>
+		  </div><!-- /.contents__wrap -->
+		</div><!-- /.contents -->
+  
+		<!-- ▽ ステータス変更ボタン ▽ -->
 		<div class="status">
-		<div class="box">
-			<!-- 観た -->
+		  <div class="box">
 			<a
-			href="#"
-			:class="{ 'status-active': myStatus === 'watched' }"
-			@click.prevent="setStatus('watched')"
-			>
-			<i class="fas fa-eye"></i><span>観た</span>
-			</a>
-
-			<!-- 観たい -->
+			  href="#"
+			  :class="{ 'status-active': myStatus === 'watched' }"
+			  @click.prevent="setStatus('watched')"
+			><i class="fas fa-eye"></i><span>観た</span></a>
+  
 			<a
-			href="#"
-			:class="{ 'status-active': myStatus === 'want' }"
-			@click.prevent="setStatus('want')"
-			>
-			<i class="fas fa-heart"></i><span>観たい</span>
-			</a>
-
-			<!-- 観れない -->
+			  href="#"
+			  :class="{ 'status-active': myStatus === 'want' }"
+			  @click.prevent="setStatus('want')"
+			><i class="fas fa-heart"></i><span>観たい</span></a>
+  
 			<a
-			href="#"
-			:class="{ 'status-active': myStatus === 'cannot' }"
-			@click.prevent="setStatus('cannot')"
-			>
-			<i class="fas fa-eye-slash"></i><span>観れない</span>
-			</a>
+			  href="#"
+			  :class="{ 'status-active': myStatus === 'cannot' }"
+			  @click.prevent="setStatus('cannot')"
+			><i class="fas fa-eye-slash"></i><span>観れない</span></a>
+		  </div>
 		</div>
-		</div>
-
-
-	</div><!-- wrap -->
-
+	  </div><!-- /.wrap -->
+  
 	  <!-- ───────── ログ一覧 ───────── -->
 	  <div class="log">
 		<template v-if="logs.length">
@@ -194,34 +197,44 @@
 		</template>
 		<p v-else>まだログがありません。</p>
 	  </div><!-- log -->
-
-
 	</section>
   </template>
-  
+
+
   <script>
-  import { ref, onMounted, computed } from 'vue'
+  import { ref, computed, onMounted } from 'vue'
   import { useRoute, useRouter } from 'vue-router'
   import apiClient from '@/services/api.js'
   
   export default {
 	name: 'StageDetail',
+  
 	setup () {
 	  const route  = useRoute()
 	  const router = useRouter()
   
 	  /* ───────── state ───────── */
-	  const stage         = ref({})
-	  const logs          = ref([])
-	  const loading       = ref(true)
-	  const error         = ref(null)
-	  const currentUserId = ref(null)   // ログイン中の自分の ID
-	  const myStatus      = ref(null)   // self status
+	  const stage          = ref({})
+	  const logs           = ref([])
+	  const loading        = ref(true)
+	  const error          = ref(null)
+	  const currentUserId  = ref(null)       // ログイン中の自分の ID
+	  const myStatus       = ref(null)       // 自分のステータス (watched / want / cannot)
   
-	  /* ───────── utils ───────── */
-	  const splitNames = str =>
-		str ? str.split(/[,、]/).map(s => s.trim()).filter(Boolean) : []
-  
+	  /* ───────── computed ───────── */
+	  /** credits 配列 → キャスト／スタッフに分離 */
+	  const castCredits  = computed(() =>
+		(stage.value.credits || []).filter(c => c.role === 'cast')
+	  )
+	  const staffCredits = computed(() =>
+		(stage.value.credits || []).filter(c => c.role === 'staff')
+	  )
+
+	  const theaterList  = computed(() =>
+		stage.value.theaters || []
+	  )
+		
+	  /** レビュー平均 */
 	  const avgRating = computed(() => {
 		const rated = logs.value.filter(l => l.rating)
 		return rated.length
@@ -229,7 +242,9 @@
 		  : null
 	  })
   
-	  const isMine = log => !!currentUserId.value && log.user?.id === currentUserId.value
+	  /** 自分のログか？ */
+	  const isMine = log =>
+		!!currentUserId.value && log.user?.id === currentUserId.value
   
 	  /* ───────── ステータス変更 ───────── */
 	  const setStatus = async (status) => {
@@ -242,25 +257,24 @@
   
 		try {
 		  if (!mine) {
-			/* --- まだ自分のログが無い --- */
+			// まだ自分のログが無い
 			if (status === 'watched') {
-			  // 「観た」は詳細入力をしたいのでフォームへ
+			  // 「観た」は詳細入力フォームへ
 			  router.push({ name: 'log-create', params: { stageId: stage.value.id } })
 			  return
 			}
 			// want / cannot はワンクリック作成
 			await apiClient.post('/api/log/', {
-			  stage_id: stage.value.id,
-			  status   : status
+			  stage: stage.value.id,
+			  status
 			})
 		  } else {
-			/* --- 既にログがある → 更新 --- */
+			// 既にログがある → 更新
 			await apiClient.put(`/api/log/${mine.id}/`, { ...mine, status })
 		  }
   
-		  await reloadLogs()        // 一覧更新
+		  await reloadLogs()          // 一覧を再取得
 		} catch (e) {
-		  /* ――― 400（既に存在）などを拾う ――― */
 		  if (e.response?.status === 400) {
 			alert('すでにこのステータスのログが登録されています')
 		  } else {
@@ -292,18 +306,16 @@
   
 	  onMounted(async () => {
 		try {
-		  /* ステージ詳細 */
+		  // ステージ詳細
 		  stage.value = (await apiClient.get(`/api/stage/${route.params.id}/`)).data
   
-		  /* 自分の ID */
+		  // 自分の ID（未ログイン時は 401）
 		  try {
-			const me = await apiClient.get('/dj-rest-auth/user/')
-			currentUserId.value = me.data.id
+			currentUserId.value = (await apiClient.get('/dj-rest-auth/user/')).data.id
 		  } catch { /* 未ログイン */ }
   
-		  /* ログ一覧 */
+		  // ログ一覧
 		  await reloadLogs()
-  
 		} catch (e) {
 		  error.value = e.message
 		} finally {
@@ -311,21 +323,22 @@
 		}
 	  })
   
+	  /* ───────── expose ───────── */
 	  return {
 		stage,
 		logs,
 		loading,
 		error,
-		splitNames,
+		castCredits,
+		staffCredits,
+		theaterList,
 		avgRating,
-		isMine,
 		myStatus,
 		setStatus,
+		isMine,
 		onClickDelete
 	  }
 	}
   }
   </script>
   
-  
-

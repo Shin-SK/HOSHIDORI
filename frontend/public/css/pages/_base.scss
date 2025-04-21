@@ -25,7 +25,7 @@ button{
 
 .status-active{
     i{
-        color: red !important;
+        color: $red !important;
     }
 }
 
@@ -70,7 +70,7 @@ input, textarea{
     grid-template-columns: repeat(3,1fr);
     @include md{
         grid-template-columns: repeat(2,1fr);
-    }   
+    }
     &__wrap{
         @include flex();
         justify-content: flex-start;
@@ -133,6 +133,64 @@ input, textarea{
         }
     }
 }
+
+.mypage{
+    .outer{
+        margin-bottom: 40px;
+        h2{
+            margin: 40px auto;
+        }
+    }
+    .watched{
+        .card{
+            padding: 16px;
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            .box{
+                display: grid;
+                grid-template-columns: 150px 1fr;
+                gap: 16px;
+                .poster{
+                    img{
+                        aspect-ratio: 1/1.414;
+                        width: 100%;
+                        height: auto;
+                        object-fit: cover;
+                        border-radius: 8px;
+                    }
+                }
+                .log{
+                    position: relative;
+                    display: flex;
+                    flex-direction: column;
+                    .title{
+                        font-weight: bold;
+                    }
+                    .meta{
+                        margin-bottom: 8px;
+                        display: flex;
+                        gap :16px;
+                        @include fs(12);
+                    }
+                    .comment{
+                        flex: 1;
+                        padding: 8px;
+                        background-color: white;
+                        height: 100%;
+                        width: 100%;
+                    }
+                }
+                .edit{
+                    position: absolute;
+                    bottom: 4px;
+                    right: 4px;
+                }
+            }
+        }
+    }
+}
+
 
 
 .search-form{
@@ -214,6 +272,16 @@ input, textarea{
         .field{
             flex:1;
             width: 100%;
+            &.submit-button{
+                @include flex();
+                margin-top: 24px;
+            }
+            &.create-account{
+                @include flex();
+                p{
+                    text-align: center;
+                }
+            }
         }
     }
     .poster-outer{
@@ -549,10 +617,16 @@ input, textarea{
         gap: 16px;
         width: 100%;
     }
+    button{
+        @include flex();
+    }
 
 }
 
 .profile-edit{
+    h2{
+        margin-bottom: 16px;
+    }
     .filepond--root {
         height: 150px;
         max-width: 100%;
@@ -681,6 +755,19 @@ input, textarea{
         flex-direction: column;
         .text{
 
+        }
+    }
+}
+
+
+.header{
+    &__wrap{
+        @include flex();
+        padding: 8px;
+        width: 100%;
+        img{
+            width: 40px;
+            height: auto;
         }
     }
 }

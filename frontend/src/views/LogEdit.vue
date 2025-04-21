@@ -144,7 +144,7 @@
 	  if (mode === 'create') {
 		/* ------ 新規作成 ------ */
 		await apiClient.post('/api/log/', {
-		  stage_id: stageId.value,           // 数値 id
+		  stage_id: stageId.value,     
 		  status  : form.value.status,
 		  times   : form.value.times,
 		  rating  : form.value.rating,
@@ -162,8 +162,9 @@
 	  /* 共通: 完了後にステージ詳細へ遷移 */
 	  router.push({ name: 'stage-detail', params: { id: stageId.value } })
 	} catch (e) {
-	  error.value = e.message
-	  console.error(e)
+		console.error(e.response?.data || e.message)        // ← ここで詳細を確認
+		error.value = JSON.stringify(e.response?.data)      // ← 画面にも表示
+		|| e.message
 	}
   }
   </script>
