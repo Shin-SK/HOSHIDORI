@@ -2,8 +2,10 @@
 import axios  from 'axios'
 import router from '@/router'
 
+const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:8000'
+
 const api = axios.create({
-  baseURL: 'http://localhost:8000',
+  baseURL: API_BASE,
   withCredentials: false          // JWT だけなら false
 })
 
@@ -42,10 +44,8 @@ api.interceptors.response.use(
       const refresh = localStorage.getItem('refreshToken')
       if (!refresh) throw new Error('no-refresh-token')
 
-      const { data } = await axios.post(
-        'http://localhost:8000/dj-rest-auth/jwt/refresh/',
-        { refresh }
-      )
+        const { data } = await axios.post(`${API_BASE}/dj-rest-auth/jwt/refresh/`,
+        { refresh })
 
       const newAccess = data.access
       localStorage.setItem('accessToken', newAccess)

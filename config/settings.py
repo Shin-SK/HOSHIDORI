@@ -21,7 +21,7 @@ debug_str = os.environ.get('DEBUG', 'True')
 DEBUG = (debug_str.lower() == 'true')
 
 if not DEBUG:
-    ALLOWED_HOSTS = ['hoshidori-07958dfc4ae7.herokuapp.com','hoshidori.com']
+    ALLOWED_HOSTS = ['hoshidori-07958dfc4ae7.herokuapp.com','hoshidori.com', 'admin.hoshidori.com']
 else:
     ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '127.0.0.1:8000']
 
@@ -219,10 +219,12 @@ DEFAULT_FROM_EMAIL = os.environ.get('DJANGO_DEFAULT_FROM_EMAIL', 'webmaster@loca
 
 # CORS設定
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # Vue
+    "http://localhost:5173",  # Vue     
+    "https://hoshidori.com" 
 ]
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
+    "https://*.hoshidori.com"
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
