@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     'dj_rest_auth',
     # ユーザー登録（registration）機能を使うなら
     'dj_rest_auth.registration',  
-
+    
     'accounts',
     'core',
 ]
