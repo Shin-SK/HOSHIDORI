@@ -206,10 +206,3 @@
 	}
   }
   </script>
-  
-  <style scoped>
-  /* テンプレートに書いていたクラス名をそのまま使えます */
-  /* .mypage, .user, .icon, .name, .lists.log, .caution, .want, .watched, .cannot など */
-  /* あとでCSSを読み込んで整える */
-  </style>
-  

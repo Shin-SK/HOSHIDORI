@@ -257,15 +257,3 @@ REST_AUTH_SERIALIZERS = {
     'USER_DETAILS_SERIALIZER': 'accounts.serializers.CustomUserSerializer',
 }
 
-LOGGING = {
-    'version': 1,
-    'handlers': {
-        'console': {'class': 'logging.StreamHandler'},
-    },
-    'loggers': {
-        'upload_debug': {
-            'handlers': ['console'],
-            'level': 'WARNING',
-        },
-    },
-}

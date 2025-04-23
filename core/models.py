@@ -62,5 +62,13 @@ class Log(models.Model):
     created_at    = models.DateTimeField(auto_now_add=True)
     updated_at    = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'stage'],
+                name='unique_user_stage'
+            )
+        ]
+
     def __str__(self):
         return f'{self.user} – {self.stage} ({self.status})'

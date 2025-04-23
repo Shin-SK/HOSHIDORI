@@ -1,18 +1,46 @@
-from rest_framework import viewsets, permissions, parsers
+from rest_framework import viewsets, permissions, parsers, status
+from rest_framework.response import Response
+from django_filters.rest_framework import DjangoFilterBackend
+from .filters import StageFilter  
 from .models import Stage, Log
 from .serializers import StageSerializer, LogSerializer
 import logging, pprint
+from django.db.models import Q
+
+
+
 
 logger = logging.getLogger('upload_debug')    # ② 追加
 
 
-class StageViewSet(viewsets.ModelViewSet):
-    queryset = Stage.objects.prefetch_related("credits__person", "theaters")
-    serializer_class = StageSerializer
-    permission_classes = (permissions.AllowAny,)
-    parser_classes = (parsers.MultiPartParser, parsers.FormParser, parsers.JSONParser)
+# core/api_views.py など
 
-    # ★ files / data / headers を全部表示
+class StageViewSet(viewsets.ModelViewSet):
+    """舞台（Stage）の CRUD + 検索用 ViewSet"""
+    serializer_class  = StageSerializer
+    permission_classes = (permissions.AllowAny,)
+    filter_backends    = [DjangoFilterBackend]
+    filterset_class    = StageFilter          # ← title・credits 等の全文検索
+    parser_classes     = (
+        parsers.MultiPartParser,
+        parsers.FormParser,
+        parsers.JSONParser,
+    )
+
+    # ---------- QuerySet ----------
+    def get_queryset(self):
+        """
+        常に Stage の一覧を返す。
+        * credits.person / theaters を事前読み込み
+        * distinct() は同じ Stage が二重に出ない保険
+        """
+        return (
+            Stage.objects
+            .prefetch_related("credits__person", "theaters")
+            .distinct()
+        )
+
+    # ---------- DEBUG ----------
     def _debug_payload(self, request):
         logger.warning(
             "\n----- FRONT PAYLOAD -----\n"
@@ -22,37 +50,64 @@ class StageViewSet(viewsets.ModelViewSet):
             "-------------------------"
         )
 
-    # 新規 POST
-    def create(self, request, *a, **kw):       # ③ 追加
+    # ---------- CREATE / UPDATE ----------
+    def create(self, request, *args, **kwargs):
         self._debug_payload(request)
-        return super().create(request, *a, **kw)
+        return super().create(request, *args, **kwargs)
 
-    # 編集 PATCH/PUT
-    def partial_update(self, request, *a, **kw):
+    def partial_update(self, request, *args, **kwargs):
         self._debug_payload(request)
-        return super().partial_update(request, *a, **kw)
+        return super().partial_update(request, *args, **kwargs)
+
+
 
 class LogViewSet(viewsets.ModelViewSet):
+    """
+    POST ひとつで「新規／更新／削除」まで面倒を見るトグル仕様
+    """
     serializer_class = LogSerializer
-    parser_classes   = (parsers.JSONParser,)  # ← 変更なし。お好みで追加
+    parser_classes   = (parsers.JSONParser,)
 
-    # ① アクション別パーミッション
+    # ---- 権限 ----
     def get_permissions(self):
-        if self.action == 'list':
-            return [permissions.AllowAny()]          # 閲覧は誰でも
-        return [permissions.IsAuthenticated()]       # それ以外は要ログイン
+        if self.action == "list":
+            return [permissions.AllowAny()]
+        return [permissions.IsAuthenticated()]
 
-    # ② stage パラメータで絞り込み
+    # ---- 一覧取得（変更なし）----
     def get_queryset(self):
-        qs = Log.objects.select_related('stage', 'user')
-        stage_id = self.request.query_params.get('stage')
-
-        if self.action == 'list' and stage_id:
-            return qs.filter(stage_id=stage_id, status='watched').order_by('-updated_at')
+        qs = Log.objects.select_related("stage", "user")
+        stage_id = self.request.query_params.get("stage")
+        if self.action == "list" and stage_id:
+            return qs.filter(stage_id=stage_id).order_by("-updated_at")
         return qs.filter(user=self.request.user)
 
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+    # ---- トグルロジックはここだけ ----
+    def create(self, request, *args, **kwargs):
+        stage_id = request.data.get("stage_id")
+        status_in = request.data.get("status")
+        if not stage_id or not status_in:
+            return Response({"detail": "stage_id と status は必須です"},
+                            status=status.HTTP_400_BAD_REQUEST)
 
-    def perform_update(self, serializer):
+        # 自分の既存ログを探す
+        log = Log.objects.filter(user=request.user, stage_id=stage_id).first()
+
+        # 1) まだ無い → 普通に新規
+        if not log:
+            return super().create(request, *args, **kwargs)
+
+        # 2) 同じ status → 削除（トグル OFF）
+        if log.status == status_in:
+            log.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        # 3) 違う status → status だけ更新
+        log.status = status_in
+        log.save(update_fields=["status", "updated_at"])
+        ser = self.get_serializer(log)
+        return Response(ser.data, status=status.HTTP_200_OK)
+
+
+    def perform_create(self, serializer):
         serializer.save(user=self.request.user)

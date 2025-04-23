@@ -1,6 +1,15 @@
 @use "../global/global" as g;
 
+main{
+    padding-bottom: 80px !important;
+}
 
+h1{
+    text-align: center;
+    @include fs(20);
+    font-weight: bold;
+    margin: 40px auto 24px;
+}
 
 .container{
     padding: 0px 16px;
@@ -321,11 +330,7 @@ input, textarea{
     @include flex();
     flex-direction: column;
     gap: 40px;
-    h1{
-        text-align: center;
-        @include fs(20);
-        font-weight: bold;
-    }
+
     .wrap{
         .contents{
             display: block;
@@ -606,10 +611,6 @@ input, textarea{
     flex-direction: column;
     gap: 80px;
     padding: 80px 0px;
-    h1{
-        text-align: center;
-        font-weight: bold;
-    }
     .form{
         display: flex;
         align-items: stretch;
@@ -730,11 +731,6 @@ input, textarea{
 }
 
 .contact{
-    h1{
-        @include fs(20);
-        font-weight: bold;
-        text-align: center;
-    }
     .form{
         display: flex;
         flex-direction: column;
@@ -769,5 +765,36 @@ input, textarea{
             width: 40px;
             height: auto;
         }
+    }
+}
+
+.footer{
+    position: fixed;
+    width: 100%;
+    height: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    background-color: white;
+    @include shadow();
+    &__wrap{
+        @include flex();
+        padding: 8px;
+        width: 100%;
+        justify-content: space-around;
+        img{
+            width: 40px;
+            height: auto;
+        }
+    }
+}
+
+.signup{
+
+    .login{
+        margin-top: 40px;
+        @include flex();
+        flex-direction: column;
     }
 }

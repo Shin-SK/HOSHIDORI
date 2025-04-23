@@ -124,221 +124,206 @@
 	  </div><!-- /.wrap -->
   
 	  <!-- ───────── ログ一覧 ───────── -->
-	  <div class="log">
-		<template v-if="logs.length">
+<!-- ───────── ログ一覧 ───────── -->
+		<div class="log">
+		<template v-if="watchedLogs.length">
 			<div class="area">
-				<div
-				v-for="log in logs"
+			<div
+				v-for="log in watchedLogs"
 				:key="log.id"
 				class="box"
-				>
-					<div class="name-box">
-						<!-- ユーザー -->
-						<div class="icon">
-							<img
-							v-if="log.user.icon_url"
-							:src="log.user.icon_url"
-							/>
-							<img
-							v-else
-							src="/img/user-default.png"
-							/>
-						</div>
-						<div class="name">{{ log.user.nickname }} さん</div>
-					</div>
-
-					<!-- ステータス / 回数 / レーティング -->
-					<div class="wrap">
-						<div class="outer">
-							<div class="inner log-status">
-								<div class="inner__wrap">
-									<i
-										:class="[
-										'fas',
-										log.status === 'watched'
-											? 'fa-eye'
-											: log.status === 'want'
-											? 'fa-heart'
-											: 'fa-eye-slash'
-										]"
-									/>
-									{{ log.status_display }}
-								</div>
-							</div><!-- log-status -->
-							<div class="inner log-times">
-									<span>観劇回数</span>{{ log.times }}
-							</div>
-							<div class="inner log-rating">
-								<span>レビュー</span>
-								<div class="star">
-								<i
-									v-for="i in 5"
-									:key="i"
-									:class="['fa-star', i <= log.rating ? 'fas' : 'far']"
-								/>
-								</div>
-							</div>
-						</div><!-- outer -->
-						<!-- コメント -->
-						<div class="log-comment">{{ log.comment }}</div>
-					</div>
-
-					<div class="edit">
-						<!-- 自分のログだけ ⇒ isMine(log) は <script> 側で実装してある前提 -->
-						<template v-if="isMine(log)">
-							<router-link :to="`/log/${log.id}/edit`">編集</router-link> |
-							<!-- 削除ボタンはクリックで deleteLog(id) を呼ぶだけ -->
-							<a href="#" class="delete" @click.prevent="onClickDelete(log.id)">削除</a>
-						</template>
-					</div>
-
+			>
+				<div class="name-box">
+				<div class="icon">
+					<img v-if="log.user.icon_url" :src="log.user.icon_url" />
+					<img v-else src="/img/user-default.png" />
 				</div>
+				<div class="name">{{ log.user.nickname }} さん</div>
+				</div>
+
+				<!-- ステータス / 回数 / レーティング -->
+				<div class="wrap">
+				<div class="outer">
+					<div class="inner log-status">
+					<div class="inner__wrap">
+						<i
+						:class="[
+							'fas',
+							log.status === 'watched'
+							? 'fa-eye'
+							: log.status === 'want'
+							? 'fa-heart'
+							: 'fa-eye-slash'
+						]"
+						/>
+						{{ log.status_display }}
+					</div>
+					</div>
+					<div class="inner log-times">
+					<span>観劇回数</span>{{ log.times }}
+					</div>
+					<div class="inner log-rating">
+					<span>レビュー</span>
+					<div class="star">
+						<i
+						v-for="i in 5"
+						:key="i"
+						:class="['fa-star', i <= log.rating ? 'fas' : 'far']"
+						/>
+					</div>
+					</div>
+				</div>
+				<!-- コメント -->
+				<div class="log-comment">{{ log.comment }}</div>
+				</div>
+
+				<div class="edit">
+				<template v-if="isMine(log)">
+					<router-link :to="`/log/${log.id}/edit`">編集</router-link> |
+					<a
+					href="#"
+					class="delete"
+					@click.prevent="onClickDelete(log.id)"
+					>削除</a>
+				</template>
+				</div>
+			</div>
 			</div>
 		</template>
 		<p v-else>まだログがありません。</p>
-	  </div><!-- log -->
+		</div>
+
 	</section>
   </template>
 
 
-  <script>
-  import { ref, computed, onMounted } from 'vue'
-  import { useRoute, useRouter } from 'vue-router'
-  import apiClient from '@/services/api.js'
-  
-  export default {
-	name: 'StageDetail',
-  
-	setup () {
-	  const route  = useRoute()
-	  const router = useRouter()
-  
-	  /* ───────── state ───────── */
-	  const stage          = ref({})
-	  const logs           = ref([])
-	  const loading        = ref(true)
-	  const error          = ref(null)
-	  const currentUserId  = ref(null)       // ログイン中の自分の ID
-	  const myStatus       = ref(null)       // 自分のステータス (watched / want / cannot)
-  
-	  /* ───────── computed ───────── */
-	  /** credits 配列 → キャスト／スタッフに分離 */
-	  const castCredits  = computed(() =>
-		(stage.value.credits || []).filter(c => c.role === 'cast')
-	  )
-	  const staffCredits = computed(() =>
-		(stage.value.credits || []).filter(c => c.role === 'staff')
-	  )
+<script>
+import { ref, computed, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import apiClient from '@/services/api.js'
 
-	  const theaterList  = computed(() =>
-		stage.value.theaters || []
-	  )
-		
-	  /** レビュー平均 */
-	  const avgRating = computed(() => {
-		const rated = logs.value.filter(l => l.rating)
-		return rated.length
-		  ? rated.reduce((s, l) => s + l.rating, 0) / rated.length
-		  : null
-	  })
-  
-	  /** 自分のログか？ */
-	  const isMine = log =>
-		!!currentUserId.value && log.user?.id === currentUserId.value
-  
-	  /* ───────── ステータス変更 ───────── */
-	  const setStatus = async (status) => {
-		if (!currentUserId.value) {
-		  alert('ログインしてください')
-		  return
-		}
-  
-		const mine = logs.value.find(isMine)
-  
-		try {
-		  if (!mine) {
-			// まだ自分のログが無い
-			if (status === 'watched') {
-			  // 「観た」は詳細入力フォームへ
-			  router.push({ name: 'log-create', params: { stageId: stage.value.id } })
-			  return
-			}
-			// want / cannot はワンクリック作成
-			await apiClient.post('/api/log/', {
-			  stage: stage.value.id,
-			  status
-			})
-		  } else {
-			// 既にログがある → 更新
-			await apiClient.put(`/api/log/${mine.id}/`, { ...mine, status })
-		  }
-  
-		  await reloadLogs()          // 一覧を再取得
-		} catch (e) {
-		  if (e.response?.status === 400) {
-			alert('すでにこのステータスのログが登録されています')
-		  } else {
-			alert('ステータス変更に失敗しました: ' + e.message)
-		  }
-		  console.error(e)
-		}
-	  }
-  
-	  /* ───────── ログ削除 ───────── */
-	  const onClickDelete = async (id) => {
-		if (!confirm('このログを削除しますか？')) return
-		try {
-		  await apiClient.delete(`/api/log/${id}/`)
-		  logs.value = logs.value.filter(l => l.id !== id)
-		  alert('削除しました')
-		} catch (e) {
-		  alert('削除できませんでした: ' + e.message)
-		}
-	  }
-  
-	  /* ───────── API fetch ───────── */
-	  const reloadLogs = async () => {
-		const res = await apiClient.get('/api/log/', { params: { stage: stage.value.id } })
-		logs.value = res.data
-		const mine = logs.value.find(isMine)
-		myStatus.value = mine ? mine.status : null
-	  }
-  
-	  onMounted(async () => {
-		try {
-		  // ステージ詳細
-		  stage.value = (await apiClient.get(`/api/stage/${route.params.id}/`)).data
-  
-		  // 自分の ID（未ログイン時は 401）
-		  try {
-			currentUserId.value = (await apiClient.get('/dj-rest-auth/user/')).data.id
-		  } catch { /* 未ログイン */ }
-  
-		  // ログ一覧
-		  await reloadLogs()
-		} catch (e) {
-		  error.value = e.message
-		} finally {
-		  loading.value = false
-		}
-	  })
-  
-	  /* ───────── expose ───────── */
-	  return {
-		stage,
-		logs,
-		loading,
-		error,
-		castCredits,
-		staffCredits,
-		theaterList,
-		avgRating,
-		myStatus,
-		setStatus,
-		isMine,
-		onClickDelete
-	  }
-	}
+export default {
+  name: 'StageDetail',
+
+  setup () {
+    const route  = useRoute()
+    const router = useRouter()
+
+    /* ───────── state ───────── */
+    const stage          = ref({})
+    const logs           = ref([])            // ← 取得した全ログ
+    const watchedLogs    = computed(() =>     // ← “観た” だけ抽出
+      logs.value.filter(l => l.status === 'watched')
+    )
+    const loading        = ref(true)
+    const error          = ref(null)
+    const currentUserId  = ref(null)
+    const myStatus       = ref(null)          // watched / want / cannot
+
+    /* ───────── computed ───────── */
+    const castCredits  = computed(() =>
+      (stage.value.credits || []).filter(c => c.role === 'cast')
+    )
+    const staffCredits = computed(() =>
+      (stage.value.credits || []).filter(c => c.role === 'staff')
+    )
+    const theaterList  = computed(() =>
+      stage.value.theaters || []
+    )
+
+    /** “観た” だけで平均を計算 */
+    const avgRating = computed(() => {
+      const rated = watchedLogs.value.filter(l => l.rating)
+      return rated.length
+        ? rated.reduce((s, l) => s + l.rating, 0) / rated.length
+        : null
+    })
+
+    /** 自分のログ判定 */
+    const isMine = log =>
+      !!currentUserId.value && log.user?.id === currentUserId.value
+
+/* ───────── ステータス変更 ───────── */
+const setStatus = async (status) => {
+  if (!currentUserId.value) return alert('ログインしてください')
+
+  // ===== 観た！はフォームへ =====
+  if (status === 'watched') {
+    const mine = logs.value.find(isMine)
+
+    // ★ クエリに toStatus=watched を付けて渡す ★
+    router.push(
+      mine
+        ? { name: 'log-edit',   params: { id: mine.id },      query: { toStatus: 'watched' } }
+        : { name: 'log-create', params: { stageId: stage.value.id }, query: { toStatus: 'watched' } }
+    )
+    return
   }
-  </script>
-  
+
+  // ===== want / cannot はその場更新 =====
+  try {
+    await apiClient.post('/api/log/', { stage_id: stage.value.id, status })
+    await reloadLogs()
+  } catch (e) {
+    alert('変更に失敗しました: ' + (e.response?.data?.detail || e.message))
+    console.error(e)
+  }
+}
+
+    /* ───────── ログ削除 ───────── */
+    const onClickDelete = async (id) => {
+      if (!confirm('このログを削除しますか？')) return
+      try {
+        await apiClient.delete(`/api/log/${id}/`)
+        logs.value = logs.value.filter(l => l.id !== id)
+
+        // “観た” を消した時はハイライトも落とす
+        if (myStatus.value === 'watched' && !logs.value.find(isMine)) {
+          myStatus.value = null
+        }
+        alert('削除しました')
+      } catch (e) {
+        alert('削除できませんでした: ' + e.message)
+      }
+    }
+
+    /* ───────── API fetch ───────── */
+    const reloadLogs = async () => {
+      const res = await apiClient.get('/api/log/', { params: { stage: stage.value.id } })
+      logs.value = res.data
+      const mine = res.data.find(isMine)
+      myStatus.value = mine ? mine.status : null
+    }
+
+    onMounted(async () => {
+      try {
+        stage.value = (await apiClient.get(`/api/stage/${route.params.id}/`)).data
+        try {
+          currentUserId.value = (await apiClient.get('/dj-rest-auth/user/')).data.id
+        } catch { /* 未ログイン */ }
+        await reloadLogs()
+      } catch (e) {
+        error.value = e.message
+      } finally {
+        loading.value = false
+      }
+    })
+
+    /* ───────── expose ───────── */
+    return {
+      stage,
+      watchedLogs,        // ← テンプレート側はこれを使う
+      loading,
+      error,
+      castCredits,
+      staffCredits,
+      theaterList,
+      avgRating,
+      myStatus,
+      setStatus,
+      isMine,
+      onClickDelete
+    }
+  }
+}
+</script>

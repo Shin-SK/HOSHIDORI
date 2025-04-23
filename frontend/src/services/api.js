@@ -1,74 +1,78 @@
 // src/services/api.js
-import axios from 'axios'
+import axios  from 'axios'
 import router from '@/router'
 
-// ◇ 1. 基本設定
 const api = axios.create({
   baseURL: 'http://localhost:8000',
-  withCredentials: false            // JWT はヘッダだけで送る
+  withCredentials: false          // JWT だけなら false
 })
 
-// ◇ 2. リクエスト前: accessToken があれば必ず付ける
+// ───── リクエスト前 ─────
 api.interceptors.request.use(cfg => {
   const token = localStorage.getItem('accessToken')
   if (token) cfg.headers.Authorization = `Bearer ${token}`
   return cfg
 })
 
-// ◇ 3. レスポンス後: 401 が来たら自動リフレッシュ＆リトライ
+// ───── レスポンス後 ─────
 let isRefreshing = false
-let queued = []   // リフレッシュ中のリクエストをキューに貯める
+let queue = []
 
 api.interceptors.response.use(
-  res => res,     // 200 系はそのまま返す
+  res => res,
   async err => {
     const { config, response } = err
-    if (!response || response.status !== 401) throw err       // 401 以外はただ投げる
+    if (!response || response.status !== 401) throw err
 
-    // ----- ここから 401 対応 -----
-    // ① すでにリフレッシュ試したリクエストなら諦めてログインへ
+    // 1回 retry した物は諦めてログインへ
     if (config._retry) {
-      localStorage.removeItem('accessToken')
-      localStorage.removeItem('refreshToken')
-      router.push('/login')
+      cleanupAndLogout()
       throw err
     }
     config._retry = true
 
-    // ② 同時に 401 が複数来る場合のロック
+    // refresh 中はキューへ
     if (isRefreshing) {
-      return new Promise((resolve, reject) => queued.push({ resolve, reject, config }))
+      return new Promise((resolve, reject) => queue.push({ resolve, reject, config }))
     }
     isRefreshing = true
 
     try {
-      // ③ refresh トークンで新しい access を取得
+      // ── リフレッシュ
       const refresh = localStorage.getItem('refreshToken')
-      const res = await axios.post('http://localhost:8000/dj-rest-auth/jwt/refresh/', {
-        refresh
-      })
-      const newAccess = res.data.access
+      if (!refresh) throw new Error('no-refresh-token')
+
+      const { data } = await axios.post(
+        'http://localhost:8000/dj-rest-auth/jwt/refresh/',
+        { refresh }
+      )
+
+      const newAccess = data.access
       localStorage.setItem('accessToken', newAccess)
 
-      // ④ 今のリクエスト & 待機列を再送
+      // 自分 & キューを再送
       config.headers.Authorization = `Bearer ${newAccess}`
-      queued.forEach(p => {
+      queue.forEach(p => {
         p.config.headers.Authorization = `Bearer ${newAccess}`
         api.request(p.config).then(p.resolve).catch(p.reject)
       })
-      queued = []
+      queue = []
       return api.request(config)
 
-    } catch (refreshErr) {
-      // ⑤ refresh 失敗 → ログアウト
-      localStorage.removeItem('accessToken')
-      localStorage.removeItem('refreshToken')
-      router.push('/login')
-      throw refreshErr
+    } catch (e) {
+      cleanupAndLogout()
+      throw e
     } finally {
       isRefreshing = false
     }
   }
 )
+
+// ユーティリティ
+function cleanupAndLogout () {
+  localStorage.removeItem('accessToken')
+  localStorage.removeItem('refreshToken')
+  router.push('/login')
+}
 
 export default api

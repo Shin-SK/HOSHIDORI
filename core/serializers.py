@@ -176,7 +176,7 @@ class StageLiteSerializer(serializers.ModelSerializer):
 # ------------------------------------------------------------
 class LogSerializer(serializers.ModelSerializer):
     stage_id = serializers.PrimaryKeyRelatedField(  # write‑only
-        queryset=Stage.objects.all(), source='stage', write_only=True
+        queryset=Stage.objects.all(), source='stage', write_only=True, required=False
     )
     stage = StageLiteSerializer(read_only=True)
     user  = UserLiteSerializer(read_only=True)

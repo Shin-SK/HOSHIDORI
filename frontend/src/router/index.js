@@ -8,12 +8,13 @@ import StageCreate from '../views/StageCreate.vue'
 import MyPage from '../views/MyPage.vue'
 import LogEdit from '../views/LogEdit.vue'
 import ProfileEdit from '../views/ProfileEdit.vue'
+import Signup from '@/views/Signup.vue'
 
 // ★ ログインページをインポート
 import LoginView from '../views/LoginView.vue'
 
 const routes = [
-  { path: '/', name: 'home', component: HomeView },
+  { path: '/', name: 'home', component: HomeView, meta: { hideLayout: true }},
   { path: '/stage', name: 'stage-list', component: StageList },
   { path: '/stage/create', name: 'stage-create', component: StageCreate },
   { path: '/stage/:id', name: 'stage-detail', component: StageDetail },
@@ -22,8 +23,8 @@ const routes = [
   { path: '/mypage', name: 'mypage', component: MyPage },
   { path  : '/log/create/:stageId', name  : 'log-create', component: LogEdit, props: route => ({ mode: 'create', stageId: Number(route.params.stageId) })},
   { path: '/log/:id/edit', name: 'log-edit', component: LogEdit, props: route => ({ mode: 'edit', id: route.params.id }) },
-  { path: '/profile/edit',  name: 'profile-edit', component: ProfileEdit } // ★ これを追加
-
+  { path: '/profile/edit',  name: 'profile-edit', component: ProfileEdit },
+  { path: '/signup', name: 'signup', component: Signup  }
 ]
 
 const router = createRouter({

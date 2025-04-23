@@ -93,6 +93,9 @@
   const route  = useRoute()
   const router = useRouter()
   
+	/* ★ 追記: クエリから初期 status を拾う（無ければ null） ★ */
+	const initStatus = route.query.toStatus || null
+
   /* route から取れる stageId (create 時のみ入っている) */
   const stageIdFromRoute = Number(route.params.stageId) || null
   
@@ -101,7 +104,7 @@
   const error   = ref(null)
   
   const form = ref({
-	status : 'watched',
+	status : initStatus || 'watched',
 	times  : 1,
 	rating : 0,
 	comment: '',
@@ -131,6 +134,7 @@
 	try {
 	  const res = await apiClient.get(`/api/log/${logId}/`)
 	  form.value = { ...form.value, ...res.data }   // ← stage も入る
+	  if (initStatus) form.value.status = initStatus
 	} catch (e) {
 	  error.value = e.message
 	} finally {
@@ -153,6 +157,7 @@
 	  } else {
 		/* ------ 編集更新 ------ */
 		await apiClient.put(`/api/log/${logId}/`, {
+		  stage_id: stageId.value,
 		  status : form.value.status,
 		  times  : form.value.times,
 		  rating : form.value.rating,

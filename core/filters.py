@@ -1,35 +1,34 @@
 # core/filters.py
+from django.db.models import Q
 import django_filters
 from django import forms
-from django.db.models import Q
 from .models import Stage
-from .models import Log
-
-class LogFilter(django_filters.FilterSet):
-    # stage で絞り込みたい場合
-    stage = django_filters.NumberFilter(field_name='stage_id')
-
-    # user で絞り込みたい場合 (例)
-    user = django_filters.NumberFilter(field_name='user_id')
-
-    class Meta:
-        model = Log
-        fields = ['stage', 'user', 'status', 'rating']
 
 class StageFilter(django_filters.FilterSet):
     search = django_filters.CharFilter(
         method='filter_search',
         label='キーワード検索',
-        widget=forms.TextInput(attrs={'placeholder': '舞台タイトル・出演者・スタッフで検索'})
+        widget=forms.TextInput(
+            attrs={'placeholder': 'タイトル・出演者・スタッフ・劇場で検索'}
+        )
     )
 
     class Meta:
-        model = Stage
+        model  = Stage
         fields = []
 
-    def filter_search(self, queryset, name, value):
-        return queryset.filter(
-            Q(title__icontains=value) |
-            Q(cast__icontains=value) |
-            Q(staff__icontains=value)
+    def filter_search(self, qs, name, value):
+        v = value.strip()
+        if not v:
+            return qs
+
+        return (
+            qs.filter(
+                Q(title__icontains=v) |                       # 作品タイトル
+                Q(credits__person__name__icontains=v) |       # キャスト／スタッフ名
+                Q(credits__position__icontains=v) |           # 役職(演出など)
+                Q(theaters__name__icontains=v)                # ★ 劇場名 ← 追加
+            )
+            .distinct()
+            .prefetch_related("credits__person", "theaters")
         )
