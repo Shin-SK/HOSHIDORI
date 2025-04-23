@@ -220,7 +220,7 @@ DEFAULT_FROM_EMAIL = os.environ.get('DJANGO_DEFAULT_FROM_EMAIL', 'webmaster@loca
 # CORS設定
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",  # Vue     
-    "https://hoshidori.com" 
+    "https://admin.hoshidori.com" 
 ]
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
