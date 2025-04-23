@@ -21,7 +21,7 @@ debug_str = os.environ.get('DEBUG', 'True')
 DEBUG = (debug_str.lower() == 'true')
 
 if not DEBUG:
-    ALLOWED_HOSTS = ['hoshidori-07958dfc4ae7.herokuapp.com','hoshidori.com', 'admin.hoshidori.com']
+    ALLOWED_HOSTS = ['hoshidori-07958dfc4ae7.herokuapp.com','.hoshidori.com']
 else:
     ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '127.0.0.1:8000']
 
