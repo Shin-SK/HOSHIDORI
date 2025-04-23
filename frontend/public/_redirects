@@ -1,0 +1,2 @@
+# frontend/public/_redirects      ← Vite の場合この位置が楽
+/*    /index.html   200
