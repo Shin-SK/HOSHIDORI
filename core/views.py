@@ -1,4 +1,4 @@
-# core/views.py - Consolidated imports
+# core/views.py
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import (
@@ -26,6 +26,11 @@ from django.views.generic import CreateView, UpdateView
 from .models import Stage
 from .forms import StageForm, LogForm
 from cloudinary.uploader import upload
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from .models import Log, Like
+
 
 
 @login_required
@@ -240,3 +245,23 @@ def top_view(request):
     else:
         # LP用テンプレートを表示
         return render(request, 'core/top.html')
+
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def toggle_like(request, log_id):
+    log = get_object_or_404(Log, pk=log_id)
+    like_qs = Like.objects.filter(user=request.user, log=log)
+
+    if like_qs.exists():        # 既に押している ⇒ 解除
+        like_qs.delete()
+        liked = False
+    else:                       # まだ押していない ⇒ 追加
+        Like.objects.create(user=request.user, log=log)
+        liked = True
+
+    return Response({
+        'liked': liked,
+        'like_count': log.likes.count()
+    })

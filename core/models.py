@@ -1,6 +1,41 @@
 # core/models.py
 from django.conf import settings
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+
+class Profile(models.Model):
+    """公開プロフィール"""
+    user        = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='profile'
+    )
+    bio         = models.TextField(blank=True)
+    website_url = models.URLField(blank=True)
+    twitter_url = models.URLField(blank=True)
+    created_at  = models.DateTimeField(auto_now_add=True)
+    updated_at  = models.DateTimeField(auto_now=True)
+        # ★ 追加ここだけ ★
+    DIVISION_CHOICES = [
+        ('',         '— 未設定 —'),
+        ('actor',    '俳優部'),
+        ('staff',    '制作部'),
+        ('producer', '製作部'),
+    ]
+    division = models.CharField(max_length=20, choices=DIVISION_CHOICES, blank=True)
+
+    def __str__(self):
+        return f"{self.user.username}'s profile"
+
+# --- 自動生成 ---
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def create_or_update_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+    else:
+        instance.profile.save()
 
 
 class Theater(models.Model):
@@ -72,3 +107,20 @@ class Log(models.Model):
 
     def __str__(self):
         return f'{self.user} – {self.stage} ({self.status})'
+
+
+
+class Like(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
+        related_name='likes_given')
+    log  = models.ForeignKey(
+        Log, on_delete=models.CASCADE, related_name='likes')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'log')   # 二重いいね防止
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f'{self.user} ❤️ {self.log_id}'

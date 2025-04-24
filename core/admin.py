@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Stage, Theater, Person, Credit, Log
+from .models import Stage, Theater, Person, Credit, Log, Profile
 from import_export.admin import ImportExportModelAdmin
 from import_export import resources
 
@@ -39,3 +39,10 @@ class PersonAdmin(admin.ModelAdmin):
 @admin.register(Log)
 class LogAdmin(admin.ModelAdmin):
     list_display = ('user', 'stage', 'status', 'rating')
+
+
+@admin.register(Profile)
+class ProfileAdmin(admin.ModelAdmin):
+    list_display  = ('user', 'division')          # 一覧に division を表示
+    list_filter   = ('division',)                 # サイドバーで絞り込み
+    search_fields = ('user__username', 'user__nickname')

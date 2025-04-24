@@ -53,18 +53,6 @@ input, textarea{
     justify-content: flex-start;
     gap: 8px;
     width: 100%;
-    .icon{
-        width: 80px;
-        height: 80px;
-        img{
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 100%;
-            border: 1px $mc solid;
-            background-color: white;
-        }
-    }
     .name{
         font-weight: bold;
     }
@@ -152,14 +140,15 @@ input, textarea{
     }
     .watched{
         .card{
-            padding: 16px;
-            background-color: #f5f5f5;
-            border-radius: 8px;
             margin-bottom: 16px;
             .box{
+                padding: 16px;
+                background-color: #f5f5f5;
+                border-radius: 8px;
                 display: grid;
                 grid-template-columns: 150px 1fr;
                 gap: 16px;
+                margin-bottom: 16px;
                 .poster{
                     img{
                         aspect-ratio: 1/1.414;
@@ -555,6 +544,13 @@ input, textarea{
             display: inline;
             width: fit-content;
         }
+        .box{
+            .like{
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+        }
     }
     .navi{
         margin-bottom: 40px;
@@ -564,17 +560,10 @@ input, textarea{
             align-items: center;
             li{
                 width: 100%;
-                a{
-                    @include flex();
-                    flex-direction: column;
-                    gap: 4px;
-                    i{
-                        @include fs(30);
-                        
-                    }
-                    span{
-                        @include fs(10);
-                    }
+                cursor: pointer;
+                text-align: center;
+                &.active{
+                    font-weight: bold;
                 }
             }
         }
@@ -584,17 +573,17 @@ input, textarea{
         width: 100%;
         @include fs(20);
         color: $mc;
-        &::after{
-            content: '';
-            position: absolute;
-            height: 1px;
-            width: 80%;
-            top: 0;
-            bottom: 0;
-            right: 0;
-            margin: auto;
-            background-color: $mc;
-        }
+        // &::after{
+        //     content: '';
+        //     position: absolute;
+        //     height: 1px;
+        //     width: 80%;
+        //     top: 0;
+        //     bottom: 0;
+        //     right: 0;
+        //     margin: auto;
+        //     background-color: $mc;
+        // }
     }
     .caution{
         padding: 40px 16px;
@@ -777,7 +766,7 @@ input, textarea{
     right: 0;
     margin: auto;
     background-color: white;
-    @include shadow();
+    border-top: 1px lightgray solid;
     &__wrap{
         @include flex();
         padding: 8px;
@@ -791,10 +780,58 @@ input, textarea{
 }
 
 .signup{
-
     .login{
         margin-top: 40px;
         @include flex();
         flex-direction: column;
+    }
+}
+
+.icon{
+    width: 80px;
+    height: 80px;
+    img{
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 100%;
+        border: 1px $mc solid;
+        background-color: white;
+    }
+    .division{
+        position: relative;
+        &::before{
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 100%;
+            top: 0;
+            right: 0;
+        }
+        &--actor::before{
+            background-image: url(../../img/icon_haiyu.svg);
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        &--staff::before{
+            background-color: blue;
+        }
+    }
+    .rank{
+        position: relative;
+        &::after{
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 100%;
+            bottom: 0;
+            right: 0;
+        }
+        &--1::after{
+            background-color: pink;
+        }
     }
 }

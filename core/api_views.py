@@ -1,19 +1,45 @@
+# core/api_views.py
+import logging, pprint
+from django.db.models import Q
+from django.contrib.auth import get_user_model
+from django.shortcuts import get_object_or_404
+from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
 from rest_framework import viewsets, permissions, parsers, status
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
+
 from .filters import StageFilter  
-from .models import Stage, Log
-from .serializers import StageSerializer, LogSerializer
-import logging, pprint
-from django.db.models import Q
+from .models import Stage, Log, Profile ,Like
+from .serializers import StageSerializer, LogSerializer ,ProfileSerializer
 
 
+logger = logging.getLogger('upload_debug')
+User = get_user_model()
 
+class ProfileViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    /api/profile/<username>/ だけ取れれば十分なので ReadOnly
+    """
+    serializer_class  = ProfileSerializer
+    permission_classes = (permissions.AllowAny,)
+    lookup_field       = 'user__username'      # URL で username を使う
+    queryset = Profile.objects.select_related('user')
 
-logger = logging.getLogger('upload_debug')    # ② 追加
+    # username は User のフィールドなので JOIN して絞り込み
+    def get_queryset(self):
+        return super().get_queryset().select_related('user')
 
+    @action(detail=False, methods=['get'], url_path='me')
+    def me(self, request):
+        """ /api/profile/me/ → 自分のプロフィール """
+        if not request.user.is_authenticated:
+            return Response({'detail': 'Authentication required'}, status=401)
 
-# core/api_views.py など
+        profile = get_object_or_404(Profile, user=request.user)
+        ser = self.get_serializer(profile)
+        return Response(ser.data)
+
 
 class StageViewSet(viewsets.ModelViewSet):
     """舞台（Stage）の CRUD + 検索用 ViewSet"""
@@ -111,3 +137,24 @@ class LogViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+
+    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
+    def like(self, request, pk=None):
+        """
+        POST /api/log/<pk>/like/
+        """
+        log      = self.get_object()
+        like_qs  = Like.objects.filter(user=request.user, log=log)
+
+        if like_qs.exists():
+            like_qs.delete()
+            liked = False
+        else:
+            Like.objects.create(user=request.user, log=log)
+            liked = True
+
+        return Response({
+            'liked'      : liked,
+            'like_count' : log.likes.count()
+        })

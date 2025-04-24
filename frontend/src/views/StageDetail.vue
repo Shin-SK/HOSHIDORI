@@ -187,6 +187,17 @@
 					>削除</a>
 				</template>
 				</div>
+
+				<div class="like">
+					<button
+						class="like-btn"
+						:class="{ liked: log.is_liked }"
+						@click="toggleLike(log)"
+					>
+						<i class="fas fa-heart" />
+						{{ log.like_count }}
+					</button>
+				</div>
 			</div>
 			</div>
 		</template>
@@ -287,6 +298,18 @@ const setStatus = async (status) => {
       }
     }
 
+	// ――― いいねトグル ―――
+	const toggleLike = async (log) => {
+	if (!currentUserId.value) return alert('ログインしてください')
+	try {
+		const { data } = await apiClient.post(`/api/log/${log.id}/like/`)
+		log.is_liked   = data.liked
+		log.like_count = data.like_count
+	} catch (e) {
+		alert('失敗しました: ' + (e.response?.data?.detail || e.message))
+	}
+	}
+
     /* ───────── API fetch ───────── */
     const reloadLogs = async () => {
       const res = await apiClient.get('/api/log/', { params: { stage: stage.value.id } })
@@ -322,8 +345,20 @@ const setStatus = async (status) => {
       myStatus,
       setStatus,
       isMine,
+	  toggleLike,
       onClickDelete
     }
   }
 }
 </script>
+
+<style>
+
+.like-btn {
+  display:inline-flex; gap:4px; align-items:center;
+  padding:2px 6px; border:1px solid #ddd; border-radius:4px;
+  background:#fff; cursor:pointer; font-size:14px;
+}
+.like-btn.liked   { color:#e63946; border-color:#e63946; }
+.like-btn i       { font-size:12px; }
+</style>

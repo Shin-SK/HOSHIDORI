@@ -13,6 +13,7 @@ from .views import (
     LogDeleteView,
     LogCreateView,
     set_log_status_view
+    # toggle_like
 )
 
 urlpatterns = [
@@ -29,4 +30,5 @@ urlpatterns = [
     path('stage/<int:stage_pk>/log/create/', LogCreateView.as_view(), name='log_create'),
 	path('mypage/', my_page, name='my_page'),
 	path('stage/search/', StageSearchView.as_view(), name='stage_search'),
+    # path('logs/<int:log_id>/like/', toggle_like, name='toggle-like'),
 ]

@@ -447,19 +447,6 @@ input, textarea {
   gap: 8px;
   width: 100%;
 }
-.name-box .icon {
-  width: 80px;
-  height: 80px;
-}
-.name-box .icon img {
-  width: 100%;
-  height: 100%;
-  -o-object-fit: cover;
-     object-fit: cover;
-  border-radius: 100%;
-  border: 1px #000b00 solid;
-  background-color: white;
-}
 .name-box .name {
   font-weight: bold;
 }
@@ -550,15 +537,16 @@ input, textarea {
   margin: 40px auto;
 }
 .mypage .watched .card {
-  padding: 16px;
-  background-color: #f5f5f5;
-  border-radius: 8px;
   margin-bottom: 16px;
 }
 .mypage .watched .card .box {
+  padding: 16px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
   display: grid;
   grid-template-columns: 150px 1fr;
   gap: 16px;
+  margin-bottom: 16px;
 }
 .mypage .watched .card .box .poster img {
   aspect-ratio: 1/1.414;
@@ -970,6 +958,11 @@ input, textarea {
   width: -moz-fit-content;
   width: fit-content;
 }
+.mypage .user .box .like {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
 .mypage .navi {
   margin-bottom: 40px;
 }
@@ -980,36 +973,17 @@ input, textarea {
 }
 .mypage .navi__wrap li {
   width: 100%;
+  cursor: pointer;
+  text-align: center;
 }
-.mypage .navi__wrap li a {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  gap: 4px;
-}
-.mypage .navi__wrap li a i {
-  font-size: clamp(3rem, 2.9346938776rem + 0.2040816327vw, 3.2rem);
-}
-.mypage .navi__wrap li a span {
-  font-size: clamp(1rem, 0.9346938776rem + 0.2040816327vw, 1.2rem);
+.mypage .navi__wrap li.active {
+  font-weight: bold;
 }
 .mypage h2 {
   position: relative;
   width: 100%;
   font-size: clamp(2rem, 1.9346938776rem + 0.2040816327vw, 2.2rem);
   color: #000b00;
-}
-.mypage h2::after {
-  content: "";
-  position: absolute;
-  height: 1px;
-  width: 80%;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  margin: auto;
-  background-color: #000b00;
 }
 .mypage .caution {
   padding: 40px 16px;
@@ -1195,7 +1169,7 @@ input, textarea {
   right: 0;
   margin: auto;
   background-color: white;
-  box-shadow: 0px 0px 15px -5px #777777;
+  border-top: 1px lightgray solid;
 }
 .footer__wrap {
   display: flex;
@@ -1216,6 +1190,56 @@ input, textarea {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+}
+
+.icon {
+  width: 80px;
+  height: 80px;
+}
+.icon img {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+  border-radius: 100%;
+  border: 1px #000b00 solid;
+  background-color: white;
+}
+.icon .division {
+  position: relative;
+}
+.icon .division::before {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 100%;
+  top: 0;
+  right: 0;
+}
+.icon .division--actor::before {
+  background-image: url(../../img/icon_haiyu.svg);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.icon .division--staff::before {
+  background-color: blue;
+}
+.icon .rank {
+  position: relative;
+}
+.icon .rank::after {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 100%;
+  bottom: 0;
+  right: 0;
+}
+.icon .rank--1::after {
+  background-color: pink;
 }
 
 .top {

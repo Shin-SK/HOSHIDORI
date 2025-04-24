@@ -9,6 +9,7 @@
   import LogEdit from '../views/LogEdit.vue'
   import ProfileEdit from '../views/ProfileEdit.vue'
   import Signup from '@/views/Signup.vue'
+  import PublicProfile from '../views/PublicProfile.vue'
 
   
   // ★ ログインページをインポート
@@ -25,7 +26,8 @@
     { path  : '/log/create/:stageId', name  : 'log-create', component: LogEdit, props: route => ({ mode: 'create', stageId: Number(route.params.stageId) })},
     { path: '/log/:id/edit', name: 'log-edit', component: LogEdit, props: route => ({ mode: 'edit', id: route.params.id }) },
     { path: '/profile/edit',  name: 'profile-edit', component: ProfileEdit },
-    { path: '/signup', name: 'signup', component: Signup  }
+    { path: '/signup', name: 'signup', component: Signup  },
+    { path: '/profile/:username', name: 'public-profile', component: PublicProfile, props: true }
   ]
 
   const router = createRouter({

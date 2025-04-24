@@ -3,7 +3,8 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from cloudinary.uploader import upload as cloud_upload
 import json 
-from .models import Person, Theater, Stage, Credit, Log
+from .models import Person, Theater, Stage, Credit, Log, Profile, Like
+from django.db.models import Count
 
 User = get_user_model()           # カスタムユーザー対応
 # ------------------------------------------------------------
@@ -180,8 +181,74 @@ class LogSerializer(serializers.ModelSerializer):
     )
     stage = StageLiteSerializer(read_only=True)
     user  = UserLiteSerializer(read_only=True)
+    like_count = serializers.IntegerField(source='likes.count', read_only=True)
+    is_liked   = serializers.SerializerMethodField()
+
+    def get_is_liked(self, obj):
+        req = self.context.get('request')     # ← .get で安全に
+        return bool(
+            req and req.user.is_authenticated
+            and obj.likes.filter(user=req.user).exists()
+        )
 
     class Meta:
         model  = Log
         fields = '__all__'
         read_only_fields = ('created_at', 'updated_at')
+    
+
+# ----- Profile -----
+
+class ProfileSerializer(serializers.ModelSerializer):
+    user = UserLiteSerializer(read_only=True)
+
+    # 差し替え：いいね数系
+    liked_logs   = serializers.SerializerMethodField()
+    liked_count  = serializers.SerializerMethodField()
+
+    # 既存 ↓ はそのまま
+    favorite_theaters = serializers.SerializerMethodField()
+    rank              = serializers.SerializerMethodField()
+
+    class Meta:
+        model  = Profile
+        fields = ('user', 'bio', 'website_url', 'twitter_url', 'division',
+                  'liked_logs', 'liked_count', 'favorite_theaters', 'rank')
+
+    # --- いいね！合計 --------------------------------------------------
+    def get_liked_count(self, profile):
+        return (Like.objects
+                    .filter(log__user=profile.user)   # 自分の日誌に付いたいいね
+                    .count())
+
+    # --- TOP3 劇場 (既存ロジック) --------------------------------------
+    def get_favorite_theaters(self, profile):
+        qs = (Log.objects
+                .filter(user=profile.user, status='watched')
+                .values('stage__theaters__id', 'stage__theaters__name')
+                .annotate(times=Count('id'))
+                .order_by('-times')[:3])
+        return [{'id': t['stage__theaters__id'],
+                 'name': t['stage__theaters__name'],
+                 'times': t['times']} for t in qs]
+
+    # --- ランク：いいね数ベース ----------------------------------------
+    def get_rank(self, profile):
+        cnt = self.get_liked_count(profile)
+        return cnt // 10 + 1           # 10 いいね単位で LevelUP など
+
+    # --- いいねされた Log 一覧（最新順） -------------------------------
+    def get_liked_logs(self, profile):
+        logs = (Log.objects
+                  .filter(user=profile.user)
+                  .annotate(like_total=Count('likes'))
+                  .filter(like_total__gt=0)
+                  .order_by('-like_total', '-updated_at'))
+        return LogSerializer(
+            logs,
+            many=True,
+            context=self.context        # ★ 追加
+        ).data
+
+
+

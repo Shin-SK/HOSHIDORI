@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     'dj_rest_auth',
     # ユーザー登録（registration）機能を使うなら
     'dj_rest_auth.registration',  
-    
+
     'accounts',
     'core',
 ]
@@ -262,13 +262,3 @@ REST_AUTH_SERIALIZERS = {
 }
 
 
-
-
-LOGGING = {
-    "version": 1,
-    "handlers": {"console": {"class": "logging.StreamHandler"}},
-    "loggers": {
-        "django.request": {"handlers": ["console"], "level": "ERROR"},
-        "django.db.backends": {"handlers": ["console"], "level": "ERROR"},
-    },
-}
