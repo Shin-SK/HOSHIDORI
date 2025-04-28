@@ -452,7 +452,7 @@ input, textarea {
 }
 
 .lists {
-  margin: 16px auto;
+  margin: auto;
   gap: 8px;
   align-items: start;
   display: grid;
@@ -469,11 +469,9 @@ input, textarea {
   align-items: center;
   justify-content: flex-start;
   flex-direction: column;
-  gap: 8px;
-  background-color: #f5f5f5;
-  border-radius: 16px;
-  padding: 8px;
+  gap: 4px;
   height: 100%;
+  border-radius: 16px;
 }
 .lists__wrap .poster {
   width: 100%;
@@ -540,13 +538,17 @@ input, textarea {
   margin-bottom: 16px;
 }
 .mypage .watched .card .box {
-  padding: 16px;
-  background-color: #f5f5f5;
-  border-radius: 8px;
+  padding: 16px 0px;
+  border-top: 1px #f5f5f5 solid;
+  border-bottom: 1px #f5f5f5 solid;
   display: grid;
   grid-template-columns: 150px 1fr;
   gap: 16px;
-  margin-bottom: 16px;
+}
+@media screen and (max-width: 768px) {
+  .mypage .watched .card .box {
+    grid-template-columns: 1fr;
+  }
 }
 .mypage .watched .card .box .poster img {
   aspect-ratio: 1/1.414;
@@ -555,6 +557,11 @@ input, textarea {
   -o-object-fit: cover;
      object-fit: cover;
   border-radius: 8px;
+}
+@media screen and (max-width: 768px) {
+  .mypage .watched .card .box .poster img {
+    aspect-ratio: 16/9;
+  }
 }
 .mypage .watched .card .box .log {
   position: relative;
@@ -584,7 +591,6 @@ input, textarea {
 }
 
 .search-form {
-  height: 60vh;
   width: 100%;
   display: flex;
   justify-content: center;
@@ -602,11 +608,13 @@ input, textarea {
 .search-form form .input-wrap {
   width: 100%;
   border-radius: 100px;
-  border: 2px #000b00 solid;
+  background-color: #f5f5f5;
   position: relative;
 }
 .search-form form .input-wrap input {
   border-radius: 100px;
+  padding: 8px;
+  text-align: center;
 }
 .search-form form .input-wrap button {
   position: absolute;
@@ -721,7 +729,7 @@ input, textarea {
 }
 
 .stage-detail {
-  padding-top: 40px;
+  padding-top: 16px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -735,6 +743,9 @@ input, textarea {
 .stage-detail .wrap .contents__wrap {
   position: relative;
   margin-top: 16px;
+}
+.stage-detail .wrap .contents__wrap h1 {
+  margin: auto;
 }
 .stage-detail .wrap .contents .field {
   margin-top: 16px;
@@ -771,7 +782,7 @@ input, textarea {
 }
 .stage-detail .wrap .contents .stage-edit {
   position: absolute;
-  top: -16px;
+  bottom: -16px;
   right: 0;
   font-size: clamp(1.2rem, 1.1346938776rem + 0.2040816327vw, 1.4rem);
   display: flex;
@@ -823,69 +834,66 @@ input, textarea {
   width: 100%;
   gap: 16px;
   justify-content: flex-start;
-  background-color: #f5f5f5;
-  padding: 16px;
+  padding: 8px;
+  border-top: 1px #f5f5f5 solid;
+  border-bottom: 1px #f5f5f5 solid;
 }
-.stage-detail .log .area .box .wrap {
-  width: 100%;
-}
-.stage-detail .log .area .box .wrap .outer {
+.stage-detail .log .area .box .box-header {
   display: flex;
-  justify-content: center;
   align-items: center;
   justify-content: flex-start;
-  gap: 40px;
+  width: 100%;
+  gap: 16px;
 }
-@media screen and (max-width: 768px) {
-  .stage-detail .log .area .box .wrap .outer {
-    gap: 8px;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-  }
+.stage-detail .log .area .box .box-header .left .icon {
+  width: auto;
+  height: auto;
 }
-.stage-detail .log .area .box .wrap .outer .inner {
+.stage-detail .log .area .box .box-header .left .icon img {
+  width: 40px;
+  height: auto;
+}
+.stage-detail .log .area .box .box-header .right .outer {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.stage-detail .log .area .box .box-header .right .outer .inner {
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.stage-detail .log .area .box .wrap .outer .inner span {
-  background-color: #000b00;
-  font-weight: bold;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  padding: 4px 16px;
-  border-radius: 100px;
-  margin-right: 8px;
-  font-size: clamp(1.2rem, 1.1346938776rem + 0.2040816327vw, 1.4rem);
-}
-.stage-detail .log .area .box .wrap .outer .log-status .inner__wrap {
+.stage-detail .log .area .box .box-header .right .outer .log-status .inner__wrap {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   font-size: clamp(1rem, 0.9346938776rem + 0.2040816327vw, 1.2rem);
 }
-.stage-detail .log .area .box .wrap .outer .log-status .inner__wrap i {
-  font-size: clamp(3rem, 2.9346938776rem + 0.2040816327vw, 3.2rem);
+.stage-detail .log .area .box .box-header .right .outer .log-status .inner__wrap i {
+  font-size: clamp(2rem, 1.9346938776rem + 0.2040816327vw, 2.2rem);
 }
 @media screen and (max-width: 768px) {
-  .stage-detail .log .area .box .wrap .outer .log-status .inner__wrap i {
-    font-size: clamp(2.6rem, 2.5346938776rem + 0.2040816327vw, 2.8rem);
-  }
-}
-@media screen and (max-width: 768px) {
-  .stage-detail .log .area .box .wrap .outer .log-status .inner__wrap {
+  .stage-detail .log .area .box .box-header .right .outer .log-status .inner__wrap {
     flex-direction: row;
     gap: 8px;
   }
 }
-.stage-detail .log .area .box .wrap .log-comment {
-  padding: 16px;
-  margin-top: 16px;
-  background-color: white;
+.stage-detail .log .area .box .wrap {
+  width: 100%;
+}
+.stage-detail .log .area .box .like {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+.stage-detail .log .area .box .like .like-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.stage-detail .log .area .box .like .like-btn.liked {
+  color: #000b00;
 }
 .stage-detail .log .area .box .edit {
   position: absolute;
@@ -1104,6 +1112,16 @@ input, textarea {
 .stage {
   position: relative;
 }
+.stage .header-stage {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 16px 0px;
+}
+.stage .header-stage .logo a img {
+  width: 40px;
+}
 
 .a2h-banner {
   margin-top: 40px;
@@ -1171,17 +1189,21 @@ input, textarea {
   background-color: white;
   border-top: 1px lightgray solid;
 }
+@media screen and (max-width: 768px) {
+  .footer {
+    padding-bottom: 16px;
+  }
+}
 .footer__wrap {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 8px;
+  padding: 16px 8px;
   width: 100%;
   justify-content: space-around;
 }
-.footer__wrap img {
-  width: 40px;
-  height: auto;
+.footer__wrap i {
+  font-size: clamp(2rem, 1.9346938776rem + 0.2040816327vw, 2.2rem);
 }
 
 .signup .login {

@@ -2,9 +2,7 @@
 <template>
 	<section class="stage-detail mb-footer">
 	  <!-- ───────── タイトル & ポスター ───────── -->
-	  <h1>{{ stage.title }}</h1>
-  
-	  <p v-if="error" class="text-red-600">{{ error }}</p>
+  	  <p v-if="error" class="text-red-600">{{ error }}</p>
 	  <p v-else-if="loading">Loading…</p>
   
 	  <!-- ========== 本体 ========== -->
@@ -17,6 +15,7 @@
 		  </div>
   
 		  <div class="contents__wrap">
+			<h1>{{ stage.title }}</h1>
 			<!-- キャスト -->
 			<div class="field">
 			  <div class="title">キャスト</div>
@@ -124,7 +123,6 @@
 	  </div><!-- /.wrap -->
   
 	  <!-- ───────── ログ一覧 ───────── -->
-<!-- ───────── ログ一覧 ───────── -->
 		<div class="log">
 		<template v-if="watchedLogs.length">
 			<div class="area">
@@ -133,48 +131,56 @@
 				:key="log.id"
 				class="box"
 			>
-				<div class="name-box">
-				<div class="icon">
-					<img v-if="log.user.icon_url" :src="log.user.icon_url" />
-					<img v-else src="/img/user-default.png" />
-				</div>
-				<div class="name">{{ log.user.nickname }} さん</div>
+				<div class="box-header">
+					<div class="left">
+						<div class="icon">
+						<img v-if="log.user.icon_url" :src="log.user.icon_url" />
+						<img v-else src="/img/user-default.png" />
+						</div>
+					</div>
+					<div class="right">
+						<div class="name">{{ log.user.nickname }} さん</div>
+						<div class="outer">
+							<div class="inner log-status">
+								<div class="inner__wrap">
+									<i
+									:class="[
+										'fas',
+										log.status === 'watched'
+										? 'fa-eye'
+										: log.status === 'want'
+										? 'fa-heart'
+										: 'fa-eye-slash'
+									]"
+									/>
+									{{ log.status_display }}
+								</div>
+							</div>
+							<div class="inner log-times">
+								{{ log.times }}
+							</div>
+							<div class="inner log-rating">
+								<div class="star">
+									<i
+									v-for="i in 5"
+									:key="i"
+									:class="['fa-star', i <= log.rating ? 'fas' : 'far']"
+									/>
+								</div>
+							</div>
+						</div><!-- outer -->
+					</div>
+
+
+
+
 				</div>
 
 				<!-- ステータス / 回数 / レーティング -->
 				<div class="wrap">
-				<div class="outer">
-					<div class="inner log-status">
-					<div class="inner__wrap">
-						<i
-						:class="[
-							'fas',
-							log.status === 'watched'
-							? 'fa-eye'
-							: log.status === 'want'
-							? 'fa-heart'
-							: 'fa-eye-slash'
-						]"
-						/>
-						{{ log.status_display }}
-					</div>
-					</div>
-					<div class="inner log-times">
-					<span>観劇回数</span>{{ log.times }}
-					</div>
-					<div class="inner log-rating">
-					<span>レビュー</span>
-					<div class="star">
-						<i
-						v-for="i in 5"
-						:key="i"
-						:class="['fa-star', i <= log.rating ? 'fas' : 'far']"
-						/>
-					</div>
-					</div>
-				</div>
-				<!-- コメント -->
-				<div class="log-comment">{{ log.comment }}</div>
+
+					<!-- コメント -->
+					<div class="log-comment">{{ log.comment }}</div>
 				</div>
 
 				<div class="edit">
@@ -352,13 +358,4 @@ const setStatus = async (status) => {
 }
 </script>
 
-<style>
-
-.like-btn {
-  display:inline-flex; gap:4px; align-items:center;
-  padding:2px 6px; border:1px solid #ddd; border-radius:4px;
-  background:#fff; cursor:pointer; font-size:14px;
-}
-.like-btn.liked   { color:#e63946; border-color:#e63946; }
-.like-btn i       { font-size:12px; }
-</style>
+	

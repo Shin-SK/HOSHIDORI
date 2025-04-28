@@ -62,7 +62,10 @@ class Stage(models.Model):
     theaters     = models.ManyToManyField(Theater, blank=True, related_name='stages')
     created_at   = models.DateTimeField(auto_now_add=True)
     updated_at   = models.DateTimeField(auto_now=True)
-
+    open_date    = models.DateField(null=True, blank=True)   # 開幕日
+    close_date   = models.DateField(null=True, blank=True)   # 千秋楽
+    class Meta:
+        ordering = ["open_date"]  # 早い順に並ぶ
     def __str__(self):
         return self.title
 

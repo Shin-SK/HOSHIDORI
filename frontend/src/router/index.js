@@ -16,8 +16,8 @@
   import LoginView from '../views/LoginView.vue'
 
   const routes = [
-    { path: '/', name: 'home', component: HomeView, meta: { hideLayout: true }},
-    { path: '/stage', name: 'stage-list', component: StageList },
+    { path: '/', name: 'home', component: HomeView, meta: { hideHeader: true }},
+    { path: '/stage', name: 'stage-list', component: StageList, meta: { hideLayout: true }},
     { path: '/stage/create', name: 'stage-create', component: StageCreate },
     { path: '/stage/:id', name: 'stage-detail', component: StageDetail },
     { path: '/stage/:id/edit', name: 'stage-edit', component: StageEdit },

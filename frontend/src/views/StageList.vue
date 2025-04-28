@@ -2,22 +2,26 @@
 <template>
 	<section class="stage mb-footer">
 	  <!-- ■ 検索フォーム -->
-	  <div class="search-form">
-		<form @submit.prevent="doSearch">
-		  <div class="input-wrap">
-			<input
-			  v-model="searchTerm"
-			  type="text"
-			  placeholder="舞台タイトル・出演者・スタッフで検索"
-			/>
-			<button type="submit">
-			  <i class="fas fa-search" />
-			</button>
-		  </div>
-		</form>
-	  </div>
-  
-	  <div class="mainTitle">舞台一覧</div>
+	   <div class="header-stage">
+			<div class="logo">
+				<router-link to="/stage" class="logo"><img src="/img/logo.svg" /></router-link>
+			</div>
+			<div class="search-form">
+				<form @submit.prevent="doSearch">
+				<div class="input-wrap">
+					<input
+					v-model="searchTerm"
+					type="text"
+					placeholder="検索"
+					/>
+					<button type="submit">
+					<i class="fas fa-search" />
+					</button>
+				</div>
+				</form>
+			</div>
+	   </div>
+
   
 	  <!-- ■ ローディング / エラー -->
 	  <p v-if="error" class="text-red-600">{{ error }}</p>
@@ -50,7 +54,7 @@
 			  </router-link>
 			</div>
   
-			<div class="wrap">
+			<div class="wrap" style="display: none;">
 			  <ul>
 				<!-- Cast -->
 				<li
@@ -120,9 +124,10 @@
   const fetchStages = async () => {
 	try {
 	  loading.value = true
-	  const res = await apiClient.get('/api/stage/', {
-		params: { search: searchTerm.value || undefined }
-	  })
+	// ▼ URL のクエリをそのまま API に流す（search も上書き）
+	const res = await apiClient.get('/api/stage/', {
+	params: { ...route.query, search: searchTerm.value || undefined }
+	})
 	  stages.value = res.data        // credits 配列込みで返ってくる
 	} catch (e) {
 	  error.value = e.message
@@ -133,14 +138,14 @@
   
   /* ---------- handlers ---------- */
   const doSearch = () => {
-	router.push({ name: 'stage-list', query: { search: searchTerm.value } })
+	router.push({
+	name : 'stage-list',
+	query: { ...route.query, search: searchTerm.value || undefined }
+	})
   }
   
   /* ---------- effects ---------- */
   fetchStages()                                  // 初回
-  watch(() => route.query.search, (v) => {       // ?search=xxx が変わったら再取得
-	searchTerm.value = v || ''
-	fetchStages()
-  })
+  watch(() => route.query, () => fetchStages(), { deep: true })
   </script>
   
