@@ -502,6 +502,99 @@ input, textarea{
             }
         }
     }//log
+
+    .shop{
+        margin-top: 40px;
+        h2{
+            background-color: #f7f7f7;
+            font-weight: bold;
+            padding: 16px;
+            @include fs(20);
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        h3{
+            text-align: center;
+            margin-bottom: 16px;
+            @include fs(18);
+            font-weight: bold;
+        }
+        .area{
+            margin-bottom: 40px;
+        }
+        .sponser{
+            li{
+                a{
+                    display: grid;
+                    grid-template-columns: repeat(2,1fr);
+                    align-items: center;
+                    gap: 16px;
+                    img{
+                        aspect-ratio: 16/9;
+                        object-fit: cover;
+                        width: 100%;
+                    }
+                    .info{
+                        .title{
+                            font-weight: bold;
+                        }
+                    }
+                }
+            }
+        }
+        .partner{
+            ul{
+                display: grid;
+                grid-template-columns: repeat(2,1fr);
+                gap: 16px;
+                li{
+                    a{
+                        img{
+                            aspect-ratio: 16/9;
+                            width: 100%;
+                            object-fit: cover;
+                        }
+                        .title{
+                            font-weight: bold;
+                        }
+                        .addr{
+                            @include fs(12);
+                        }
+                    }
+                }
+            }
+        }
+        .shop-list{
+            ul{
+                display: grid;
+                grid-template-columns: repeat(4,1fr);
+                gap: 16px;
+                @include sp{
+                    grid-template-columns: repeat(2,1fr);
+                }
+                img{
+                    aspect-ratio: 16/9;
+                    object-fit: cover;
+                    margin-bottom: 8px;
+                    width: 100%;
+                }
+                .info{
+                    .title{
+                        font-weight: bold;
+                    }
+                    .meta{
+
+                    }
+                    .addr{
+                        display: none;
+                    }
+                }
+            }
+        }
+        .powered-by{
+            text-align: center;
+        }
+    }
   }
 
 

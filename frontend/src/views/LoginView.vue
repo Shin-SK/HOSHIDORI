@@ -28,6 +28,10 @@
 		<div class="field submit-button">
 		  <button type="submit">ログイン</button>
 		</div>
+
+		<div class="field">
+			<router-link to="/stage">ログインせずに観る</router-link>
+		</div>
 	  </form>
 	</section>
   </template>

@@ -228,14 +228,20 @@
 
 	  <!-- エラーメッセージ -->
 	  <div v-if="errorMsg" style="color:red">{{ errorMsg }}</div>
+	<div class="logout">
+		<button @click="logout">ログアウト</button>
+	</div>
+
 	</section>
   </template>
   
   <script setup>
 import { ref, onMounted, computed, watch } from 'vue'
+import { useRouter } from 'vue-router'
 import apiClient from '@/services/api.js'
 import UserIcon  from '@/components/UserIcon.vue'
 
+const router = useRouter() 
 const userInfo    = ref({})
 const wantLogs    = ref([])
 const watchedLogs = ref([])
@@ -264,7 +270,22 @@ onMounted(async () => {
   } finally {
     loading.value = false
   }
+  
 })
+
+async function logout () {
+  try {
+    // JWT の場合 refresh を渡すとブラックリスト化できる
+    const refresh = localStorage.getItem('refreshToken')
+    await apiClient.post('/dj-rest-auth/logout/', { refresh })
+	
+  } catch (_) { /* 500 等でもあとでトークン消すので無視 */ }
+
+  // トークン類を物理削除
+  localStorage.removeItem('accessToken')
+  localStorage.removeItem('refreshToken')
+  router.push('/login')
+}
 
 onMounted(() => {
   if (location.hash === '#likelog') activeTab.value = 'likelog'

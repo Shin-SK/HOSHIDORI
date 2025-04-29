@@ -10,6 +10,7 @@
 				<form @submit.prevent="doSearch">
 				<div class="input-wrap">
 					<input
+					id="global-search"
 					v-model="searchTerm"
 					type="text"
 					placeholder="検索"
@@ -23,6 +24,7 @@
 	   </div>
 
   
+	   <h1 v-if="props.mode==='running'">現在上演中の作品</h1>
 	  <!-- ■ ローディング / エラー -->
 	  <p v-if="error" class="text-red-600">{{ error }}</p>
 	  <p v-else-if="loading">Loading…</p>
@@ -110,10 +112,11 @@
   import { ref, watch } from 'vue'
   import { useRoute, useRouter } from 'vue-router'
   import apiClient from '@/services/api.js'
-  
+  import { defineProps } from 'vue'
+
   const route       = useRoute()
   const router      = useRouter()
-  
+  const props = defineProps({ mode: String })
   /* ---------- state ---------- */
   const stages     = ref([])
   const loading    = ref(true)
@@ -124,10 +127,12 @@
   const fetchStages = async () => {
 	try {
 	  loading.value = true
-	// ▼ URL のクエリをそのまま API に流す（search も上書き）
-	const res = await apiClient.get('/api/stage/', {
-	params: { ...route.query, search: searchTerm.value || undefined }
-	})
+	  	const params = {}
+		if (searchTerm.value)        params.search  = searchTerm.value
+		if (props.mode === 'running') params.running = 1
+	  
+	const res = await apiClient.get('/api/stage/', { params })
+	  
 	  stages.value = res.data        // credits 配列込みで返ってくる
 	} catch (e) {
 	  error.value = e.message
@@ -138,14 +143,28 @@
   
   /* ---------- handlers ---------- */
   const doSearch = () => {
-	router.push({
-	name : 'stage-list',
-	query: { ...route.query, search: searchTerm.value || undefined }
-	})
+	const dest = props.mode === 'running' ? 'stage-list-running' : 'stage-list'
+	const q = {}
+	if (searchTerm.value) q.search = searchTerm.value        // 空なら付けない
+	router.push({ name: dest, query: q })
   }
   
   /* ---------- effects ---------- */
-  fetchStages()                                  // 初回
-  watch(() => route.query, () => fetchStages(), { deep: true })
+  	fetchStages()
+	watch(
+		() => route.query,
+		q => {
+		searchTerm.value = q.search || ''    // ← クエリに合わせて入力も更新
+		fetchStages()
+		},
+		{ deep: true }
+		)
+
+  function focusSearch () {
+  // DOM に描画されていることを保証するため nextTick
+  Promise.resolve().then(() => {
+    document.getElementById('global-search')?.focus()
+  })
+}
   </script>
   

@@ -41,9 +41,13 @@
 	.icon{
 		@include flex();
 		margin: 40px auto;
+        width: auto;
+        height: auto;
 		img{
 			width: 30%;
 			max-width: 100px;
+            border: unset;
+            border-radius: unset;
 		}
 	}
 

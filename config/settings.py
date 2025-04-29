@@ -240,7 +240,7 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',  # 全開放なら
+        'rest_framework.permissions.IsAuthenticated',
     ],
 }
 

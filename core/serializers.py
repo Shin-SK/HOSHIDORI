@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from cloudinary.uploader import upload as cloud_upload
 import json 
-from .models import Person, Theater, Stage, Credit, Log, Profile, Like
+from .models import Person, Theater, Stage, Credit, Log, Profile, Like, Shop
 from django.db.models import Count
 
 User = get_user_model()           # カスタムユーザー対応
@@ -252,3 +252,32 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 
 
+
+class ShopSerializer(serializers.ModelSerializer):
+    class Meta:
+        model  = Shop
+        fields = '__all__'
+
+# ----- 一覧用（元の StageSerializer をリネーム） -----
+class StageListSerializer(serializers.ModelSerializer):
+    credits = CreditReadSerializer(many=True, read_only=True)
+
+    class Meta:
+        model  = Stage
+        fields = ('id', 'title', 'poster_url', 'credits',
+                  'open_date', 'close_date')
+
+# ----- 詳細用（shops 付き） -----
+class StageDetailSerializer(StageListSerializer):
+    theaters = TheaterLiteSerializer(many=True, read_only=True)
+    shops    = serializers.SerializerMethodField()
+
+    class Meta(StageListSerializer.Meta):
+        fields = StageListSerializer.Meta.fields + ('theaters', 'shops')
+
+    def get_shops(self, obj):
+        qs = (Shop.objects
+                .filter(theater_shops__theater__in=obj.theaters.all())
+                .order_by('theater_shops__distance_m') 
+                .distinct())
+        return ShopSerializer(qs, many=True).data

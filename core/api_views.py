@@ -11,7 +11,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from .filters import StageFilter  
 from .models import Stage, Log, Profile ,Like
-from .serializers import StageSerializer, LogSerializer ,ProfileSerializer
+from .serializers import StageSerializer, LogSerializer ,ProfileSerializer, StageListSerializer, StageDetailSerializer
 
 
 logger = logging.getLogger('upload_debug')
@@ -55,16 +55,12 @@ class StageViewSet(viewsets.ModelViewSet):
 
     # ---------- QuerySet ----------
     def get_queryset(self):
-        """
-        常に Stage の一覧を返す。
-        * credits.person / theaters を事前読み込み
-        * distinct() は同じ Stage が二重に出ない保険
-        """
-        return (
-            Stage.objects
-            .prefetch_related("credits__person", "theaters")
-            .distinct()
-        )
+        return (Stage.objects
+                .prefetch_related(
+                    "credits__person",
+                    "theaters",
+                    "theaters__theater_shops__shop")  # shops まで取得
+                .distinct())
 
     # ---------- DEBUG ----------
     def _debug_payload(self, request):
@@ -85,6 +81,10 @@ class StageViewSet(viewsets.ModelViewSet):
         self._debug_payload(request)
         return super().partial_update(request, *args, **kwargs)
 
+    def get_serializer_class(self):
+        return (StageDetailSerializer
+                if self.action == 'retrieve'        # /api/stage/<pk>/
+                else StageListSerializer)           # /api/stage/
 
 
 class LogViewSet(viewsets.ModelViewSet):

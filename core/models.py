@@ -41,6 +41,8 @@ def create_or_update_profile(sender, instance, created, **kwargs):
 class Theater(models.Model):
     name    = models.CharField(max_length=100, unique=True)
     address = models.CharField(max_length=255, blank=True)
+    lat     = models.FloatField(null=True, blank=True)
+    lng     = models.FloatField(null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -127,3 +129,42 @@ class Like(models.Model):
 
     def __str__(self):
         return f'{self.user} ❤️ {self.log_id}'
+
+
+# core/models.py
+class Shop(models.Model):
+    SPONSOR_CHOICES = [
+        ('free',    '自動取得'),
+        ('partner',    '協力店'),
+        ('sponsor', 'スポンサー'),
+    ]
+    name        = models.CharField(max_length=120)
+    lat = models.FloatField(null=True, blank=True)   # ← これだけ変更
+    lng = models.FloatField(null=True, blank=True)   # ←
+    category    = models.CharField(max_length=40)      # bar / cafe…
+    rating      = models.FloatField(null=True, blank=True)
+    address     = models.CharField(max_length=200, blank=True)
+    map_url     = models.URLField(max_length=400, blank=True)
+    photo_url   = models.URLField(max_length=500, blank=True)
+    opening_hours = models.CharField(max_length=120, blank=True)
+    distance_m    = models.PositiveIntegerField(null=True, blank=True)
+
+    sponsor_tier = models.CharField(
+        max_length=10, choices=SPONSOR_CHOICES, default='free')
+    priority   = models.PositiveSmallIntegerField(default=0)
+    memo       = models.TextField(blank=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ('lat', 'lng', 'name')
+        ordering = ['-priority', '-rating']
+
+
+class TheaterShop(models.Model):
+    theater = models.ForeignKey(Theater, on_delete=models.CASCADE, related_name='theater_shops')
+    shop = models.ForeignKey(Shop, on_delete=models.CASCADE, related_name='theater_shops')
+    distance_m = models.PositiveIntegerField(null=True, blank=True)
+    fetched_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ('theater', 'shop')

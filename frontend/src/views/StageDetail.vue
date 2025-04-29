@@ -210,6 +210,75 @@
 		<p v-else>まだログがありません。</p>
 		</div>
 
+		<div class="shop">
+			<h2>観劇の後は</h2>
+
+			<div class="area sponser" v-if="sponsorShops.length">
+				<h3>オススメ店</h3><!-- スポンサーのmodelを作って、それをadminで入力して、ここに表示させたい -->
+				<ul>
+					<li v-for="s in sponsorShops" :key="s.map_url">
+						<a :href="s.map_url" target="_blank" rel="noopener">
+							<img :src="s.photo_url || '/img/noimage.png'" alt="" loading="lazy">
+							<div class="info">
+								<div class="title">
+									{{ s.name }}
+								</div>
+								<div class="meta">
+									<span v-if="s.rating">★ {{ s.rating.toFixed(1) }}</span>
+									<span v-if="s.distance_m">／{{ s.distance_m }} m</span>
+								</div>
+								<div class="addr">{{ s.address }}</div>
+							</div>
+						</a>
+					</li>
+				</ul>
+				
+			</div>
+
+			<div class="area partner" v-if="partnerShops.length">
+				<h3>協力店</h3><!-- 最初協力してくれた店を出してあげたい。これは消えるかもしれないけど、人情というか -->
+				<ul>
+					<li v-for="s in partnerShops" :key="s.map_url">
+						<a :href="s.map_url" target="_blank" rel="noopener">
+							<img :src="s.photo_url || '/img/noimage.png'" alt="" loading="lazy">
+							<div class="info">
+								<div class="title">
+									{{ s.name }}
+								</div>
+								<div class="meta">
+									<span v-if="s.rating">★ {{ s.rating.toFixed(1) }}</span>
+									<span v-if="s.distance_m">／{{ s.distance_m }} m</span>
+								</div>
+								<div class="addr">{{ s.address }}</div>
+							</div>
+						</a>
+					</li>
+				</ul>
+
+			</div>
+			<div class="area shop-list">
+				<ul>
+					<li v-for="s in freeShops" :key="s.map_url">
+						<a :href="s.map_url" target="_blank" rel="noopener">
+							<img :src="s.photo_url || '/img/noimage.png'" alt="" loading="lazy">
+							<div class="info">
+								<div class="title">
+									{{ s.name }}
+								</div>
+								<div class="meta">
+									<span v-if="s.rating">★ {{ s.rating.toFixed(1) }}</span>
+									<span v-if="s.distance_m">／{{ s.distance_m }} m</span>
+								</div>
+								<div class="addr">{{ s.address }}</div>
+							</div>
+						</a>
+					</li>
+				</ul>
+			</div>
+			<p class="powered-by">Powered by Google</p>
+
+		</div>
+
 	</section>
   </template>
 
@@ -316,6 +385,18 @@ const setStatus = async (status) => {
 	}
 	}
 
+	/* ---------- ショップまわり ----------*/
+	const sponsorShops = computed(() =>
+    (stage.value.shops || []).filter(s => s.sponsor_tier === 'sponsor')
+                             .sort((a,b)=> a.priority - b.priority))
+
+	const partnerShops = computed(() =>
+		(stage.value.shops || []).filter(s => s.sponsor_tier === 'partner')
+								.sort((a,b)=> a.priority - b.priority))
+
+	const freeShops = computed(() =>
+		(stage.value.shops || []).filter(s => s.sponsor_tier === 'free'))
+
     /* ───────── API fetch ───────── */
     const reloadLogs = async () => {
       const res = await apiClient.get('/api/log/', { params: { stage: stage.value.id } })
@@ -352,7 +433,10 @@ const setStatus = async (status) => {
       setStatus,
       isMine,
 	  toggleLike,
-      onClickDelete
+      onClickDelete,
+	  sponsorShops,
+	  partnerShops,
+	  freeShops
     }
   }
 }

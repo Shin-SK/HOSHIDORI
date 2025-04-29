@@ -905,6 +905,84 @@ input, textarea {
   font-size: clamp(1.2rem, 1.1346938776rem + 0.2040816327vw, 1.4rem);
   gap: 8px;
 }
+.stage-detail .shop {
+  margin-top: 40px;
+}
+.stage-detail .shop h2 {
+  background-color: #f7f7f7;
+  font-weight: bold;
+  padding: 16px;
+  font-size: clamp(2rem, 1.9346938776rem + 0.2040816327vw, 2.2rem);
+  text-align: center;
+  margin-bottom: 16px;
+}
+.stage-detail .shop h3 {
+  text-align: center;
+  margin-bottom: 16px;
+  font-size: clamp(1.8rem, 1.7346938776rem + 0.2040816327vw, 2rem);
+  font-weight: bold;
+}
+.stage-detail .shop .area {
+  margin-bottom: 40px;
+}
+.stage-detail .shop .sponser li a {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  align-items: center;
+  gap: 16px;
+}
+.stage-detail .shop .sponser li a img {
+  aspect-ratio: 16/9;
+  -o-object-fit: cover;
+     object-fit: cover;
+  width: 100%;
+}
+.stage-detail .shop .sponser li a .info .title {
+  font-weight: bold;
+}
+.stage-detail .shop .partner ul {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+.stage-detail .shop .partner ul li a img {
+  aspect-ratio: 16/9;
+  width: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+.stage-detail .shop .partner ul li a .title {
+  font-weight: bold;
+}
+.stage-detail .shop .partner ul li a .addr {
+  font-size: clamp(1.2rem, 1.1346938776rem + 0.2040816327vw, 1.4rem);
+}
+.stage-detail .shop .shop-list ul {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+@media screen and (max-width: 768px) {
+  .stage-detail .shop .shop-list ul {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+.stage-detail .shop .shop-list ul img {
+  aspect-ratio: 16/9;
+  -o-object-fit: cover;
+     object-fit: cover;
+  margin-bottom: 8px;
+  width: 100%;
+}
+.stage-detail .shop .shop-list ul .info .title {
+  font-weight: bold;
+}
+.stage-detail .shop .shop-list ul .info .addr {
+  display: none;
+}
+.stage-detail .shop .powered-by {
+  text-align: center;
+}
 
 .log-form .radio {
   display: flex;
@@ -1311,10 +1389,14 @@ input, textarea {
   justify-content: center;
   align-items: center;
   margin: 40px auto;
+  width: auto;
+  height: auto;
 }
 .top .icon img {
   width: 30%;
   max-width: 100px;
+  border: unset;
+  border-radius: unset;
 }
 .top .kv {
   width: 100%;

@@ -24,6 +24,9 @@ api.interceptors.response.use(
   res => res,
   async err => {
     const { config, response } = err
+    
+    if (!localStorage.getItem('accessToken')) throw err
+
     if (!response || response.status !== 401) throw err
 
     // 1回 retry した物は諦めてログインへ
