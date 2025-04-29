@@ -144,8 +144,8 @@ class Shop(models.Model):
     category    = models.CharField(max_length=40)      # bar / cafe…
     rating      = models.FloatField(null=True, blank=True)
     address     = models.CharField(max_length=200, blank=True)
-    map_url     = models.URLField(max_length=400, blank=True)
-    photo_url   = models.URLField(max_length=500, blank=True)
+    map_url     = models.URLField(max_length=1000, blank=True)
+    photo_url   = models.URLField(max_length=1000, blank=True)
     opening_hours = models.CharField(max_length=120, blank=True)
     distance_m    = models.PositiveIntegerField(null=True, blank=True)
 
