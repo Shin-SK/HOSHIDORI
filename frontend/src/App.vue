@@ -15,7 +15,7 @@
     <div class="footer__wrap">
       <router-link to="/stage" class="home"><i class="fas fa-home"></i></router-link>
       <router-link to="/stage/running" class="trend"><i class="fas fa-rss"></i></router-link>
-      <button  class="search" @click="openSearch"><i class="fas fa-search"></i></button>      <router-link to="/stage" class="news"><i class="far fa-newspaper"></i></router-link>
+      <button  class="search" @click="openSearch"><i class="fas fa-search"></i></button>      <router-link to="/news" class="news"><i class="far fa-newspaper"></i></router-link>
       <router-link to="/mypage" class="mypage"><i class="fas fa-user"></i></router-link>
     </div>
   </footer>
