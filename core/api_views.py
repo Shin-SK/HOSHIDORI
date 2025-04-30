@@ -10,8 +10,8 @@ from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 
 from .filters import StageFilter  
-from .models import Stage, Log, Profile ,Like
-from .serializers import StageSerializer, LogSerializer ,ProfileSerializer, StageListSerializer, StageDetailSerializer
+from .models import Stage, Log, Profile ,Like ,News
+from .serializers import StageSerializer, LogSerializer ,ProfileSerializer, StageListSerializer, StageDetailSerializer, NewsSerializer
 
 
 logger = logging.getLogger('upload_debug')
@@ -158,3 +158,9 @@ class LogViewSet(viewsets.ModelViewSet):
             'liked'      : liked,
             'like_count' : log.likes.count()
         })
+
+
+class NewsViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class  = NewsSerializer
+    queryset          = News.objects.all()
+    permission_classes = (permissions.AllowAny,)

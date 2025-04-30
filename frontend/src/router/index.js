@@ -12,6 +12,7 @@ import ProfileEdit   from '@/views/ProfileEdit.vue'
 import Signup        from '@/views/Signup.vue'
 import PublicProfile from '@/views/PublicProfile.vue'
 import LoginView     from '@/views/LoginView.vue'
+import NewsList     from '@/views/NewsList.vue'
 
 const routes = [
   // トップ → ログイン済みなら /stage
@@ -32,6 +33,7 @@ const routes = [
   { path: '/login',name: 'login',component: LoginView },
   { path: '/signup',name: 'signup',component: Signup },
   { path: '/profile/:username', name: 'public-profile', component: PublicProfile, props: true },
+  { path: '/news',name: 'news',component: NewsList },
 
   /* ─────── 要ログインページ ─────── */
   { path: '/mypage', name: 'mypage',component: MyPage,meta: { requiresAuth: true } },

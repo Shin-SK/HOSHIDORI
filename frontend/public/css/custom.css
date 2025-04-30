@@ -1563,4 +1563,33 @@ input, textarea {
 }
 .top .tome-logo img {
   width: 150px;
+}
+
+.news .news-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+}
+@media screen and (max-width: 768px) {
+  .news .news-list {
+    grid-template-columns: 1fr;
+  }
+}
+.news .news-list li a img {
+  aspect-ratio: 4/3;
+  -o-object-fit: cover;
+     object-fit: cover;
+  -o-object-position: center;
+     object-position: center;
+}
+.news .news-list li a .title {
+  font-weight: bold;
+  margin: 16px auto 8px;
+}
+.news .news-list li a .meta {
+  font-size: clamp(1.2rem, 1.1346938776rem + 0.2040816327vw, 1.4rem);
+}
+.news .powered {
+  margin: 40px auto;
+  text-align: center;
 }/*# sourceMappingURL=custom.css.map */

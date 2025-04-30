@@ -1,0 +1,30 @@
+.news{
+	.news-list{
+		display: grid;
+		grid-template-columns: repeat(3,1fr);
+		gap: 40px;
+		@include sp{
+			grid-template-columns: 1fr;
+		}
+		li{
+			a{
+				img{
+					aspect-ratio: 4/3;
+					object-fit: cover;
+					object-position: center;
+				}
+				.title{
+					font-weight: bold;
+					margin: 16px auto 8px;
+				}
+				.meta{
+					@include fs(12);
+				}
+			}
+		}
+	}
+	.powered{
+		margin: 40px auto;
+		text-align: center;
+	}
+}

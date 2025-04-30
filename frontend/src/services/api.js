@@ -80,8 +80,6 @@ function cleanupAndLogout () {
 
 export default api
 
-
-
 // 便利ラッパー（使わなくても OK）
 export const getPublicProfile = username =>
   api.get(`/api/profile/${username}/`).then(r => r.data)

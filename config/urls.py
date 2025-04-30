@@ -27,9 +27,8 @@ urlpatterns = [
     # 新規ユーザー登録APIが必要なら
     path('dj-rest-auth/registration/', include('dj_rest_auth.registration.urls')),
     # ★ JWT専用エンドポイントを手動で定義
-    path('dj-rest-auth/jwt/create/',  TokenObtainPairView.as_view(),   name='token_create'),
-    path('dj-rest-auth/jwt/refresh/', TokenRefreshView.as_view(),      name='token_refresh'),
-    path('dj-rest-auth/jwt/verify/',  TokenVerifyView.as_view(),       name='token_verify'),
-
+    path('dj-rest-auth/jwt/create/',  TokenObtainPairView.as_view(), name='token_create'),
+    path('dj-rest-auth/jwt/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('dj-rest-auth/jwt/verify/',  TokenVerifyView.as_view(), name='token_verify'),
 
 ]

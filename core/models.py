@@ -168,3 +168,18 @@ class TheaterShop(models.Model):
 
     class Meta:
         unique_together = ('theater', 'shop')
+
+
+
+class News(models.Model):
+    title   = models.CharField(max_length=300)
+    link    = models.URLField(unique=True)           # 記事 URL
+    source  = models.CharField(max_length=50)        # natalie / spice …
+    pub_at  = models.DateTimeField()
+    image   = models.URLField(blank=True)            # サムネ (無くても可)
+
+    class Meta:
+        ordering = ['-pub_at']
+
+    def __str__(self):
+        return self.title
