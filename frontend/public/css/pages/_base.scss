@@ -458,10 +458,6 @@ input, textarea{
                             .inner{
                                 @include flex();
                             }
-                            .log-rating{
-                                .star{
-                                }
-                            }
                             .log-status{
                                 .inner__wrap{
                                     @include flex();
@@ -481,9 +477,6 @@ input, textarea{
                 }
                 .wrap{
                     width: 100%;
-
-                    .log-comment{
-                    }
                 }
                 .like{
                     display: flex;
@@ -589,9 +582,6 @@ input, textarea{
                 .info{
                     .title{
                         font-weight: bold;
-                    }
-                    .meta{
-
                     }
                     .addr{
                         display: none;
@@ -875,9 +865,6 @@ input, textarea{
         min-height: 100vh;
         @include flex();
         flex-direction: column;
-        .text{
-
-        }
     }
 }
 

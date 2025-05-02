@@ -1251,6 +1251,7 @@ input, textarea {
   align-items: center;
   flex-direction: column;
 }
+
 .header__wrap {
   display: flex;
   justify-content: center;
