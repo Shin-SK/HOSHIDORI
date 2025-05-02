@@ -224,6 +224,9 @@ CORS_ALLOWED_ORIGINS = [
     "https://www.hoshidori.com",   # ★ ← 追加 (www リダイレクト用)
     "https://admin.hoshidori.com" 
 ]
+
+CORS_ALLOW_CREDENTIALS = True 
+
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
     "https://*.hoshidori.com"
