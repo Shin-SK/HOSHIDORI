@@ -265,3 +265,20 @@ REST_AUTH_SERIALIZERS = {
 }
 
 
+
+
+# settings.py 末尾
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': { 'class': 'logging.StreamHandler' },
+    },
+    'loggers': {
+        'django.request': {          # ここに ERROR を流す
+            'handlers': ['console'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+    },
+}
