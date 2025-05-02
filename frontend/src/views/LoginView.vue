@@ -59,7 +59,7 @@
 	  }
 	  const { data } = await apiClient.post('/dj-rest-auth/jwt/create/', body)
 	  setTokens(data.access, data.refresh)
-	  router.push('/stage')           // 任意の遷移先
+	  router.push('/mypage')
 	} catch (e) {
 	  error.value = 'ログイン失敗：' +
 		(e.response?.data?.detail || e.message)

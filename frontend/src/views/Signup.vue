@@ -95,8 +95,8 @@
 		headers: { 'Content-Type': 'multipart/form-data' },
 	  })
   
-	  alert('登録が完了しました！ ログインしました。')
-	  router.push({ name: 'stage-list' })        // 好きな遷移先に
+	  alert('登録が完了しました！')
+	  router.push('/login')
 	} catch (e) {
 	  const data = e.response?.data || {}
 	  nonFieldError.value = data.detail || ''
