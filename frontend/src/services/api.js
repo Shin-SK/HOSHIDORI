@@ -3,61 +3,65 @@ import axios  from 'axios'
 import router from '@/router'
 import { useToast } from 'vue-toastification'
 
-/* ---------------- base ---------------- */
 const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:8000'
 
 const api = axios.create({
   baseURL: API_BASE,
-  withCredentials: false          // JWT だけなら false
+  withCredentials: false
 })
 
-/* ---------------- toast ----------------
-   composable は setup() の外だと直接呼べないので
-   “遅延生成” パターンを取る                      */
+/* ------------ toast ------------ */
 let toast
 function notify (msg) {
   if (!toast) toast = useToast()
   toast.error(msg)
 }
 
-/* ---------------- Request --------------- */
+/* ------------ Request ------------ */
 api.interceptors.request.use(cfg => {
-  // accessToken があれば付与
   const token = localStorage.getItem('accessToken')
   if (token) cfg.headers.Authorization = `Bearer ${token}`
   return cfg
 })
 
-/* =============== Response (error) ========= */
+/* ============ Response (error) ============ */
 let isRefreshing = false
 let queue = []
 
 api.interceptors.response.use(
-  res => res,                                 // ← 成功時は手を触れない
+  res => res,
   async err => {
-    /* ---------- 共通エラー表示 ---------- */
-    const data = err.response?.data
-    const msg =
-      data?.detail ||                          // DRF の detail
-      Object.values(data || {})?.[0]?.[0] ||   // password1 など field error
-      'エラーが発生しました。運営にお問い合わせください。'
-    notify(msg)
+    /* ① ここで一度だけ展開 --------------- */
+    const { response, config } = err
 
-    /* ---------- JWT が無い or 401 以外 ---------- */
-    const { config, response } = err
-    const hasToken = !!localStorage.getItem('accessToken')
-    if (!hasToken || !response || response.status !== 401) {
-      return Promise.reject(err)               // ここで打ち止め
+    /* ---------- エラー表示 ---------- */
+    if (response) {
+      if (response.status !== 401) {            // 401 は黙っておく
+        const data = response.data
+        const msg =
+          Object.values(data || {})?.[0]?.[0] ||
+          data?.detail ||
+          'エラーが発生しました。運営にお問い合わせください。'
+        notify(msg)
+      }
+    } else {
+      notify('通信に失敗しました。電波状況を確認してください。')
     }
 
-    /* ---------- 2 回目も 401 → ログアウト ---------- */
+    /* ---------- 401 以外 or トークン無し ---------- */
+    const hasToken = !!localStorage.getItem('accessToken')
+    if (!hasToken || !response || response.status !== 401) {
+      return Promise.reject(err)
+    }
+
+    /* ---------- リトライは 1 回だけ ---------- */
     if (config._retry) {
       cleanupAndLogout()
       return Promise.reject(err)
     }
-    config._retry = true                       // 1 回だけ再挑戦許可
+    config._retry = true
 
-    /* ---------- 刷新処理が同時に走ったらキュー ---------- */
+    /* ---------- 他でリフレッシュ中ならキュー ---------- */
     if (isRefreshing) {
       return new Promise((resolve, reject) => {
         queue.push({ resolve, reject, config })
@@ -85,20 +89,20 @@ api.interceptors.response.use(
       })
       queue = []
 
-      /* ---------- 自分のリトライ ---------- */
+      /* ---------- 自分をリトライ ---------- */
       config.headers.Authorization = `Bearer ${newAccess}`
       return api.request(config)
 
     } catch (e) {
       cleanupAndLogout()
-      return Promise.reject(e)                 // ← 失敗は上に伝える
+      return Promise.reject(e)
     } finally {
       isRefreshing = false
     }
   }
 )
 
-/* ============ util ============ */
+/* ------------ util ------------ */
 function cleanupAndLogout () {
   localStorage.removeItem('accessToken')
   localStorage.removeItem('refreshToken')
@@ -107,6 +111,5 @@ function cleanupAndLogout () {
 
 export default api
 
-/* ---------- 便利ラッパー（例） ---------- */
 export const getPublicProfile = username =>
   api.get(`/api/profile/${username}/`).then(r => r.data)

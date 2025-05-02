@@ -27,10 +27,17 @@
 		  <input id="pw2" v-model.trim="form.password2" type="password" required />
 		  <p v-if="errors.password2" class="error">{{ errors.password2 }}</p>
 		</div>
-  
+
+  		<!-- ユーザーネーム -->
+		  <div class="field">
+		  <label for="username">ユーザーネーム(英数字6〜20字)</label>
+			<input id="username" v-model.trim="form.username" pattern="[A-Za-z0-9_]{6,20}" required />
+		  <p v-if="errors.username" class="error">{{ errors.usernam }}</p>
+		</div>
+
 		<!-- ニックネーム -->
 		<div class="field">
-		  <label for="nickname">ニックネーム</label>
+		  <label for="nickname">表示名 (ニックネーム)</label>
 		  <input id="nickname" v-model.trim="form.nickname" required />
 		  <p v-if="errors.nickname" class="error">{{ errors.nickname }}</p>
 		</div>
@@ -70,6 +77,7 @@
 	email: '',
 	password1: '',
 	password2: '',
+	username: '',
 	nickname: '',
 	// icon: null,
   })

@@ -444,11 +444,18 @@ input, textarea {
   justify-content: center;
   align-items: center;
   justify-content: flex-start;
-  gap: 8px;
+  gap: 16px;
   width: 100%;
 }
-.name-box .name {
+.name-box .inner {
+  display: flex;
+  flex-direction: column;
+}
+.name-box .inner .name {
   font-weight: bold;
+}
+.name-box .inner .nickname {
+  color: gray;
 }
 
 .lists {

@@ -4,13 +4,14 @@
 	  <!-- ユーザー情報 -->
 	  <div class="user">
 		<div class="name-box">
-		  <div class="icon">
-			<!-- ユーザーアイコン -->
-			<UserIcon :icon-url="userInfo.icon_url" :division="userInfo.division" />
-		</div>
-		  <div class="name">
-			{{ userInfo.nickname }}さん
-		  </div>
+		  	<div class="icon">
+				<!-- ユーザーアイコン -->
+				<UserIcon :icon-url="userInfo.icon_url" :division="userInfo.division" />
+			</div>
+			<div class="inner">
+				<div class="name">{{ userInfo.nickname || '未設定' }}</div>
+				<div class="nickname" v-if="userInfo.username">@{{ userInfo.username }}</div>
+			</div>
 		</div>
 		<div class="box">
 			<div class="like">

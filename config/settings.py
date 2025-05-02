@@ -259,14 +259,6 @@ SIMPLE_JWT = {
 }
 
 
-
-REST_AUTH_SERIALIZERS = {
-    'USER_DETAILS_SERIALIZER': 'accounts.serializers.CustomUserSerializer',
-}
-
-
-
-
 # settings.py 末尾
 LOGGING = {
     'version': 1,
@@ -281,4 +273,9 @@ LOGGING = {
             'propagate': True,
         },
     },
+}
+
+
+REST_AUTH = {
+    'REGISTER_SERIALIZER': 'accounts.serializers.CustomRegisterSerializer'
 }

@@ -13,7 +13,7 @@ User = get_user_model()           # カスタムユーザー対応
 class UserLiteSerializer(serializers.ModelSerializer):
     class Meta:
         model  = User
-        fields = ('id', 'nickname', 'icon_url')
+        fields = ('id', 'username', 'nickname', 'icon_url')
 
 class PersonSerializer(serializers.ModelSerializer):
     class Meta:

@@ -51,11 +51,19 @@ input, textarea{
 .name-box{
     @include flex();
     justify-content: flex-start;
-    gap: 8px;
+    gap: 16px;
     width: 100%;
-    .name{
-        font-weight: bold;
+    .inner{
+        display: flex;
+        flex-direction: column;
+        .name{
+            font-weight: bold;
+        }
+        .nickname{
+            color: gray;
+        }
     }
+
 }
 
 
