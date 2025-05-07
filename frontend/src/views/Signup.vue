@@ -30,14 +30,14 @@
 
   		<!-- ユーザーネーム -->
 		  <div class="field">
-		  <label for="username">ユーザーネーム(英数字6〜20字)</label>
+		  <label for="username">ユーザーID(英数字6〜20字/あとで変更できます)</label>
 			<input id="username" v-model.trim="form.username" pattern="[A-Za-z0-9_]{6,20}" required />
 		  <p v-if="errors.username" class="error">{{ errors.usernam }}</p>
 		</div>
 
 		<!-- ニックネーム -->
 		<div class="field">
-		  <label for="nickname">表示名 (ニックネーム)</label>
+		  <label for="nickname">ユーザーネーム(あとで変更できます)</label>
 		  <input id="nickname" v-model.trim="form.nickname" required />
 		  <p v-if="errors.nickname" class="error">{{ errors.nickname }}</p>
 		</div>

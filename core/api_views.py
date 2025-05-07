@@ -9,9 +9,9 @@ from rest_framework import viewsets, permissions, parsers, status
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 
-from .filters import StageFilter  
-from .models import Stage, Log, Profile ,Like ,News
-from .serializers import StageSerializer, LogSerializer ,ProfileSerializer, StageListSerializer, StageDetailSerializer, NewsSerializer
+from .filters import StageFilter
+from .models import Stage, Log, Profile ,Like ,News ,Theater
+from .serializers import StageSerializer, LogSerializer ,ProfileSerializer, StageListSerializer, StageDetailSerializer, NewsSerializer, TheaterSerializer
 
 
 logger = logging.getLogger('upload_debug')
@@ -164,3 +164,20 @@ class NewsViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class  = NewsSerializer
     queryset          = News.objects.all()
     permission_classes = (permissions.AllowAny,)
+
+
+class TheaterViewSet(viewsets.ModelViewSet):
+    """
+    /api/theater/
+        GET  : ?q=キーワード  → name 前方一致検索（5件くらい）
+        POST : {name, city?}   → 劇場新規追加
+    /api/theater/<pk>/ も使える（Retrieve / Update / Delete）
+    """
+    serializer_class  = TheaterSerializer
+    permission_classes = (permissions.AllowAny,)   # 認可はお好みで
+    queryset = Theater.objects.all().order_by('name')
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        q  = self.request.query_params.get('q', '').strip()
+        return qs.filter(name__istartswith=q)[:5] if q else qs

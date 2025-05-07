@@ -8,25 +8,25 @@
   
 	  <form v-else @submit.prevent="handleSubmit">
 		<!-- ステータス -->
-		<div class="field radio">
-		<div
-			class="radio__wrap"
-			v-for="opt in statusOptions"
-			:key="opt.value"
-		>
-			<input
-			type="radio"
-			name="status"
-			:id="`status_${opt.value}`"
-			:value="opt.value"
-			v-model="form.status"
-			required
-			/>
-			<label :for="`status_${opt.value}`">
-			<i :class="opt.icon"></i>
-			{{ opt.label }}
-			</label>
-		</div>
+		<div class="field radio" style="display: none;">
+			<div
+				class="radio__wrap"
+				v-for="opt in statusOptions"
+				:key="opt.value"
+			>
+				<input
+				type="radio"
+				name="status"
+				:id="`status_${opt.value}`"
+				:value="opt.value"
+				v-model="form.status"
+				required
+				/>
+				<label :for="`status_${opt.value}`">
+				<i :class="opt.icon"></i>
+				{{ opt.label }}
+				</label>
+			</div>
 		</div>
 
   
@@ -41,15 +41,16 @@
 		/>
 		</div>
 
-		<!-- ★ レビュー評価（クリックで 1〜5 を選択） -->
+		<!-- レビュー評価（クリックで 1〜5 を選択） -->
 		<div class="field star-rating">
 		<label>レビュー評価</label><br />
 
-		<!-- 星アイコンをループで描画し、クリックした数を form.rating にセット -->
+		<!-- ☆ここiconをfontawsomeからさっき作ったscssのオリジナルに変更したい。
+		選択されてないやつはicon-star-line 選択されてるやつはicon-star -->
 		<i
 			v-for="n in 5"
 			:key="n"
-			:class="['fa-star', n <= form.rating ? 'fas' : 'far']"
+			:class="['', n <= form.rating ? 'icon-star' : 'icon-star-line']"
 			:data-value="n"
 			@click="form.rating = n"
 		/>

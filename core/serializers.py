@@ -1,6 +1,7 @@
 # core/serializers.py
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
+from rest_framework.validators import UniqueValidator
 from cloudinary.uploader import upload as cloud_upload
 import json 
 from .models import Person, Theater, Stage, Credit, Log, Profile, Like, Shop, News
@@ -288,3 +289,19 @@ class NewsSerializer(serializers.ModelSerializer):
     class Meta:
         model  = News
         fields = ('id', 'title', 'link', 'source', 'pub_at', 'image')
+
+
+class TheaterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model  = Theater
+        fields = ('id', 'name', 'city')
+        extra_kwargs = {
+            'name': {
+                'validators': [
+                    UniqueValidator(
+                        queryset=Theater.objects.all(),
+                        message='同名の劇場が既に存在します。既存のレコードを選択してください。'
+                    )
+                ]
+            }
+        }

@@ -105,185 +105,302 @@
 			  href="#"
 			  :class="{ 'status-active': myStatus === 'watched' }"
 			  @click.prevent="setStatus('watched')"
-			><i class="fas fa-eye"></i><span>観た</span></a>
+			><i class="icon-eyes"></i><span>観た</span></a>
   
 			<a
 			  href="#"
 			  :class="{ 'status-active': myStatus === 'want' }"
 			  @click.prevent="setStatus('want')"
-			><i class="fas fa-heart"></i><span>観たい</span></a>
+			><i class="icon-heart"></i><span>観たい</span></a>
   
 			<a
 			  href="#"
 			  :class="{ 'status-active': myStatus === 'cannot' }"
 			  @click.prevent="setStatus('cannot')"
-			><i class="fas fa-eye-slash"></i><span>観れない</span></a>
+			><i class="icon-angel"></i><span>観たかった</span></a>
 		  </div>
 		</div>
 	  </div><!-- /.wrap -->
   
-	  <!-- ───────── ログ一覧 ───────── -->
-		<div class="log">
-		<template v-if="watchedLogs.length">
-			<div class="area">
-			<div
-				v-for="log in watchedLogs"
-				:key="log.id"
-				class="box"
-			>
-				<div class="box-header">
-					<div class="left">
-						<div class="icon">
-						<img v-if="log.user.icon_url" :src="log.user.icon_url" />
-						<img v-else src="/img/user-default.png" />
-						</div>
-					</div>
-					<div class="right">
-						<div class="name">{{ log.user.nickname }} さん</div>
-						<div class="outer">
-							<div class="inner log-status">
-								<div class="inner__wrap">
-									<i
-									:class="[
-										'fas',
-										log.status === 'watched'
-										? 'fa-eye'
-										: log.status === 'want'
-										? 'fa-heart'
-										: 'fa-eye-slash'
-									]"
-									/>
-									{{ log.status_display }}
-								</div>
-							</div>
-							<div class="inner log-times">
-								{{ log.times }}
-							</div>
-							<div class="inner log-rating">
-								<div class="star">
-									<i
-									v-for="i in 5"
-									:key="i"
-									:class="['fa-star', i <= log.rating ? 'fas' : 'far']"
-									/>
-								</div>
-							</div>
-						</div><!-- outer -->
-					</div>
-
-
-
-
-				</div>
-
-				<!-- ステータス / 回数 / レーティング -->
-				<div class="wrap">
-
-					<!-- コメント -->
-					<div class="log-comment">{{ log.comment }}</div>
-				</div>
-
-				<div class="edit">
-				<template v-if="isMine(log)">
-					<router-link :to="`/log/${log.id}/edit`">編集</router-link> |
-					<a
-					href="#"
-					class="delete"
-					@click.prevent="onClickDelete(log.id)"
-					>削除</a>
-				</template>
-				</div>
-
-				<div class="like">
-					<button
-						class="like-btn"
-						:class="{ liked: log.is_liked }"
-						@click="toggleLike(log)"
+	  <!-- ───────── 自分ログ一覧 ───────── -->
+		<div class="log myLog">
+			<h2>あなたのログ</h2>
+			<template v-if="myLogs.length">
+				<div class="area">
+					<div
+						v-for="log in myLogs"
+						:key="log.id"
+						class="box"
 					>
-						<i class="fas fa-heart" />
-						{{ log.like_count }}
-					</button>
+					<div class="box-header">
+						<div class="left">
+							<div class="icon">
+							<img v-if="log.user.icon_url" :src="log.user.icon_url" />
+							<img v-else src="/img/user-default.png" />
+							</div>
+						</div>
+						<div class="right">
+							<div class="name">{{ log.user.nickname }} さん</div>
+							<div class="outer">
+								<div class="inner log-status">
+									<div class="inner__wrap">
+										<i
+										:class="[
+											'fas',
+											log.status === 'watched'
+											? 'fa-eye'
+											: log.status === 'want'
+											? 'fa-heart'
+											: 'fa-eye-slash'
+										]"
+										/>
+										{{ log.status_display }}
+									</div>
+								</div>
+								<div class="inner log-times">
+									{{ log.times }}
+								</div>
+								<div class="inner log-rating">
+									<div class="star">
+										<i
+										v-for="i in 5"
+										:key="i"
+										:class="['fa-star', i <= log.rating ? 'fas' : 'far']"
+										/>
+									</div>
+								</div>
+							</div><!-- outer -->
+						</div>
+
+
+
+
+					</div>
+
+					<!-- ステータス / 回数 / レーティング -->
+					<div class="wrap">
+
+						<!-- コメント -->
+						<div class="log-comment">{{ log.comment }}</div>
+					</div>
+
+					<div class="edit">
+					<template>
+						<router-link :to="`/log/${log.id}/edit`">編集</router-link> |
+						<a
+						href="#"
+						class="delete"
+						@click.prevent="onClickDelete(log.id)"
+						>削除</a>
+					</template>
+					</div>
+
+					<div class="like">
+						<button
+							class="like-btn"
+							:class="{ liked: log.is_liked }"
+							@click="toggleLike(log)"
+						>
+							<i class="fas fa-heart" />
+							{{ log.like_count }}
+						</button>
+					</div>
 				</div>
-			</div>
-			</div>
-		</template>
-		<p v-else>まだログがありません。</p>
+				</div>
+			</template>
+			<p class="text-center" v-else>まだログがありません。</p>
 		</div>
 
-		<div class="shop">
-			<h2>観劇の後は</h2>
+		<div class="tab">
+			<ul class="tab-nav">
+				<li>
+					<button
+					:class="{ active: activeTab === 'shop' }"
+					@click="activeTab = 'shop'"
+					>
+						観劇の後は
+					</button>
+				</li>
+				<li>
+					<button
+					:class="{ active: activeTab === 'log' }"
+					@click="activeTab = 'log'"
+					>
+						みんなのログ
+					</button>
+				</li>
+			</ul>
+			<transition name="fade">
+			<div class="shop" v-show="activeTab === 'shop'">
+				<h2>劇場近くのお店</h2>
+				<p class="disc">観劇の後は演劇について語らってほしいのです</p>
 
-			<div class="area sponser" v-if="sponsorShops.length">
-				<h3>オススメ店</h3><!-- スポンサーのmodelを作って、それをadminで入力して、ここに表示させたい -->
-				<ul>
-					<li v-for="s in sponsorShops" :key="s.map_url">
-						<a :href="s.map_url" target="_blank" rel="noopener">
-							<img :src="s.photo_url || '/img/noimage.png'" alt="" loading="lazy">
-							<div class="info">
-								<div class="title">
-									{{ s.name }}
+				<div class="area sponser" v-if="sponsorShops.length">
+					<h3>オススメ店</h3>
+					<ul>
+						<li v-for="s in sponsorShops" :key="s.map_url">
+							<a :href="s.map_url" target="_blank" rel="noopener">
+								<img :src="s.photo_url || '/img/noimage.png'" alt="" loading="lazy">
+								<div class="info">
+									<div class="title">
+										{{ s.name }}
+									</div>
+									<div class="meta">
+										<span v-if="s.rating">★ {{ s.rating.toFixed(1) }}</span>
+										<span v-if="s.distance_m">／{{ s.distance_m }} m</span>
+									</div>
+									<div class="addr">{{ s.address }}</div>
 								</div>
-								<div class="meta">
-									<span v-if="s.rating">★ {{ s.rating.toFixed(1) }}</span>
-									<span v-if="s.distance_m">／{{ s.distance_m }} m</span>
-								</div>
-								<div class="addr">{{ s.address }}</div>
-							</div>
-						</a>
-					</li>
-				</ul>
-				
-			</div>
+							</a>
+						</li>
+					</ul>
+					
+				</div>
 
-			<div class="area partner" v-if="partnerShops.length">
-				<h3>協力店</h3><!-- 最初協力してくれた店を出してあげたい。これは消えるかもしれないけど、人情というか -->
-				<ul>
-					<li v-for="s in partnerShops" :key="s.map_url">
-						<a :href="s.map_url" target="_blank" rel="noopener">
-							<img :src="s.photo_url || '/img/noimage.png'" alt="" loading="lazy">
-							<div class="info">
-								<div class="title">
-									{{ s.name }}
+				<div class="area partner" v-if="partnerShops.length">
+					<h3>協力店</h3><!-- 最初協力してくれた店を出してあげたい。これは消えるかもしれないけど、人情というか -->
+					<ul>
+						<li v-for="s in partnerShops" :key="s.map_url">
+							<a :href="s.map_url" target="_blank" rel="noopener">
+								<img :src="s.photo_url || '/img/noimage.png'" alt="" loading="lazy">
+								<div class="info">
+									<div class="title">
+										{{ s.name }}
+									</div>
+									<div class="meta">
+										<span v-if="s.rating">★ {{ s.rating.toFixed(1) }}</span>
+										<span v-if="s.distance_m">／{{ s.distance_m }} m</span>
+									</div>
+									<div class="addr">{{ s.address }}</div>
 								</div>
-								<div class="meta">
-									<span v-if="s.rating">★ {{ s.rating.toFixed(1) }}</span>
-									<span v-if="s.distance_m">／{{ s.distance_m }} m</span>
+							</a>
+						</li>
+					</ul>
+
+				</div>
+				<div class="area shop-list">
+					<ul>
+						<li v-for="s in freeShops" :key="s.map_url">
+							<a :href="s.map_url" target="_blank" rel="noopener">
+								<img :src="s.photo_url || '/img/noimage.png'" alt="" loading="lazy">
+								<div class="info">
+									<div class="title">
+										{{ s.name }}
+									</div>
+									<div class="meta">
+										<span v-if="s.rating">★ {{ s.rating.toFixed(1) }}</span>
+										<span v-if="s.distance_m">／{{ s.distance_m }} m</span>
+									</div>
+									<div class="addr">{{ s.address }}</div>
 								</div>
-								<div class="addr">{{ s.address }}</div>
-							</div>
-						</a>
-					</li>
-				</ul>
+							</a>
+						</li>
+					</ul>
+				</div>
+				<p class="powered-by">Powered by Google</p>
 
 			</div>
-			<div class="area shop-list">
-				<ul>
-					<li v-for="s in freeShops" :key="s.map_url">
-						<a :href="s.map_url" target="_blank" rel="noopener">
-							<img :src="s.photo_url || '/img/noimage.png'" alt="" loading="lazy">
-							<div class="info">
-								<div class="title">
-									{{ s.name }}
-								</div>
-								<div class="meta">
-									<span v-if="s.rating">★ {{ s.rating.toFixed(1) }}</span>
-									<span v-if="s.distance_m">／{{ s.distance_m }} m</span>
-								</div>
-								<div class="addr">{{ s.address }}</div>
+			</transition>
+			<transition name="fade">
+			<div class="log watchedLog" v-show="activeTab === 'log'">
+				<h2>みんなのログ</h2>
+				<template v-if="watchedLogs.length">
+				<div class="area">
+				<div
+					v-for="log in watchedLogs"
+					:key="log.id"
+					class="box"
+				>
+					<div class="box-header">
+						<div class="left">
+							<div class="icon">
+							<img v-if="log.user.icon_url" :src="log.user.icon_url" />
+							<img v-else src="/img/user-default.png" />
 							</div>
-						</a>
-					</li>
-				</ul>
+						</div>
+						<div class="right">
+							<div class="name">{{ log.user.nickname }} さん</div>
+							<div class="outer">
+								<div class="inner log-status">
+									<div class="inner__wrap">
+										<i
+										:class="[
+											'fas',
+											log.status === 'watched'
+											? 'fa-eye'
+											: log.status === 'want'
+											? 'fa-heart'
+											: 'fa-eye-slash'
+										]"
+										/>
+										{{ log.status_display }}
+									</div>
+								</div>
+								<div class="inner log-times">
+									{{ log.times }}
+								</div>
+								<div class="inner log-rating">
+									<div class="star">
+										<i
+										v-for="i in 5"
+										:key="i"
+										:class="['fa-star', i <= log.rating ? 'fas' : 'far']"
+										/>
+									</div>
+								</div>
+							</div><!-- outer -->
+						</div>
+
+
+
+
+					</div>
+
+					<!-- ステータス / 回数 / レーティング -->
+					<div class="wrap">
+
+						<!-- コメント -->
+						<div class="log-comment">{{ log.comment }}</div>
+					</div>
+
+					<div class="edit">
+					<template >
+						<router-link :to="`/log/${log.id}/edit`">編集</router-link> |
+						<a
+						href="#"
+						class="delete"
+						@click.prevent="onClickDelete(log.id)"
+						>削除</a>
+					</template>
+					</div>
+
+					<div class="like">
+						<button
+							class="like-btn"
+							:class="{ liked: log.is_liked }"
+							@click="toggleLike(log)"
+						>
+							<i class="fas fa-heart" />
+							{{ log.like_count }}
+						</button>
+					</div>
+				</div>
+				</div>
+				</template>
+				<p v-else>まだログがありません。</p>
 			</div>
-			<p class="powered-by">Powered by Google</p>
+			</transition>
+
 
 		</div>
+
 
 	</section>
   </template>
 
 
 <script>
+
 import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import apiClient from '@/services/api.js'
@@ -296,11 +413,22 @@ export default {
     const router = useRouter()
 
     /* ───────── state ───────── */
+	const activeTab = ref('shop')
     const stage          = ref({})
-    const logs           = ref([])            // ← 取得した全ログ
-    const watchedLogs    = computed(() =>     // ← “観た” だけ抽出
-      logs.value.filter(l => l.status === 'watched')
-    )
+    const logs           = ref([]) // ← 取得した全ログ
+    /** 自分のログ判定 */
+    const isMine = log =>
+      !!currentUserId.value && log.user?.id === currentUserId.value
+
+	const watchedLogs = computed(() =>
+	logs.value.filter(l => l.status === 'watched')
+	)
+	// ――― 自分のログを “すべて” 取る（ステータス不問）―――
+	const myLogs = computed(() =>
+	logs.value.filter(l => isMine(l) && l.status === 'watched')
+	)
+
+
     const loading        = ref(true)
     const error          = ref(null)
     const currentUserId  = ref(null)
@@ -324,10 +452,6 @@ export default {
         ? rated.reduce((s, l) => s + l.rating, 0) / rated.length
         : null
     })
-
-    /** 自分のログ判定 */
-    const isMine = log =>
-      !!currentUserId.value && log.user?.id === currentUserId.value
 
 /* ───────── ステータス変更 ───────── */
 const setStatus = async (status) => {
@@ -405,13 +529,22 @@ const setStatus = async (status) => {
       myStatus.value = mine ? mine.status : null
     }
 
-    onMounted(async () => {
+    onMounted(async () => {     
       try {
         stage.value = (await apiClient.get(`/api/stage/${route.params.id}/`)).data
         try {
           currentUserId.value = (await apiClient.get('/dj-rest-auth/user/')).data.id
         } catch { /* 未ログイン */ }
         await reloadLogs()
+
+    // ここで本当の値を確認
+    console.log('currentUserId', currentUserId.value)
+    console.table(logs.value.map(l => ({
+      id   : l.id,
+      uid  : l.user?.id,
+      mine : isMine(l),
+      st   : l.status
+    })))
       } catch (e) {
         error.value = e.message
       } finally {
@@ -419,8 +552,11 @@ const setStatus = async (status) => {
       }
     })
 
+
+
     /* ───────── expose ───────── */
     return {
+	  activeTab,
       stage,
       watchedLogs,        // ← テンプレート側はこれを使う
       loading,
@@ -436,10 +572,10 @@ const setStatus = async (status) => {
       onClickDelete,
 	  sponsorShops,
 	  partnerShops,
-	  freeShops
+	  freeShops,
+	  myLogs
     }
   }
 }
 </script>
 
-	

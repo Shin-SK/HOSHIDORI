@@ -5,7 +5,7 @@ import StageList     from '@/views/StageList.vue'
 import StageListRun  from '@/views/StageListRun.vue'
 import StageDetail   from '@/views/StageDetail.vue'
 import StageEdit     from '@/views/StageEdit.vue'
-import StageCreate   from '@/views/StageCreate.vue'
+// import StageCreate   from '@/views/StageCreate.vue'
 import MyPage        from '@/views/MyPage.vue'
 import LogEdit       from '@/views/LogEdit.vue'
 import ProfileEdit   from '@/views/ProfileEdit.vue'
@@ -37,9 +37,21 @@ const routes = [
 
   /* ─────── 要ログインページ ─────── */
   { path: '/mypage', name: 'mypage',component: MyPage,meta: { requiresAuth: true } },
+  { // ── 新規作成 ──
+    path:'/stage/create',
+    name:'stage-create',
+    component:StageEdit,
+    meta:{requiresAuth:true},
+    props:()=>({})              // id 無し（= 新規）
+  },
+  { // ── 編集 ──
+    path:'/stage/:id(\\d+)/edit',
+    name:'stage-edit',
+    component:StageEdit,
+    meta:{requiresAuth:true},
+    props:r=>({ id:Number(r.params.id) })  // id を渡す
+  },
   { path: '/profile/edit',name: 'profile-edit',  component: ProfileEdit,meta: { requiresAuth: true } },
-  { path: '/stage/create',name: 'stage-create',  component: StageCreate,meta: { requiresAuth: true } },
-  { path: '/stage/:id/edit',name: 'stage-edit',component: StageEdit,meta: { requiresAuth: true } },
   { path: '/log/create/:stageId', name: 'log-create',component: LogEdit,props: r => ({ mode:'create', stageId:+r.params.stageId }), meta: { requiresAuth: true } },
   { path: '/log/:id/edit',name: 'log-edit',component: LogEdit,props: r => ({ mode:'edit',  id:r.params.id }),meta: { requiresAuth: true } },
 ]

@@ -1,8 +1,6 @@
 @charset "UTF-8";
 /* 除算math.divを使うのに必要な記述 */
 @import url(https://use.typekit.net/lpz2crc.css);
-@import url(https://use.typekit.net/lpz2crc.css);
-@import url(https://use.typekit.net/lpz2crc.css);
 html {
   font-size: 62.5%;
 }
@@ -57,142 +55,6 @@ html::-webkit-scrollbar {
 
 a {
   text-decoration: none;
-}
-
-/* 除算math.divを使うのに必要な記述 */
-html {
-  font-size: 62.5%;
-}
-
-body {
-  font-size: clamp(1.4rem, 1.3346938776rem + 0.2040816327vw, 1.6rem);
-}
-
-body a {
-  color: #0f0f0f;
-}
-
-body a :hover {
-  transition: 0.5s;
-  -webkit-transition: 0.5s; /* Chrome、Safari用 */
-  -moz-transition: 0.5s; /* Firefox用 */
-  -o-transition: 0.5s; /* Opera用 */
-  opacity: 0.5;
-}
-
-body img {
-  max-width: 100%;
-  height: auto;
-}
-
-body .mincho {
-  font-family: "Times New Roman", "YuMincho", "Hiragino Mincho ProN", "Yu Mincho", "MS PMincho", serif;
-  font-size: clamp(3rem, 2.9346938776rem + 0.2040816327vw, 3.2rem);
-}
-
-body section {
-  margin-bottom: 40px;
-}
-
-/* 非表示状態 */
-.inactive {
-  display: none;
-  opacity: 0;
-}
-
-/* 表示状態 */
-.active {
-  display: block;
-  opacity: 1;
-}
-
-html {
-  /*IE(Internet Explorer)・Microsoft Edgeへの対応*/
-  -ms-overflow-style: none;
-  /*Firefoxへの対応*/
-  scrollbar-width: none;
-  /*Google Chrome、Safariへの対応*/
-}
-
-html::-webkit-scrollbar {
-  display: none;
-}
-
-a {
-  text-decoration: none;
-}
-
-html, body, div, span, applet, object, iframe,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-a, abbr, acronym, address, big, cite, code,
-del, dfn, em, img, ins, kbd, q, s, samp,
-small, strike, strong, sub, sup, tt, var,
-b, u, i, center,
-dl, dt, dd, ol, ul, li,
-fieldset, form, label, legend,
-table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed,
-figure, figcaption, footer, header, hgroup,
-menu, nav, output, ruby, section, summary,
-time, mark, audio, video {
-  margin: 0;
-  padding: 0;
-  border: none;
-  font-style: normal;
-  text-align: left;
-  zoom: 1;
-}
-
-article, aside, details, figcaption, figure,
-footer, header, hgroup, menu, nav, section {
-  display: block;
-}
-
-table {
-  border-collapse: collapse;
-  font-family: inherit;
-}
-
-h1, h2, h3, h4, h5 {
-  font-size: 100%;
-  font-weight: normal;
-  line-height: 1;
-}
-
-input, textarea, select {
-  font-family: inherit;
-  font-size: 16px;
-}
-
-input[type=button], input[type=text], input[type=submit] {
-  -webkit-appearance: none;
-  border-radius: 0;
-}
-
-textarea {
-  resize: none;
-  -webkit-appearance: none;
-  border-radius: 0;
-}
-
-th, td {
-  border-collapse: collapse;
-}
-
-table th, table td {
-  white-space: nowrap;
-}
-
-ul, ol {
-  list-style-type: none;
-}
-
-img {
-  vertical-align: text-bottom;
-  vertical-align: -webkit-baseline-middle;
-  max-width: 100%;
-  height: auto;
-  width: auto;
 }
 
 #navigation {
@@ -328,71 +190,63 @@ body {
   height: 40px;
 }
 
-/* 除算math.divを使うのに必要な記述 */
-html {
-  font-size: 62.5%;
+main {
+  padding-bottom: 80px !important;
 }
 
-body {
-  font-size: clamp(1.4rem, 1.3346938776rem + 0.2040816327vw, 1.6rem);
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
 }
 
-body a {
-  color: #0f0f0f;
-}
-
-body a :hover {
-  transition: 0.5s;
-  -webkit-transition: 0.5s; /* Chrome、Safari用 */
-  -moz-transition: 0.5s; /* Firefox用 */
-  -o-transition: 0.5s; /* Opera用 */
-  opacity: 0.5;
-}
-
-body img {
-  max-width: 100%;
-  height: auto;
-}
-
-body .mincho {
-  font-family: "Times New Roman", "YuMincho", "Hiragino Mincho ProN", "Yu Mincho", "MS PMincho", serif;
-  font-size: clamp(3rem, 2.9346938776rem + 0.2040816327vw, 3.2rem);
-}
-
-body section {
-  margin-bottom: 40px;
-}
-
-/* 非表示状態 */
-.inactive {
-  display: none;
+.fade-enter-from,
+.fade-leave-to {
   opacity: 0;
 }
 
-/* 表示状態 */
-.active {
-  display: block;
-  opacity: 1;
+.icon-angel {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  background-color: currentColor;
+  mask: url("../../img/icons/angel.svg") no-repeat center/contain;
+  -webkit-mask: url("../../img/icons/angel.svg") no-repeat center/contain;
 }
 
-html {
-  /*IE(Internet Explorer)・Microsoft Edgeへの対応*/
-  -ms-overflow-style: none;
-  /*Firefoxへの対応*/
-  scrollbar-width: none;
-  /*Google Chrome、Safariへの対応*/
+.icon-eyes {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  background-color: currentColor;
+  mask: url("../../img/icons/eyes.svg") no-repeat center/contain;
+  -webkit-mask: url("../../img/icons/eyes.svg") no-repeat center/contain;
 }
 
-html::-webkit-scrollbar {
-  display: none;
+.icon-heart {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  background-color: currentColor;
+  mask: url("../../img/icons/heart.svg") no-repeat center/contain;
+  -webkit-mask: url("../../img/icons/heart.svg") no-repeat center/contain;
 }
 
-a {
-  text-decoration: none;
+.icon-star {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  background-color: currentColor;
+  mask: url("../../img/icons/star.svg") no-repeat center/contain;
+  -webkit-mask: url("../../img/icons/star.svg") no-repeat center/contain;
 }
 
-main {
-  padding-bottom: 80px !important;
+.icon-star-line {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  background-color: currentColor;
+  mask: url("../../img/icons/star-line.svg") no-repeat center/contain;
+  -webkit-mask: url("../../img/icons/star-line.svg") no-repeat center/contain;
 }
 
 h1 {
@@ -400,6 +254,13 @@ h1 {
   font-size: clamp(2rem, 1.9346938776rem + 0.2040816327vw, 2.2rem);
   font-weight: bold;
   margin: 40px auto 24px;
+}
+
+h2 {
+  font-size: clamp(2rem, 1.9346938776rem + 0.2040816327vw, 2.2rem);
+  margin: 40px auto;
+  text-align: center;
+  font-weight: bold;
 }
 
 .container {
@@ -424,9 +285,46 @@ h1 {
 button {
   cursor: pointer;
 }
+button.active {
+  font-weight: bold;
+}
 
-.status-active i {
+.status {
+  width: 100%;
+  margin-top: 40px;
+  background-color: #f5f5f5;
+  padding: 16px;
+}
+.status .box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  justify-content: space-around;
+}
+.status .box a {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 4px;
+}
+.status .box a i {
+  font-size: clamp(3rem, 2.9346938776rem + 0.2040816327vw, 3.2rem);
+  color: gray;
+}
+.status .box a span {
+  font-size: clamp(1rem, 0.9346938776rem + 0.2040816327vw, 1.2rem);
+}
+
+.status-active .icon-angel {
+  color: #80b567 !important;
+}
+.status-active .icon-eyes {
   color: #a22041 !important;
+}
+.status-active .icon-heart {
+  color: #F07884 !important;
 }
 
 input, textarea {
@@ -456,6 +354,32 @@ input, textarea {
 }
 .name-box .inner .nickname {
   color: gray;
+}
+
+.tab {
+  width: 100%;
+}
+.tab .tab-nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  border-bottom: 1px #000b00 solid;
+}
+.tab .tab-nav li {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.tab .tab-nav li button {
+  width: 100%;
+  position: relative;
+}
+.tab .tab-nav li button.active {
+  color: white;
+  background-color: #000b00;
+  padding: 8px;
 }
 
 .lists {
@@ -641,6 +565,13 @@ input, textarea {
   font-weight: bold;
 }
 
+.log-from .icon-star {
+  color: yellow !important;
+}
+.log-from .icon-star-line {
+  color: gray !important;
+}
+
 .stage-create {
   width: 100%;
   height: 100%;
@@ -657,14 +588,11 @@ input, textarea {
   width: 100%;
   padding: 16px;
   color: #000b00;
-  font-size: clamp(4rem, 3.9346938776rem + 0.2040816327vw, 4.2rem);
+  font-size: clamp(2rem, 1.9346938776rem + 0.2040816327vw, 2.2rem);
   height: 100%;
   min-height: 200px;
 }
 
-.form-update {
-  padding: 80px 0px;
-}
 .form-update h2 {
   font-size: clamp(2rem, 1.9346938776rem + 0.2040816327vw, 2.2rem);
   margin: 40px auto;
@@ -702,20 +630,26 @@ input, textarea {
 .form-update form .field.create-account p {
   text-align: center;
 }
-.form-update .poster-outer {
+.form-update form .field.poster {
   display: flex;
-  gap: 16px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
 }
-.form-update .poster-outer .icon {
-  width: auto;
-  flex: unset;
+.form-update form .field.poster .item {
+  flex: 1;
+}
+.form-update form .field.poster .arrow {
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.form-update .poster-outer .icon i {
+.form-update form .field.poster .arrow i {
   font-size: clamp(2rem, 1.9346938776rem + 0.2040816327vw, 2.2rem);
   color: #000b00;
+}
+.form-update form .field.poster .new-poster {
+  width: 100%;
 }
 
 .filepond--root {
@@ -800,33 +734,6 @@ input, textarea {
 }
 .stage-detail .wrap .contents .stage-edit a {
   color: gray;
-}
-.stage-detail .wrap .status {
-  width: 100%;
-  margin-top: 40px;
-  background-color: #f5f5f5;
-  padding: 16px;
-}
-.stage-detail .wrap .status .box {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  justify-content: space-around;
-}
-.stage-detail .wrap .status .box a {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  gap: 4px;
-}
-.stage-detail .wrap .status .box a i {
-  font-size: clamp(3rem, 2.9346938776rem + 0.2040816327vw, 3.2rem);
-  color: gray;
-}
-.stage-detail .wrap .status .box a span {
-  font-size: clamp(1rem, 0.9346938776rem + 0.2040816327vw, 1.2rem);
 }
 .stage-detail .log {
   width: 100%;
@@ -916,12 +823,11 @@ input, textarea {
   margin-top: 40px;
 }
 .stage-detail .shop h2 {
-  background-color: #f7f7f7;
-  font-weight: bold;
-  padding: 16px;
-  font-size: clamp(2rem, 1.9346938776rem + 0.2040816327vw, 2.2rem);
+  margin-bottom: 0;
+}
+.stage-detail .shop .disc {
   text-align: center;
-  margin-bottom: 16px;
+  margin-bottom: 40px;
 }
 .stage-detail .shop h3 {
   text-align: center;
@@ -937,6 +843,11 @@ input, textarea {
   grid-template-columns: repeat(2, 1fr);
   align-items: center;
   gap: 16px;
+}
+@media screen and (max-width: 768px) {
+  .stage-detail .shop .sponser li a {
+    grid-template-columns: 1fr;
+  }
 }
 .stage-detail .shop .sponser li a img {
   aspect-ratio: 16/9;
@@ -964,6 +875,10 @@ input, textarea {
 .stage-detail .shop .partner ul li a .addr {
   font-size: clamp(1.2rem, 1.1346938776rem + 0.2040816327vw, 1.4rem);
 }
+.stage-detail .shop .shop-list {
+  border-top: 1px lightgray solid;
+  padding-top: 40px;
+}
 .stage-detail .shop .shop-list ul {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -971,7 +886,7 @@ input, textarea {
 }
 @media screen and (max-width: 768px) {
   .stage-detail .shop .shop-list ul {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 .stage-detail .shop .shop-list ul img {
@@ -1025,15 +940,6 @@ input, textarea {
   background-color: #333; /* お好みの色 */
   color: #fff;
   border-color: #333;
-}
-.log-form .star-rating i {
-  font-size: 24px;
-  color: #ccc;
-  cursor: pointer;
-  margin-right: 4px;
-}
-.log-form .star-rating i.selected {
-  color: #f7d106; /* 塗りつぶし: 黄色など */
 }
 
 .mypage .user {

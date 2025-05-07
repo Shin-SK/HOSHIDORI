@@ -43,6 +43,16 @@ class Theater(models.Model):
     address = models.CharField(max_length=255, blank=True)
     lat     = models.FloatField(null=True, blank=True)
     lng     = models.FloatField(null=True, blank=True)
+    city     = models.CharField(max_length=50, blank=True, null=True)
+    slug     = models.SlugField(unique=True, editable=False,null=True, blank=True)
+
+    def clean(self):
+        self.slug = slugify(self.name)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['name']),# 部分一致検索を高速化
+        ]
 
     def __str__(self):
         return self.name
