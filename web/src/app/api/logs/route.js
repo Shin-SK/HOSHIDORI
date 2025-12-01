@@ -2,6 +2,11 @@
 import prisma from '@/lib/prisma'
 import { getCurrentDbUser } from '@/lib/getCurrentDbUser'
 
+// OPTIONS /api/logs (CORS preflight)
+export async function OPTIONS() {
+  return new Response(null, { status: 204 })
+}
+
 // GET /api/logs
 export async function GET(req) {
   const dbUser = await getCurrentDbUser(req)

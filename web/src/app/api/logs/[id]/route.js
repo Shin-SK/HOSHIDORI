@@ -2,6 +2,11 @@
 import prisma from '@/lib/prisma'
 import { getCurrentDbUser } from '@/lib/getCurrentDbUser'
 
+// OPTIONS /api/logs/:id (CORS preflight)
+export async function OPTIONS() {
+  return new Response(null, { status: 204 })
+}
+
 // DELETE /api/logs/:id
 export async function DELETE(req, { params }) {
   const dbUser = await getCurrentDbUser(req)

@@ -3,6 +3,11 @@ import prisma from '@/lib/prisma'
 
 const CURRENT_USER_ID = 1 // ローカル用：「自分のログ」判定用
 
+// OPTIONS /api/works (CORS preflight)
+export async function OPTIONS() {
+  return new Response(null, { status: 204 })
+}
+
 export async function GET(req) {
   const { searchParams } = new URL(req.url)
   const qRaw = searchParams.get('q')
