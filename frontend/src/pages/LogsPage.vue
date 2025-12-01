@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { IconCirclePlus, IconStar, IconBinoculars } from '@tabler/icons-vue'
+import { authorizedFetch } from '@/apiClient'
 
 const logs = ref([])
 const loading = ref(true)
@@ -10,8 +11,11 @@ const router = useRouter()
 
 async function fetchLogs() {
   loading.value = true
+  error.value = null
+  logs.value = []
+  
   try {
-    const res = await fetch('/api/logs')
+    const res = await authorizedFetch('/api/logs')
     if (!res.ok) throw new Error('API error')
     logs.value = await res.json()
   } catch (e) {
@@ -34,7 +38,7 @@ async function deleteLog(id) {
   const ok = window.confirm('この観劇ログを削除しますか？')
   if (!ok) return
 
-  await fetch(`/api/logs/${id}`, {
+  await authorizedFetch(`/api/logs/${id}`, {
     method: 'DELETE',
   })
 

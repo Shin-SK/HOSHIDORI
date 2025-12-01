@@ -2,6 +2,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { authorizedFetch } from '@/apiClient'
 
 const router = useRouter()
 
@@ -17,13 +18,10 @@ const form = ref({
   rating: '',
 })
 
-// ローカルでは全部「自分=1」でOK、API側で userId=1 をセットする想定
-// → フロントで userId は扱わない
-
 async function fetchWorks() {
   loading.value = true
   try {
-    const res = await fetch('/api/works')
+    const res = await authorizedFetch('/api/works')
     if (!res.ok) throw new Error('API error')
     const data = await res.json()
     works.value = data
@@ -42,11 +40,10 @@ onMounted(fetchWorks)
 async function handleSubmit(e) {
   e.preventDefault()
 
-  await fetch('/api/logs', {
+  await authorizedFetch('/api/logs', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      // userId は送らない。API側で1固定にする
       workId: Number(form.value.workId),
       watchedDate: form.value.watchedDate || undefined,
       seat: form.value.seat || null,

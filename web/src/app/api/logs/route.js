@@ -1,20 +1,20 @@
 // src/app/api/logs/route.js
 import prisma from '@/lib/prisma'
-
-const CURRENT_USER_ID = 1 // ✨ ローカル用の「自分」
+import { getCurrentDbUser } from '@/lib/getCurrentDbUser'
 
 // GET /api/logs
-export async function GET() {
+export async function GET(req) {
+  const dbUser = await getCurrentDbUser(req)
+  if (!dbUser) {
+    return Response.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
   const logs = await prisma.viewingLog.findMany({
-    where: { userId: CURRENT_USER_ID },      // ← 自分のログだけ
+    where: { userId: dbUser.id },  // 自分のログだけ
     orderBy: { watchedDate: 'desc' },
     include: {
       user: true,
-      work: {
-        include: {
-          theater: true,
-        },
-      },
+      work: { include: { theater: true } },
     },
   })
 
@@ -23,6 +23,11 @@ export async function GET() {
 
 // POST /api/logs
 export async function POST(req) {
+  const dbUser = await getCurrentDbUser(req)
+  if (!dbUser) {
+    return Response.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
   const body = await req.json()
 
   const workId = Number(body.workId)
@@ -35,7 +40,7 @@ export async function POST(req) {
 
   const log = await prisma.viewingLog.create({
     data: {
-      userId: CURRENT_USER_ID,  // ← フロントから userId は受け取らない
+      userId: dbUser.id,          // ← ここで本物のユーザーID
       workId,
       watchedDate,
       seat: body.seat || null,

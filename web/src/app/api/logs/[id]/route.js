@@ -1,28 +1,43 @@
 // src/app/api/logs/[id]/route.js
 import prisma from '@/lib/prisma'
-
-const CURRENT_USER_ID = 1
+import { getCurrentDbUser } from '@/lib/getCurrentDbUser'
 
 // DELETE /api/logs/:id
-export async function DELETE(_req, { params }) {
-  const id = Number(params.id)
+export async function DELETE(req, { params }) {
+  const dbUser = await getCurrentDbUser(req)
+  if (!dbUser) {
+    return Response.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  const { id: paramId } = await params
+  const id = Number(paramId)
   if (Number.isNaN(id)) {
     return Response.json({ error: 'Invalid id' }, { status: 400 })
   }
 
-  await prisma.viewingLog.delete({
-    where: {
-      // 自分のログだけ消せるようにする
-      id_userId: { id, userId: CURRENT_USER_ID },
-    },
-  })
+  // ログを取得して所有権チェック
+  const log = await prisma.viewingLog.findUnique({ where: { id } })
+  if (!log) {
+    return Response.json({ error: 'Not found' }, { status: 404 })
+  }
+  if (log.userId !== dbUser.id) {
+    return Response.json({ error: 'Forbidden' }, { status: 403 })
+  }
+
+  await prisma.viewingLog.delete({ where: { id } })
 
   return new Response(null, { status: 204 })
 }
 
 // PATCH /api/logs/:id
 export async function PATCH(req, { params }) {
-  const id = Number(params.id)
+  const dbUser = await getCurrentDbUser(req)
+  if (!dbUser) {
+    return Response.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  const { id: paramId } = await params
+  const id = Number(paramId)
   if (Number.isNaN(id)) {
     return Response.json({ error: 'Invalid id' }, { status: 400 })
   }
@@ -54,11 +69,17 @@ export async function PATCH(req, { params }) {
     Object.entries(data).filter(([, v]) => v !== undefined),
   )
 
+  // ログを取得して所有権チェック
+  const existingLog = await prisma.viewingLog.findUnique({ where: { id } })
+  if (!existingLog) {
+    return Response.json({ error: 'Not found' }, { status: 404 })
+  }
+  if (existingLog.userId !== dbUser.id) {
+    return Response.json({ error: 'Forbidden' }, { status: 403 })
+  }
+
   const log = await prisma.viewingLog.update({
-    where: {
-      // 自分のログだけ更新
-      id_userId: { id, userId: CURRENT_USER_ID },
-    },
+    where: { id },
     data: cleaned,
   })
 

@@ -2,6 +2,7 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { authorizedFetch } from '@/apiClient'
 
 const route = useRoute()
 const router = useRouter()
@@ -30,12 +31,12 @@ async function fetchData() {
   loading.value = true
   try {
     // 作品一覧
-    const resWorks = await fetch('/api/works')
+    const resWorks = await authorizedFetch('/api/works')
     if (!resWorks.ok) throw new Error('works API error')
     works.value = await resWorks.json()
 
     // ログ一覧から該当の1件を引っこ抜く
-    const resLogs = await fetch('/api/logs')
+    const resLogs = await authorizedFetch('/api/logs')
     if (!resLogs.ok) throw new Error('logs API error')
     const all = await resLogs.json()
     const log = all.find((l) => l.id === id.value)
@@ -62,7 +63,7 @@ onMounted(fetchData)
 async function handleSubmit(e) {
   e.preventDefault()
 
-  await fetch(`/api/logs/${id.value}`, {
+  await authorizedFetch(`/api/logs/${id.value}`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({

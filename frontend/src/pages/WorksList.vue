@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import WorksBody from '@/components/WorksBody.vue'
 import { IconSearch, IconStarFilled } from '@tabler/icons-vue'
+import { authorizedFetch } from '@/apiClient'
 
 const route = useRoute()
 const q = ref(route.query.q || '')
@@ -19,7 +20,7 @@ async function search() {
     const params = new URLSearchParams()
     if (q.value.trim()) params.set('q', q.value.trim())
 
-    const res = await fetch(`/api/works?${params.toString()}`)
+    const res = await authorizedFetch(`/api/works?${params.toString()}`)
     if (!res.ok) throw new Error('API error')
 
     works.value = await res.json()

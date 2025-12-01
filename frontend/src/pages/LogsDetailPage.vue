@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { IconX, IconEdit, IconShare, IconBrandAmazon, IconBinoculars } from '@tabler/icons-vue'
 import WorksBody from '@/components/WorksBody.vue'
+import { authorizedFetch } from '@/apiClient'
 
 const props = defineProps(['id'])
 const log = ref(null)
@@ -15,7 +16,7 @@ async function fetchLog() {
   loading.value = true
   try {
     const logId = props.id || route.params.id
-    const res = await fetch(`/api/logs`)
+    const res = await authorizedFetch(`/api/logs`)
     if (!res.ok) throw new Error('API error')
     const logs = await res.json()
     log.value = logs.find(l => l.id === Number(logId))
@@ -42,7 +43,7 @@ async function deleteLog() {
   const ok = window.confirm('この観劇ログを削除しますか？')
   if (!ok) return
 
-  await fetch(`/api/logs/${log.value.id}`, {
+  await authorizedFetch(`/api/logs/${log.value.id}`, {
     method: 'DELETE',
   })
 

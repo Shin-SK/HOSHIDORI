@@ -3,6 +3,17 @@ import App from './App.vue'
 import router from './router'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import '@/assets/styles/custom.scss'
-// import 'bootstrap/dist/js/bootstrap.bundle.min.js'
+import * as TablerIcons from '@tabler/icons-vue'
+import { initAuth } from '@/authState'
 
-createApp(App).use(router).mount('#app')
+const app = createApp(App)
+
+// Tabler アイコン全登録（さっきのやつ）
+for (const [name, component] of Object.entries(TablerIcons)) {
+  app.component(name, component)
+}
+
+// 認証初期化してからマウント
+initAuth().then(() => {
+  app.use(router).mount('#app')
+})

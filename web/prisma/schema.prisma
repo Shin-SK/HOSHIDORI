@@ -8,11 +8,21 @@ datasource db {
 }
 
 model User {
-  id           Int           @id @default(autoincrement())
-  name         String
-  createdAt    DateTime      @default(now())
+  id             Int      @id @default(autoincrement())
+  username       String?  @unique  // 表示名/ハンドルネーム（任意）
+  email          String   @unique  // ログイン用メールアドレス
+  supabaseUserId String   @unique  // Supabase auth.users.id (UUID)
+  role           UserRole @default(USER)
+  createdAt      DateTime @default(now())
+  
   logs         ViewingLog[]
   createdWorks Work[]
+}
+
+enum UserRole {
+  USER
+  ADMIN
+  HELPER
 }
 
 model Theater {
