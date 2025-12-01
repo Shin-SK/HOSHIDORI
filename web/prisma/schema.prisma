@@ -32,6 +32,8 @@ model Work {
   theater     Theater  @relation(fields: [theaterId], references: [id])
   theaterId   Int
   imageUrl    String?
+  tags        String[] //任意がいい
+  actors      String[] //任意がいい
   startDate   DateTime?
   endDate     DateTime?
   createdBy   User?    @relation(fields: [createdById], references: [id])

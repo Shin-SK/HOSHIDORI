@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { IconCirclePlus, IconStar, IconBinoculars } from '@tabler/icons-vue'
 
 const logs = ref([])
 const loading = ref(true)
@@ -44,51 +45,49 @@ async function deleteLog(id) {
 
 <template>
   <main class="container py-4">
-    <h1 class="mb-3">観劇ログ一覧（Vue版）</h1>
+    <h1 class="mb-3 df-center">
+      <img 
+        src="/icon.svg"
+        style="width: 80px;"
+        alt="">
+    </h1>
 
-    <router-link to="/logs/new" class="btn btn-primary mb-3">
-      新規ログ追加
+    <router-link to="/logs/new" class="btn text-dark df-center my-5">
+      <IconCirclePlus :size="40"/>
     </router-link>
 
     <p v-if="loading">読み込み中...</p>
     <p v-else-if="error">エラー: {{ error }}</p>
     <p v-else-if="logs.length === 0">まだ観劇ログがありません。</p>
 
-    <table v-else class="table table-striped">
-      <thead>
-        <tr>
-          <th>日付</th>
-          <th>タイトル</th>
-          <th>劇場</th>
-          <th>ユーザー</th>
-          <th>メモ</th>
-          <th>操作</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="log in logs" :key="log.id">
-          <td>{{ formatDate(log.watchedDate) }}</td>
-          <td>{{ log.work?.title }}</td>
-          <td>{{ log.work?.theater?.name }}</td>
-          <td>{{ log.user?.name }}</td>
-          <td>{{ log.memo }}</td>
-          <td>
-            <router-link
-              :to="`/logs/${log.id}/edit`"
-              class="btn btn-sm btn-outline-primary me-2"
+    <div v-else class="row g-1">
+      <div v-for="log in logs" :key="log.id" class="col-6 col-md-3 col-lg-2">
+        <div class="poster position-relative">
+          <router-link :to="`/logs/${log.id}/detail`">
+            <img 
+              v-if="log.work?.imageUrl" 
+              :src="log.work.imageUrl" 
+              class="poster-img w-100"
+              :alt="log.work.title"
+              style="aspect-ratio: 1/1.414; object-fit: cover; cursor: pointer;"
             >
-              編集
-            </router-link>
-            <button
-              type="button"
-              class="btn btn-sm btn-outline-danger"
-              @click="deleteLog(log.id)"
+            <div 
+              v-else 
+              class="poster-img bg-secondary d-flex align-items-center justify-content-center text-white"
+              style="aspect-ratio: 1/1.414; cursor: pointer;"
             >
-              削除
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+              画像なし
+            </div>
+          </router-link>
+          <div class="poster-body df-center gap-2 bg-light p-1">
+            <div class="star df-center text-muted gap-1">
+              <IconStar :size="16" />
+              <div>{{ log.rating }}</div>
+            </div>
+            <div class="date df-center"><IconBinoculars :size="20" /><small>{{ formatDate(log.watchedDate) }}</small></div>
+          </div>
+        </div>
+      </div>
+    </div>
   </main>
 </template>
