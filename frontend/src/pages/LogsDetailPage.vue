@@ -3,7 +3,7 @@ import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { IconX, IconEdit, IconShare, IconBrandAmazon, IconBinoculars } from '@tabler/icons-vue'
 import WorksBody from '@/components/WorksBody.vue'
-import { authorizedFetch } from '@/apiClient'
+import { request } from '@/apiClient'
 
 const props = defineProps(['id'])
 const log = ref(null)
@@ -16,9 +16,7 @@ async function fetchLog() {
   loading.value = true
   try {
     const logId = props.id || route.params.id
-    const res = await authorizedFetch(`/api/logs`)
-    if (!res.ok) throw new Error('API error')
-    const logs = await res.json()
+    const logs = await request('/api/logs/')
     log.value = logs.find(l => l.id === Number(logId))
     if (!log.value) {
       error.value = 'ログが見つかりません'
@@ -43,7 +41,7 @@ async function deleteLog() {
   const ok = window.confirm('この観劇ログを削除しますか？')
   if (!ok) return
 
-  await authorizedFetch(`/api/logs/${log.value.id}`, {
+  await request(`/api/logs/${log.value.id}/`, {
     method: 'DELETE',
   })
 
@@ -69,8 +67,8 @@ async function deleteLog() {
             </button>
           </div>
           <img 
-            v-if="log.work?.imageUrl" 
-            :src="log.work.imageUrl" 
+            v-if="log.work?.main_image || log.work?.main_image_url" 
+            :src="log.work?.main_image || log.work?.main_image_url" 
             class="card-img-top w-100 h-100"
             :alt="log.work.title"
           >
@@ -84,7 +82,7 @@ async function deleteLog() {
           <WorksBody :work="log.work" />
           
           <div v-if="log.memo" class="card-text mt-3">
-            <div class="d-flex align-items-center mb-1"><IconBinoculars /><small>{{ formatDate(log.watchedDate) }}</small></div>
+            <div class="d-flex align-items-center mb-1"><IconBinoculars /><small>{{ formatDate(log.watched_at) }}</small></div>
             <p class="mt-2 pt-2 border-top py-4">
               {{ log.memo }}
             </p>

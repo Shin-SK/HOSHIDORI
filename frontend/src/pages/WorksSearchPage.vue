@@ -16,9 +16,9 @@ async function search() {
 
   try {
     const params = new URLSearchParams()
-    if (q.value.trim()) params.set('q', q.value.trim())
+    if (q.value.trim()) params.set('search', q.value.trim())
 
-    const res = await fetch(`/api/works?${params.toString()}`)
+    const res = await fetch(`/api/works/?${params.toString()}`)
     if (!res.ok) throw new Error('API error')
 
     works.value = await res.json()
@@ -65,8 +65,8 @@ onMounted(() => {
       <div v-for="work in works" :key="work.id" class="col">
         <div class="card h-100">
           <img
-            v-if="work.imageUrl"
-            :src="work.imageUrl"
+            v-if="work.main_image || work.main_image_url"
+            :src="work.main_image || work.main_image_url"
             class="card-img-top"
             :alt="work.title"
             style="height: 250px; object-fit: cover;"

@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { IconCirclePlus, IconStar, IconBinoculars } from '@tabler/icons-vue'
-import { authorizedFetch } from '@/apiClient'
+import { request, deleteLog as apiDeleteLog } from '@/apiClient'
 
 const logs = ref([])
 const loading = ref(true)
@@ -15,9 +15,8 @@ async function fetchLogs() {
   logs.value = []
   
   try {
-    const res = await authorizedFetch('/api/logs')
-    if (!res.ok) throw new Error('API error')
-    logs.value = await res.json()
+    const data = await request('/api/logs/')
+    logs.value = data
   } catch (e) {
     error.value = e.message
   } finally {
@@ -38,9 +37,7 @@ async function deleteLog(id) {
   const ok = window.confirm('この観劇ログを削除しますか？')
   if (!ok) return
 
-  await authorizedFetch(`/api/logs/${id}`, {
-    method: 'DELETE',
-  })
+  await apiDeleteLog(id)
 
   // 再取得
   await fetchLogs()
@@ -69,8 +66,8 @@ async function deleteLog(id) {
         <div class="poster position-relative">
           <router-link :to="`/logs/${log.id}/detail`">
             <img 
-              v-if="log.work?.imageUrl" 
-              :src="log.work.imageUrl" 
+              v-if="log.work?.main_image || log.work?.main_image_url" 
+              :src="log.work?.main_image || log.work?.main_image_url" 
               class="poster-img w-100"
               :alt="log.work.title"
               style="aspect-ratio: 1/1.414; object-fit: cover; cursor: pointer;"

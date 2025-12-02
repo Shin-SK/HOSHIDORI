@@ -8,37 +8,48 @@ import WorksList from '@/pages/WorksList.vue'
 import WorksDetailPage from '@/pages/WorksDetailPage.vue'
 import WorksNewPage from '@/pages/WorksNewPage.vue'
 import LoginPage from '@/pages/LoginPage.vue'
+import SignUpPage from '@/pages/SignUpPage.vue'
 import { currentUser, authReady } from '@/authState'
+import WorksTestPage from '@/pages/WorksTestPage.vue'
 
 const routes = [
   { path: '/', redirect: '/logs' },
-  { path: '/logs', name: 'logs', component: LogsPage },
-  { path: '/logs/new', name: 'log-new', component: LogNewPage },
+  { path: '/logs', name: 'logs', component: LogsPage, meta: { requiresAuth: true } },
+  { path: '/logs/new', name: 'log-new', component: LogNewPage, meta: { requiresAuth: true } },
   {
     path: '/logs/:id/detail',
     name: 'log-detail',
     component: LogsDetailPage,
     props: true,
+    meta: { requiresAuth: true },
   },
   {
     path: '/logs/:id/edit',
     name: 'log-edit',
     component: LogEditPage,
     props: true,
+    meta: { requiresAuth: true },
   },
-  { path: '/works', name: 'works', component: WorksList },
+  { path: '/works', name: 'works', component: WorksList, meta: { requiresAuth: true } },
   {
     path: '/works/:id/detail',
     name: 'work-detail',
     component: WorksDetailPage,
     props: true,
+    meta: { requiresAuth: true },
   },
-  { path: '/works/new', name: 'work-new', component: WorksNewPage },
+  { path: '/works/new', name: 'work-new', component: WorksNewPage, meta: { requiresAuth: true } },
   {
     path: '/login',
     name: 'login',
     component: LoginPage,
   },
+  {
+    path: '/signup',
+    name: 'signup',
+    component: SignUpPage,
+  },
+  { path: '/works-test', component: WorksTestPage, meta: { requiresAuth: true } },
 ]
 
 const router = createRouter({

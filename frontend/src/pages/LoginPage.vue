@@ -1,13 +1,12 @@
 <script setup>
 import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { supabase } from '@/supabaseClient'
 import { currentUser } from '@/authState'
 
 const router = useRouter()
 const route = useRoute()
 
-const email = ref('')
+const username = ref('')
 const password = ref('')
 const loading = ref(false)
 const error = ref(null)
@@ -22,14 +21,29 @@ async function handleLogin(e) {
   message.value = ''
 
   try {
-    const { data, error: loginError } = await supabase.auth.signInWithPassword({
-      email: email.value,
-      password: password.value,
+    const baseUrl = import.meta.env.VITE_API_BASE_URL || ''
+    const res = await fetch(`${baseUrl}/api/auth/token/`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        // Djangoデフォルトは username フィールド
+        username: username.value,
+        password: password.value,
+      }),
     })
 
-    if (loginError) throw loginError
+    if (!res.ok) {
+      const text = await res.text()
+      throw new Error(text || `Login failed: ${res.status}`)
+    }
 
-    currentUser.value = data.user
+    const data = await res.json()
+    // { access, refresh }
+    localStorage.setItem('hoshidori_token', data.access)
+    localStorage.setItem('hoshidori_refresh', data.refresh)
+
+    // 簡易的に currentUser をtruthyにする
+    currentUser.value = { token: data.access }
     message.value = 'ログインしました'
     router.push(redirectTo)
   } catch (e) {
@@ -40,29 +54,7 @@ async function handleLogin(e) {
   }
 }
 
-async function handleSignup(e) {
-  e.preventDefault()
-  loading.value = true
-  error.value = null
-  message.value = ''
-
-  try {
-    const { data, error: signupError } = await supabase.auth.signUp({
-      email: email.value,
-      password: password.value,
-    })
-
-    if (signupError) throw signupError
-
-    message.value = 'サインアップしました。メール確認が必要な場合はメールを確認してください。'
-    // そのままログイン or 手動ログインでもOK
-  } catch (e) {
-    console.error(e)
-    error.value = e.message || 'サインアップに失敗しました'
-  } finally {
-    loading.value = false
-  }
-}
+// サインアップは別ページに移動
 </script>
 
 <template>
@@ -71,11 +63,12 @@ async function handleSignup(e) {
 
     <form @submit="handleLogin" class="mb-3">
       <div class="mb-3">
-        <label class="form-label">メールアドレス</label>
+        <label class="form-label">ユーザー名</label>
         <input
-          v-model="email"
-          type="email"
+          v-model="username"
+          type="text"
           class="form-control"
+          autocomplete="username"
           required
         />
       </div>
@@ -86,6 +79,7 @@ async function handleSignup(e) {
           v-model="password"
           type="password"
           class="form-control"
+          autocomplete="current-password"
           required
         />
       </div>
@@ -95,13 +89,13 @@ async function handleSignup(e) {
       </button>
     </form>
 
-    <button
+    <router-link
       class="btn btn-outline-secondary w-100 mb-2"
-      :disabled="loading"
-      @click="handleSignup"
+      :class="{ disabled: loading }"
+      to="/signup"
     >
       初めての方はこちら（サインアップ）
-    </button>
+    </router-link>
 
     <p v-if="error" class="text-danger mt-2">{{ error }}</p>
     <p v-if="message" class="text-success mt-2">{{ message }}</p>

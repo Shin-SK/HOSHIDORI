@@ -3,7 +3,7 @@ import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import WorksBody from '@/components/WorksBody.vue'
 import { IconSearch, IconStarFilled } from '@tabler/icons-vue'
-import { authorizedFetch } from '@/apiClient'
+import { fetchWorks } from '@/apiClient'
 
 const route = useRoute()
 const q = ref(route.query.q || '')
@@ -17,13 +17,10 @@ async function search() {
   works.value = []
 
   try {
-    const params = new URLSearchParams()
-    if (q.value.trim()) params.set('q', q.value.trim())
-
-    const res = await authorizedFetch(`/api/works?${params.toString()}`)
-    if (!res.ok) throw new Error('API error')
-
-    works.value = await res.json()
+    const params = {}
+    if (q.value.trim()) params.search = q.value.trim()
+    const data = await fetchWorks(params)
+    works.value = Array.isArray(data) ? data : (data?.results || [])
   } catch (e) {
     error.value = e.message
   } finally {
@@ -65,8 +62,8 @@ onMounted(() => {
         <router-link :to="`/works/${work.id}/detail`" class="text-decoration-none">
           <div class="card h-100">
             <img
-              v-if="work.imageUrl"
-              :src="work.imageUrl"
+              v-if="work.main_image || work.main_image_url"
+              :src="work.main_image || work.main_image_url"
               class="card-img-top"
               :alt="work.title"
               style="height: 250px; object-fit: cover;"
@@ -77,13 +74,6 @@ onMounted(() => {
               style="height: 250px;"
             >
               画像なし
-            </div>
-            <div class="rating position-absolute bottom-0 end-0">
-                <div class="d-flex align-items-center justify-content-center flex-column bg-white px-2 py-1 rounded-start">
-                    <IconStarFilled :size="16" color="#f5d142" />
-                    <small>{{ work.avgRatingMine !== null ? work.avgRatingMine.toFixed(1) : '-' }}</small>
-                </div>
-
             </div>
           </div>
         </router-link>

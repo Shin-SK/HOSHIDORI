@@ -1,0 +1,160 @@
+from django.db import models
+from django.contrib.auth import get_user_model
+from cloudinary.models import CloudinaryField
+from taggit.managers import TaggableManager
+from django.contrib.postgres.fields import ArrayField
+from django.utils import timezone 
+
+User = get_user_model()
+
+
+class WorkStatus(models.TextChoices):
+    DRAFT = 'DRAFT', '仮作品（作成者のみ）'
+    PENDING = 'PENDING', '審査中'
+    APPROVED = 'APPROVED', '公開'
+
+
+class Theater(models.Model):
+    name = models.CharField(max_length=200)
+    slug = models.SlugField(unique=True)
+    area = models.CharField(
+        max_length=100,
+        blank=True,
+        help_text='メインのエリア（例：東京／名古屋／大阪）'
+    )
+    address = models.CharField(max_length=255, blank=True)
+    image_url = models.URLField(blank=True)
+
+    # ★ 複数エリアタグ用の配列フィールド
+    area_tags = ArrayField(
+        base_field=models.CharField(max_length=100),
+        blank=True,
+        default=list,
+        help_text='エリアタグ（例：["新宿", "小劇場"]）'
+    )
+
+    def __str__(self) -> str:
+        return f'{self.name} ({self.area})' if self.area else self.name
+
+class Actor(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    class Meta:
+        ordering = ['name']
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class Work(models.Model):
+    title = models.CharField(max_length=200)
+    slug = models.SlugField(unique=True)
+    troupe = models.CharField(
+        max_length=200,
+        blank=True,
+        help_text='劇団・ユニット名'
+    )
+    description = models.TextField(blank=True)
+    main_image = CloudinaryField('main image', blank=True, null=True)
+
+    main_theater = models.ForeignKey(
+        Theater, null=True, blank=True,
+        on_delete=models.SET_NULL
+    )
+
+    # 作品の性質タグ（ジャンルなど）
+    tags = TaggableManager(
+        blank=True,
+        help_text='作品タグ（会話劇、一人芝居、SF など）※カンマ区切り'
+    )
+
+    actors = models.ManyToManyField(
+        Actor, blank=True,
+        related_name='works'
+    )
+
+    status = models.CharField(
+        max_length=20,
+        choices=WorkStatus.choices,
+        default=WorkStatus.APPROVED,
+        help_text='DRAFT: 作成者のみ閲覧可 / PENDING: 要確認 / APPROVED: 公開'
+    )
+    admin_note = models.TextField(blank=True)
+
+    # Cloudinary URL を直接持ちたい場合に利用（不要なら削除可）
+    main_image_url = models.URLField(blank=True)
+
+    created_by = models.ForeignKey(
+        User, null=True, blank=True,
+        on_delete=models.SET_NULL,
+        related_name='created_works'
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self) -> str:
+        return self.title
+
+
+class Run(models.Model):
+    work = models.ForeignKey(
+        Work, on_delete=models.CASCADE, related_name='runs'
+    )
+    label = models.CharField(
+        max_length=200,
+        help_text='本公演／地方公演などのラベル'
+    )
+    area = models.CharField(
+        max_length=100,
+        blank=True,
+        help_text='エリア（例：東京／名古屋／大阪）'
+    )
+    theater = models.ForeignKey(
+        Theater, null=True, blank=True,
+        on_delete=models.SET_NULL
+    )
+
+    start_date = models.DateField(null=True, blank=True)
+    end_date = models.DateField(null=True, blank=True)
+
+    def __str__(self) -> str:
+        return f'{self.work.title} - {self.label}'
+
+
+class ViewingLog(models.Model):
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE,
+        related_name='viewing_logs'
+    )
+    work = models.ForeignKey(
+        Work, on_delete=models.CASCADE,
+        related_name='logs'
+    )
+    run = models.ForeignKey(
+        Run, null=True, blank=True,
+        on_delete=models.SET_NULL,
+        related_name='logs',
+        help_text='どの公演ブロック（東京公演/大阪公演等）で観たか（任意）'
+    )
+
+    watched_at = models.DateTimeField(help_text='観劇日時')
+    seat = models.CharField(max_length=100, blank=True)
+    memo = models.TextField(blank=True)
+    rating = models.IntegerField(
+        null=True, blank=True,
+        help_text='1〜5の評価'
+    )
+
+    # ログ固有のタグ（感情・状況など）
+    tags = TaggableManager(
+        blank=True,
+        help_text='ログ用タグ（泣いた、初見、千秋楽など）※カンマ区切り'
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-watched_at', '-created_at']
+
+    def __str__(self) -> str:
+        return f'{self.user} - {self.work} ({self.watched_at.date()})'

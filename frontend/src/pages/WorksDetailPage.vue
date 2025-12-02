@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import WorksBody from '@/components/WorksBody.vue'
-import { authorizedFetch } from '@/apiClient'
+import { request } from '@/apiClient'
 
 const props = defineProps(['id'])
 const work = ref(null)
@@ -14,9 +14,7 @@ async function fetchWork() {
   loading.value = true
   try {
     const workId = props.id || route.params.id
-    const res = await authorizedFetch(`/api/works`)
-    if (!res.ok) throw new Error('API error')
-    const works = await res.json()
+    const works = await request('/api/works/')
     work.value = works.find(w => w.id === Number(workId))
     if (!work.value) {
       error.value = '作品が見つかりません'
@@ -40,8 +38,8 @@ onMounted(fetchWork)
     <div v-else class="wrap">
       <div class="h-100">
         <img 
-          v-if="work.imageUrl" 
-          :src="work.imageUrl" 
+          v-if="work.main_image || work.main_image_url" 
+          :src="work.main_image || work.main_image_url" 
           class="w-100"
           :alt="work.title"
           style="object-fit: cover;"
